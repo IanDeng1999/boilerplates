@@ -1,0 +1,26 @@
+#!/bin/sh
+
+echo "Running version check..."
+node scripts/check-versions.js
+
+# 运行TypeScript编译检查
+echo "Running TypeScript type check..."
+pnpm exec tsc --noEmit
+
+if [ $? -ne 0 ]; then
+  echo "TypeScript type check failed. Please fix the type errors before committing."
+  exit 1
+fi
+
+# 检查是否有 JS/TS/JSX/TSX 文件被修改
+STAGED_FILES=$(git diff --cached --name-only)
+NEED_RUN_TEST=$(echo "$STAGED_FILES" | grep -E '\.(js|ts|jsx|tsx|json)$' || true)
+
+# 运行单元测试（仅当有 JS/TS/JSX/TSX 文件时）
+if [ -n "$NEED_RUN_TEST" ]; then
+  # 运行 Biome 格式化所有暂存文件
+  echo "Running Biome fix on staged files..."
+  pnpm exec biome check --staged
+else
+  echo "No JS/TS/JSX/TSX/JSON files changed, skipping tests and Lint."
+fi
