@@ -2,7 +2,7 @@ import http from "node:http";
 
 const TYPE = process.argv[2] || "sse";
 const COUNT = process.argv[3] || "5";
-const URL = `http://localhost:9876/api/samples/${TYPE}?count=${COUNT}`;
+const URL = `http://localhost:29876/api/samples/${TYPE}?count=${COUNT}`;
 
 const t = Date.now();
 let n = 0,

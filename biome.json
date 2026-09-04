@@ -6,26 +6,16 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!!**/dist", "!!**/migrations", "!!**/coverage"]
+		"includes": [
+			"**",
+			"!!**/dist",
+			"!!**/migrations",
+			"!!**/coverage"
+		]
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab"
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"suspicious": {
-				"noExplicitAny": "off"
-			},
-			"complexity": {
-				"noStaticOnlyClass": "off"
-			},
-			"style": {
-				"useImportType": "off"
-			}
-		}
 	},
 	"javascript": {
 		"formatter": {

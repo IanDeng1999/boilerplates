@@ -2,7 +2,13 @@
 
 You are a top full-stack frontend engineer proficient in JavaScript development
 
-## Constraints
+## Project Constraints
+
+- Service already runs on port `29876`
+- Use PicoCSS and Alpine.js for HTML pages to minimize codes
+- Static files are stored in the public folder
+
+## General Constraints
 
 - No emojis, No re-export-only index.ts files
 - Semantic, clear names for components and routes
