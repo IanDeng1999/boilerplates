@@ -4,14 +4,14 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "expo start --port 3737",
-    "dev:offline": "expo start --port 63636 --offline",
-    "dev:host": "expo start --port 63636 --offline --host",
-    "start": "expo start --port 63636",
+    "dev:offline": "expo start --port 3737 --offline",
+    "dev:host": "expo start --port 3737 --offline --host",
+    "start": "expo start --port 3737",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "pnpm exec tsc --noEmit && pnpm exec biome check"
+    "lint": "pnpm exec tsc --noEmit && pnpm exec biome check --fix"
   },
   "private": true,
   "dependencies": {
