@@ -1,0 +1,19 @@
+/**
+ * <%= friendlyName %> helper
+ *
+ * Generated with: pnpm exec sails generate helper <%= relPath %> <%= inputs.map(({ name, type }) => `${name}:${type}`).join(' ') %>
+ */
+module.exports = {
+	friendlyName: "<%= friendlyName %>",
+	description: "<%= friendlyName %> helper.",
+	inputs: {
+<% inputs.forEach(({ name, type }) => { %>		<%= name %>: {
+			type: "<%= type %>",
+			required: true,
+		},
+<% }); %>	},
+	fn: async () => {
+		const res = true;
+		return res;
+	},
+};

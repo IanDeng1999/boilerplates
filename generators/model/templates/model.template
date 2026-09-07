@@ -1,0 +1,19 @@
+/**
+ * <%= globalId %> model
+ *
+ * Generated with: pnpm exec sails generate model <%= globalId %> <%= fields.map(({ name, type, columnType }) => `${name}:${type}:${columnType}`).join(' ') %>
+ */
+module.exports = {
+  attributes: {
+<% if (fields.length > 0) { %>
+
+<% fields.forEach(({ name, type, columnType }) => { %>    <%= name %>: {
+      type: '<%= type %>',
+      columnName: '<%= name %>',
+      columnType: '<%= columnType %>',
+      required: true,
+      allowNull: false,
+    },
+<% }); %><% } %>
+  },
+};

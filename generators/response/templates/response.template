@@ -1,0 +1,13 @@
+/**
+ * <%= friendlyName %> response
+ *
+ * Generated with: pnpm exec sails generate response <%= relPath %> <%= statusCode %>
+ */
+const status = require("statuses");
+
+module.exports = function <%= functionName %>(extraData = status(<%= statusCode %>), code = <%= statusCode %>00) {
+	return this.res.status(<%= statusCode %>).json({
+		code,
+		err: extraData,
+	});
+};

@@ -1,0 +1,11 @@
+/**
+ * <%= friendlyName %> hook
+ *
+ */
+module.exports = function define<%= functionName[0].toUpperCase() + functionName.slice(1) %>Hook(sails) {
+	return {
+		initialize: async () => {
+			sails.log.info("Initializing custom hook (`<%= relPath %>`).");
+		},
+	};
+};
