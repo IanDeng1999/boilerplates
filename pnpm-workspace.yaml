@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: true
+# 只安装发布超过3天的包
+minimumReleaseAge: 4320
+registries:
+  default: https://registry.npmmirror.com/

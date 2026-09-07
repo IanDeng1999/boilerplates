@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Socket.IO 调试</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
+<style>
+#log { height: 60vh; overflow-y: auto; margin-bottom: 0; }
+#log li:last-child { border-bottom: none; }
+#log li code { white-space: pre-wrap; word-break: break-all; }
+.msg-in { border-left: 3px solid var(--primary); }
+.msg-out { border-left: 3px solid var(--contrast); }
+.msg-sys { color: var(--muted-color); font-style: italic; }
+#empty { color: var(--muted-color); text-align: center; padding: 2rem; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--invalid-color); vertical-align: middle; }
+.dot.on { background: var(--valid-color); }
+header { position: sticky; top: 0; z-index: 1; }
+</style>
+</head>
+<body x-data="app()">
+
+<header class="container-fluid">
+  <nav>
+    <ul><li><strong>Socket.IO</strong></li></ul>
+    <ul>
+      <li><span class="dot" :class="{ on: connected }"></span></li>
+      <li><span x-text="connected ? '已连接' : '未连接'"></span></li>
+      <li><small x-text="connected ? socketId : ''"></small></li>
+      <li><button class="outline" type="button" @click="connect" :disabled="connected">连接</button></li>
+      <li><button class="outline secondary" type="button" @click="disconnect" :disabled="!connected">断开</button></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container-fluid">
+  <div class="grid">
+    <div>
+      <article>
+        <header style="display:flex;justify-content:space-between;align-items:center;">
+          <span x-text="`${entries.length} 条`"></span>
+          <button class="outline contrast small" type="button" @click="clear">清空</button>
+        </header>
+        <ul id="log" style="list-style:none;padding:0;">
+          <li id="empty" x-show="entries.length === 0">点击「连接」建立连接</li>
+          <template x-for="entry in entries" :key="entry.id">
+            <li :class="'msg-' + entry.type" style="padding:0.5rem;border-bottom:1px solid var(--muted-border-color);" x-html="entry.html"></li>
+          </template>
+        </ul>
+      </article>
+    </div>
+
+    <div>
+      <article>
+        <header><strong>发送消息</strong></header>
+        <fieldset>
+          <label>
+            事件
+            <input x-ref="eventName" x-model="eventName" placeholder="message" />
+          </label>
+          <label>
+            数据
+            <textarea x-model="payload" placeholder='{"hello":"world"}' rows="4" @keydown="if ($event.key === 'Enter' && $event.ctrlKey) send"></textarea>
+          </label>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">
+            <button class="outline contrast small" type="button" @click="fill('ping', '')">ping</button>
+          </div>
+          <button type="button" @click="send" :disabled="!connected">发送</button>
+        </fieldset>
+      </article>
+    </div>
+  </div>
+</main>
+
+<script>
+function app() {
+  return {
+    connected: false,
+    socketId: '',
+    entries: [],
+    eventName: 'ping',
+    payload: '',
+    socket: null,
+    _entryId: 0,
+
+    connect() {
+      if (this.connected) return;
+      const socket = io({ path: '/ws' });
+
+      socket.on('connect', () => {
+        this.connected = true;
+        this.socketId = socket.id;
+        this.socket = socket;
+        this._addEntry('sys', null, `已连接  (${socket.id})`);
+      });
+
+      socket.on('disconnect', (reason) => {
+        this.connected = false;
+        this.socketId = '';
+        this._addEntry('sys', null, `已断开  ${reason}`);
+        this.socket = null;
+      });
+
+      socket.on('connect_error', (err) => {
+        this._addEntry('sys', null, `连接失败  ${err.message}`);
+      });
+
+      socket.onAny((event, ...args) => {
+        this._addEntry('in', event, args.length === 1 ? args[0] : args);
+      });
+    },
+
+    disconnect() {
+      this.socket?.disconnect();
+    },
+
+    send() {
+      if (!this.connected || !this.socket) return;
+      const ev = this.eventName.trim() || 'ping';
+      const raw = this.payload.trim();
+      let data;
+      if (raw === '') {
+        data = null;
+      } else {
+        try { data = JSON.parse(raw); } catch { data = raw; }
+      }
+      this._addEntry('out', ev, data ?? '');
+      this.socket.emit(ev, data);
+      this.payload = '';
+    },
+
+    clear() {
+      this.entries = [];
+    },
+
+    fill(event, data) {
+      this.eventName = event;
+      this.payload = data;
+      this.$nextTick(() => this.$refs.eventName?.focus());
+    },
+
+    escape(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    },
+
+    _addEntry(type, event, data) {
+      const id = ++this._entryId;
+      const time = new Date().toISOString().slice(11, 23);
+      let html;
+      if (type === 'sys') {
+        html = data;
+      } else {
+        const label = type === 'out' ? 'SEND' : 'RECV';
+        const raw = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        html = `<small>${label}</small> <small>${time}</small> <strong>${this.escape(event)}</strong><br><code>${this.escape(raw)}</code>`;
+      }
+      this.entries.push({ id, type, html });
+      this.$nextTick(() => {
+        const logEl = document.getElementById('log');
+        if (logEl) logEl.lastElementChild?.scrollIntoView({ block: 'end' });
+      });
+    }
+  };
+}
+</script>
+</body>
+</html>

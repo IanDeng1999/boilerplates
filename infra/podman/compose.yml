@@ -1,0 +1,31 @@
+services:
+  postgres:
+    container_name: unnamed-postgres
+    image: docker.io/library/postgres:18.3-alpine
+    restart: always
+    labels:
+      app: unnamed
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=unnamed.pass
+    ports:
+      - 0.0.0.0:65432:5432
+    volumes:
+      - ~/app_data/unnamed/postgres:/var/lib/postgresql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-h",
+          "127.0.0.1",
+          "-p",
+          "5432",
+          "-q",
+          "-U",
+          "postgres",
+        ]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
