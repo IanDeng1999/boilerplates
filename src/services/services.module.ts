@@ -1,9 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { IdService } from './id/id.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule, Params } from "nestjs-pino";
-import { CronjobService } from './cronjob/cronjob.service.js';
 import pino from "pino";
+import {RedisModule} from './redis/redis.module.js'
+import { IdService } from './id/id.service.js';
+import { CronjobService } from './cronjob/cronjob.service.js';
 
 @Global()
 @Module({
@@ -20,6 +21,21 @@ import pino from "pino";
 					};
 				},
 			],
+		}),
+		RedisModule.forRootAsync({
+			useFactory: async (configService: ConfigService) => ({
+				host: configService.get("REDIS_HOST", "127.0.0.1"),
+				port: configService.get("REDIS_PORT", 6379),
+				password: configService.get("REDIS_PASSWORD"),
+				db: configService.get("REDIS_DB", 0),
+				keyPrefix: configService.get("REDIS_KEY_PREFIX"),
+				enableOfflineQueue: configService.get(
+					"REDIS_ENABLE_OFFLINE_QUEUE",
+					true,
+				),
+				maxRetriesPerRequest: configService.get("REDIS_MAX_RETRIES", 3),
+			}),
+			inject: [ConfigService],
 		}),
     LoggerModule.forRootAsync({
 			inject: [ConfigService],
