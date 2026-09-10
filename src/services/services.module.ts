@@ -1,4 +1,5 @@
 import { createKeyv } from "@keyv/redis";
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ThrottlerStorageRedisService } from "@nest-lab/throttler-storage-redis";
 import { CacheModule } from "@nestjs/cache-manager";
 import { Global, Module } from "@nestjs/common";
@@ -10,7 +11,10 @@ import pino from "pino";
 import { CronjobService } from "./cronjob/cronjob.service.js";
 import { CryptoService } from "./crypto/crypto.service.js";
 import { DbModule } from "./db/db.module.js";
+import { PointKill } from "./db/entities/point-kill.entity.js";
+import { HttpContextService } from "./http-context/http-context.service.js";
 import { OssService } from "./oss/oss.service.js";
+import { PointKillService } from "./point-kill/point-kill.service.js";
 import { REDIS_CLIENT, RedisModule } from "./redis/redis.module.js";
 
 @Global()
@@ -30,6 +34,7 @@ import { REDIS_CLIENT, RedisModule } from "./redis/redis.module.js";
       ],
     }),
     DbModule,
+    MikroOrmModule.forFeature([PointKill]),
     RedisModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         url: configService.getOrThrow("REDIS_URL"),
@@ -132,7 +137,13 @@ import { REDIS_CLIENT, RedisModule } from "./redis/redis.module.js";
       },
     }),
   ],
-  providers: [CronjobService, CryptoService, OssService],
-  exports: [CryptoService, OssService],
+  providers: [
+    CronjobService,
+    CryptoService,
+    OssService,
+    PointKillService,
+    HttpContextService,
+  ],
+  exports: [CryptoService, OssService, PointKillService, HttpContextService],
 })
 export class ServicesModule {}

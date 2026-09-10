@@ -7,6 +7,7 @@ import { ThrottlerGuard } from "@nestjs/throttler";
 import { DefaultFilter } from "./aspects/filters/default/default.filter.js";
 import { HttpFilter } from "./aspects/filters/http/http.filter.js";
 import { ValidationFilter } from "./aspects/filters/validation/validation.filter.js";
+import { PointKillGuard } from "./aspects/guards/point-kill.guard.js";
 import { FormatterInterceptor } from "./aspects/interceptors/formatter/formatter.interceptor.js";
 import { BookModule } from "./features/book/book.module.js";
 import { ServicesModule } from "./services/services.module.js";
@@ -66,6 +67,10 @@ import { ServicesModule } from "./services/services.module.js";
     // #endregion
 
     // #region Guards
+    {
+      provide: APP_GUARD,
+      useClass: PointKillGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

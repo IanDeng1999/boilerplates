@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
 
     // 从Redis获取session数据
     const key = `session:${sessionId}`;
-    const sessionData = await this.redisClient.get(key);
+    const sessionData = await this.redisClient.hget(key, "data");
 
     if (!sessionData) {
       this.httpContextService.clearCookie("session");
