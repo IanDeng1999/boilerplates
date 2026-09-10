@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.12/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -7,14 +7,19 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": [
-      "**",
-      "!public/*.html"
-    ]
+    "includes": ["**", "!public/*.html"]
   },
-  "lint": {
-    "style": {
-      "useImportType": false
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "style": {
+        "useImportType": "off"
+      },
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      }
     }
   },
   "formatter": {
@@ -25,6 +30,9 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   },
   "assist": {

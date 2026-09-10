@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
-import { ServicesModule } from './services/services.module.js';
-import { BookModule } from './features/book/book.module.js';
+import { Module } from "@nestjs/common";
+import { BookModule } from "./features/book/book.module.js";
+import { ServicesModule } from "./services/services.module.js";
 
 @Module({
   imports: [ServicesModule, BookModule],

@@ -1,9 +1,9 @@
+import type { EntityManager } from "@mikro-orm/core";
 import { Seeder } from "@mikro-orm/seeder";
-import { EntityManager } from "@mikro-orm/core";
-import { BookSeeder } from "./account.seeder.js";
+import { BookSeeder } from "./book.seeder.js";
 
 export class DatabaseSeeder extends Seeder {
-	async run(em: EntityManager): Promise<void> {
-		await this.call(em, [BookSeeder]);
-	}
+  async run(em: EntityManager): Promise<void> {
+    await this.call(em, [BookSeeder]);
+  }
 }

@@ -1,13 +1,13 @@
+import fastifyCookie from "@fastify/cookie";
+import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import {
   FastifyAdapter,
   type NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import { Logger } from "nestjs-pino";
 import { AppModule } from "./app.module.js";
 import { IdService } from "./services/id/id.service.js";
-import { Logger } from "nestjs-pino";
-import { ConfigService } from "@nestjs/config";
-import fastifyCookie from "@fastify/cookie";
 
 async function bootstrap() {
   let idService: IdService;
@@ -15,7 +15,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({
       logger: false,
-      genReqId: () => idService!.genSnowflakeId(),
+      genReqId: () => idService.genSnowflakeId(),
       // disableRequestLogging: true,
     }),
     {
@@ -37,23 +37,23 @@ async function bootstrap() {
   const logger = app.get(Logger);
   app.useLogger(logger);
 
-	const configService = app.get(ConfigService);
-	idService = app.get(IdService);
+  const configService = app.get(ConfigService);
+  idService = app.get(IdService);
 
-	// 注册cookie插件
-	await app.register(fastifyCookie as any, {
-		// secret: configService.getOrThrow("COOKIE_SECRET") as string,
-	});
+  // 注册cookie插件
+  await app.register(fastifyCookie as any, {
+    secret: configService.getOrThrow("COOKIE_SECRET") as string,
+  });
 
-	const isProd = configService.get("IS_PRODUCTION", false);
+  const isProd = configService.get("IS_PRODUCTION", false);
 
-	const portStr = configService.get("APP_PORT", "8080");
-	const host = configService.get("APP_HOST", "0.0.0.0");
-	await app.listen(Number.parseInt(portStr, 10), host);
-	logger.log(
-		{ isProd },
-		`Server running in http://${host}:${portStr}`,
-		"NestApp",
-	);
+  const portStr = configService.get("APP_PORT", "8080");
+  const host = configService.get("APP_HOST", "0.0.0.0");
+  await app.listen(Number.parseInt(portStr, 10), host);
+  logger.log(
+    { isProd },
+    `Server running in http://${host}:${portStr}`,
+    "NestApp",
+  );
 }
 await bootstrap();
