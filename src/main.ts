@@ -17,7 +17,6 @@ async function bootstrap() {
     new FastifyAdapter({
       logger: false,
       genReqId: () => uuidv7(),
-      // disableRequestLogging: true,
     }),
     {
       bufferLogs: true,
