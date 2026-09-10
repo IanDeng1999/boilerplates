@@ -6,6 +6,7 @@ import pino from "pino";
 import { CronjobService } from "./cronjob/cronjob.service.js";
 import { DbModule } from "./db/db.module.js";
 import { RedisModule } from "./redis/redis.module.js";
+import { CryptoService } from './crypto/crypto.service.js';
 
 @Global()
 @Module({
@@ -121,6 +122,6 @@ import { RedisModule } from "./redis/redis.module.js";
       }),
     }),
   ],
-  providers: [CronjobService],
+  providers: [CronjobService, CryptoService],
 })
 export class ServicesModule {}
