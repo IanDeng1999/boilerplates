@@ -10,7 +10,6 @@ import { apiReference } from "@scalar/nestjs-api-reference";
 import { Logger } from "nestjs-pino";
 import { v7 as uuidv7 } from "uuid";
 import { AppModule } from "./app.module.js";
-import { IdService } from "./services/id/id.service.js";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

@@ -15,11 +15,7 @@ export default function getMikroORMConfig() {
   return defineConfig({
     // 1. 数据库核心配置
     driver: PostgreSqlDriver,
-    dbName: process.env.POSTGRE_NAME,
-    host: process.env.POSTGRE_HOST,
-    port: Number(process.env.POSTGRE_PORT) || 5432,
-    user: process.env.POSTGRE_USER,
-    password: process.env.POSTGRE_PASSWORD,
+    clientUrl: process.env.DATABASE_URL,
 
     // 2. 实体配置
     entities: ["dist/**/entities/*.entity.js"], // 编译后的实体路径（TS 项目必填，需与 tsconfig 输出目录一致）

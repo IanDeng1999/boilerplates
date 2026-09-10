@@ -1,14 +1,23 @@
 import {
+  CACHE_MANAGER,
+  Cache,
+  CacheInterceptor,
+  CacheKey,
+  CacheTTL,
+} from "@nestjs/cache-manager";
+import {
   Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   NotFoundException,
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Book } from "../../services/db/entities/book.entity.js";
@@ -18,27 +27,41 @@ import { UpdateBookDto } from "./dto/update-book.dto.js";
 
 @ApiTags("book")
 @Controller("api/book")
+@UseInterceptors(CacheInterceptor)
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(
+    private readonly bookService: BookService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: "创建书籍" })
   @ApiResponse({ status: 201, description: "创建成功", type: Book })
   async create(@Body() createBookDto: CreateBookDto) {
-    return this.bookService.create(createBookDto);
+    const book = await this.bookService.create(createBookDto);
+    await this.invalidateBookList();
+    return book;
   }
 
   @Get()
+  @CacheKey("book:all")
+  @CacheTTL(60_000)
   @ApiOperation({ summary: "获取所有书籍" })
   @ApiResponse({ status: 200, description: "获取成功", type: [Book] })
   async findAll() {
+    console.log("获取");
     return this.bookService.findAll();
   }
 
   @Get(":id")
+  @CacheKey(
+    (context) => `book:${context.switchToHttp().getRequest().params.id}`,
+  )
+  @CacheTTL(60_000)
   @ApiOperation({ summary: "获取单个书籍" })
   @ApiResponse({ status: 200, description: "获取成功", type: Book })
   async findOne(@Param("id") id: string) {
+    console.log("获取");
     const book = await this.bookService.findOne(id);
     if (!book) {
       throw new NotFoundException("书籍不存在", {
@@ -58,6 +81,7 @@ export class BookController {
         errorCode: "40400",
       });
     }
+    await this.invalidateBook(id);
     return book;
   }
 
@@ -72,6 +96,18 @@ export class BookController {
         errorCode: "40400",
       });
     }
+    await this.invalidateBook(id);
     return result;
+  }
+
+  private async invalidateBookList() {
+    await this.cacheManager.del("book:all");
+  }
+
+  private async invalidateBook(id: string) {
+    await Promise.all([
+      this.invalidateBookList(),
+      this.cacheManager.del(`book:${id}`),
+    ]);
   }
 }

@@ -1,4 +1,7 @@
+import { createKeyv } from "@keyv/redis";
+import { CacheModule } from "@nestjs/cache-manager";
 import { HttpStatus, Module, ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
 import { ThrottlerGuard } from "@nestjs/throttler";
 import { DefaultFilter } from "./aspects/filters/default/default.filter.js";
@@ -9,7 +12,20 @@ import { BookModule } from "./features/book/book.module.js";
 import { ServicesModule } from "./services/services.module.js";
 
 @Module({
-  imports: [ServicesModule, BookModule],
+  imports: [
+    ServicesModule,
+    CacheModule.registerAsync({
+      isGlobal: true,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        stores: [
+          createKeyv(config.getOrThrow("REDIS_URL"), { namespace: "cache" }),
+        ],
+        ttl: 60_000,
+      }),
+    }),
+    BookModule,
+  ],
   providers: [
     // #region Interceptors
     {

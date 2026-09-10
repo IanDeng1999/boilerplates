@@ -1,12 +1,17 @@
+import { createKeyv } from "@keyv/redis";
+import { ThrottlerStorageRedisService } from "@nest-lab/throttler-storage-redis";
+import { CacheModule } from "@nestjs/cache-manager";
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ThrottlerModule } from "@nestjs/throttler";
+import type { Redis } from "ioredis";
 import { LoggerModule, Params } from "nestjs-pino";
 import pino from "pino";
 import { CronjobService } from "./cronjob/cronjob.service.js";
+import { CryptoService } from "./crypto/crypto.service.js";
 import { DbModule } from "./db/db.module.js";
-import { RedisModule } from "./redis/redis.module.js";
-import { CryptoService } from './crypto/crypto.service.js';
+import { OssService } from "./oss/oss.service.js";
+import { REDIS_CLIENT, RedisModule } from "./redis/redis.module.js";
 
 @Global()
 @Module({
@@ -27,18 +32,19 @@ import { CryptoService } from './crypto/crypto.service.js';
     DbModule,
     RedisModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
-        host: configService.get("REDIS_HOST", "127.0.0.1"),
-        port: configService.get("REDIS_PORT", 6379),
-        password: configService.get("REDIS_PASSWORD"),
-        db: configService.get("REDIS_DB", 0),
-        keyPrefix: configService.get("REDIS_KEY_PREFIX"),
-        enableOfflineQueue: configService.get(
-          "REDIS_ENABLE_OFFLINE_QUEUE",
-          true,
-        ),
-        maxRetriesPerRequest: configService.get("REDIS_MAX_RETRIES", 3),
+        url: configService.getOrThrow("REDIS_URL"),
       }),
       inject: [ConfigService],
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        stores: [
+          createKeyv(config.getOrThrow("REDIS_URL"), { namespace: "cache" }),
+        ],
+        ttl: 60_000,
+      }),
     }),
     LoggerModule.forRootAsync({
       inject: [ConfigService],
@@ -104,24 +110,29 @@ import { CryptoService } from './crypto/crypto.service.js';
     }),
 
     ThrottlerModule.forRootAsync({
-      inject: [ConfigService],
+      inject: [ConfigService, REDIS_CLIENT],
       imports: [],
-      useFactory: (config: ConfigService) => ({
-        throttlers: [
-          {
-            name: "default",
-            ttl: config.get("THROTTLE_TTL", 60000), // 60秒
-            limit: config.get("THROTTLE_LIMIT", 60), // 100次请求
-          },
-          {
-            name: "short",
-            ttl: config.get("SHORT_THROTTLE_TTL", 20000),
-            limit: config.get("SHORT_THROTTLE_LIMIT", 10),
-          },
-        ],
-      }),
+      useFactory: (config: ConfigService, redis: Redis) => {
+        redis.set("niubi", "haha");
+        return {
+          storage: new ThrottlerStorageRedisService(redis),
+          throttlers: [
+            {
+              name: "default",
+              ttl: config.get("THROTTLE_TTL", 60000), // 60秒
+              limit: config.get("THROTTLE_LIMIT", 60), // 100次请求
+            },
+            {
+              name: "short",
+              ttl: config.get("SHORT_THROTTLE_TTL", 20000),
+              limit: config.get("SHORT_THROTTLE_LIMIT", 10),
+            },
+          ],
+        };
+      },
     }),
   ],
-  providers: [CronjobService, CryptoService],
+  providers: [CronjobService, CryptoService, OssService],
+  exports: [CryptoService, OssService],
 })
 export class ServicesModule {}

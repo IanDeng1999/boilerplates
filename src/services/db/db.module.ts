@@ -12,13 +12,7 @@ import { ConfigService } from "@nestjs/config";
       driver: PostgreSqlDriver,
       useFactory: (configService: ConfigService) => {
         const config = defineConfig({
-          dbName: configService.getOrThrow("POSTGRE_NAME"),
-          host: configService.getOrThrow("POSTGRE_HOST"),
-          port:
-            Number.parseInt(configService.getOrThrow("POSTGRE_PORT"), 10) ||
-            5432,
-          user: configService.getOrThrow("POSTGRE_USER"),
-          password: configService.getOrThrow("POSTGRE_PASSWORD"),
+          clientUrl: configService.getOrThrow("DATABASE_URL"),
 
           // 2. 实体配置
           entities: ["dist/**/entities/*.entity.js"], // 编译后的实体路径（TS 项目必填，需与 tsconfig 输出目录一致）
