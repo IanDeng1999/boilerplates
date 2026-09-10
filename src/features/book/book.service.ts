@@ -1,6 +1,7 @@
 import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
+import { pick } from "es-toolkit";
 import { Book } from "../../services/db/entities/book.entity.js";
 import { CreateBookDto } from "./dto/create-book.dto.js";
 import { UpdateBookDto } from "./dto/update-book.dto.js";
@@ -20,15 +21,19 @@ export class BookService {
     return book;
   }
 
-  async findAll(): Promise<Book[]> {
-    return this.bookRepository.findAll();
+  async findAll() {
+    return this.bookRepository
+      .findAll()
+      .then((books) => books.map((b) => this.serialization(b)));
   }
 
-  async findOne(id: string): Promise<Book | null> {
-    return this.bookRepository.findOne({ id });
+  async findOne(id: string) {
+    return this.bookRepository
+      .findOne({ id })
+      .then((b) => (b ? this.serialization(b) : b));
   }
 
-  async update(id: string, updateBookDto: UpdateBookDto): Promise<Book | null> {
+  async update(id: string, updateBookDto: UpdateBookDto) {
     const book = await this.bookRepository.findOne({ id });
     if (!book) {
       return null;
@@ -36,10 +41,10 @@ export class BookService {
     this.bookRepository.assign(book, updateBookDto);
     this.em.persist(book);
     await this.em.flush();
-    return book;
+    return this.serialization(book);
   }
 
-  async remove(id: string): Promise<boolean> {
+  async remove(id: string) {
     const book = await this.bookRepository.findOne({ id });
     if (!book) {
       return false;
@@ -47,5 +52,9 @@ export class BookService {
     this.em.remove(book);
     await this.em.flush();
     return true;
+  }
+
+  serialization(model: Book) {
+    return pick(model, ["id", "title", "description"]);
   }
 }

@@ -5,7 +5,6 @@ import { LoggerModule, Params } from "nestjs-pino";
 import pino from "pino";
 import { CronjobService } from "./cronjob/cronjob.service.js";
 import { DbModule } from "./db/db.module.js";
-import { IdService } from "./id/id.service.js";
 import { RedisModule } from "./redis/redis.module.js";
 
 @Global()
@@ -43,49 +42,63 @@ import { RedisModule } from "./redis/redis.module.js";
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
+        console.log(config.get("LOG_LEVEL"));
+
+        const stream = pino.transport({
+          targets: [
+            {
+              target: "pino-pretty",
+              options: { colorize: true },
+              level: config.get("LOG_LEVEL", "debug"),
+            },
+            {
+              target: "pino-roll",
+              options: {
+                file: "./logs/app.log",
+                frequency: "daily",
+                size: "10m",
+                mkdir: true,
+                symlink: true,
+                compress: true,
+              },
+              level: config.get("LOG_LEVEL", "debug"),
+            },
+          ],
+        });
+
         return {
-          pinoHttp: {
-            customReceivedObject(req) {
-              return {
-                msg: "request in",
-                path: req.url,
-                method: req.method,
-              };
+          pinoHttp: [
+            {
+              customReceivedObject(req) {
+                return {
+                  msg: "request in",
+                  path: req.url,
+                  method: req.method,
+                };
+              },
+              customSuccessObject(req, res, val) {
+                return {
+                  path: req.url,
+                  method: req.method,
+                  status: res.statusCode,
+                  cost: val.responseTime,
+                };
+              },
+              customErrorObject(req, res, _error, val) {
+                return {
+                  path: req.url,
+                  method: req.method,
+                  status: res.statusCode,
+                  cost: val.responseTime,
+                };
+              },
+              quietReqLogger: true,
+              quietResLogger: true,
+              level: config.get("LOG_LEVEL", "debug"),
             },
-            customSuccessObject(req, res, val) {
-              return {
-                path: req.url,
-                method: req.method,
-                status: res.statusCode,
-                cost: val.responseTime,
-              };
-            },
-            customErrorObject(req, res, _error, val) {
-              return {
-                path: req.url,
-                method: req.method,
-                status: res.statusCode,
-                cost: val.responseTime,
-              };
-            },
-            quietReqLogger: true,
-            quietResLogger: true,
-            level: config.get("LOG_LEVEL", "debug"),
-            transport:
-              process.env.NODE_ENV === "production"
-                ? undefined
-                : { target: "pino-pretty" },
-            stream:
-              process.env.NODE_ENV === "production"
-                ? pino.destination({
-                    dest: "./app.log",
-                    minLength: 4096,
-                    sync: false,
-                    append: true,
-                  })
-                : void 0,
-          },
-        } as Params;
+            stream,
+          ] satisfies Params["pinoHttp"],
+        } satisfies Params;
       },
     }),
 
@@ -108,6 +121,6 @@ import { RedisModule } from "./redis/redis.module.js";
       }),
     }),
   ],
-  providers: [IdService, CronjobService],
+  providers: [CronjobService],
 })
 export class ServicesModule {}

@@ -1,7 +1,6 @@
 import type { EntityManager } from "@mikro-orm/core";
 import { Seeder } from "@mikro-orm/seeder";
 import { Book } from "../entities/book.entity.js";
-import { generateSeedId } from "./seed-utils.js";
 
 export class BookSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
@@ -13,7 +12,6 @@ export class BookSeeder extends Seeder {
     }
 
     em.create(Book, {
-      id: generateSeedId(),
       title: "钢铁是怎样炼成的",
       description: "保尔柯察金",
     });

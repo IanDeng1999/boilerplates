@@ -8,16 +8,16 @@ import {
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
 import { Logger } from "nestjs-pino";
+import { v7 as uuidv7 } from "uuid";
 import { AppModule } from "./app.module.js";
 import { IdService } from "./services/id/id.service.js";
 
 async function bootstrap() {
-  let idService: IdService;
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({
       logger: false,
-      genReqId: () => idService.genSnowflakeId(),
+      genReqId: () => uuidv7(),
       // disableRequestLogging: true,
     }),
     {
@@ -40,7 +40,6 @@ async function bootstrap() {
   app.useLogger(logger);
 
   const configService = app.get(ConfigService);
-  idService = app.get(IdService);
 
   // 注册cookie插件
   await app.register(fastifyCookie as any, {

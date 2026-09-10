@@ -24,21 +24,21 @@ export class BookController {
   @Post()
   @ApiOperation({ summary: "创建书籍" })
   @ApiResponse({ status: 201, description: "创建成功", type: Book })
-  async create(@Body() createBookDto: CreateBookDto): Promise<Book> {
+  async create(@Body() createBookDto: CreateBookDto) {
     return this.bookService.create(createBookDto);
   }
 
   @Get()
   @ApiOperation({ summary: "获取所有书籍" })
   @ApiResponse({ status: 200, description: "获取成功", type: [Book] })
-  async findAll(): Promise<Book[]> {
+  async findAll() {
     return this.bookService.findAll();
   }
 
   @Get(":id")
   @ApiOperation({ summary: "获取单个书籍" })
   @ApiResponse({ status: 200, description: "获取成功", type: Book })
-  async findOne(@Param("id") id: string): Promise<Book> {
+  async findOne(@Param("id") id: string) {
     const book = await this.bookService.findOne(id);
     if (!book) {
       throw new NotFoundException("书籍不存在", {
@@ -51,10 +51,7 @@ export class BookController {
   @Put(":id")
   @ApiOperation({ summary: "更新书籍" })
   @ApiResponse({ status: 200, description: "更新成功", type: Book })
-  async update(
-    @Param("id") id: string,
-    @Body() updateBookDto: UpdateBookDto,
-  ): Promise<Book> {
+  async update(@Param("id") id: string, @Body() updateBookDto: UpdateBookDto) {
     const book = await this.bookService.update(id, updateBookDto);
     if (!book) {
       throw new NotFoundException("书籍不存在", {
@@ -68,7 +65,7 @@ export class BookController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: "删除书籍" })
   @ApiResponse({ status: 204, description: "删除成功" })
-  async remove(@Param("id") id: string): Promise<boolean> {
+  async remove(@Param("id") id: string) {
     const result = await this.bookService.remove(id);
     if (!result) {
       throw new NotFoundException("书籍不存在", {

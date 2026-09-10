@@ -3,6 +3,16 @@ import {
   FastifyRequest as FastifyRequestType,
 } from "fastify";
 
+declare module "pino-roll" {
+  export function destination(options: {
+    file: string;
+    frequency?: "daily" | "hourly";
+    size?: string;
+    mkdir?: boolean;
+    symlink?: boolean;
+    compress?: boolean;
+  }): NodeJS.WritableStream;
+}
 declare global {
   interface AuthedAccount {
     id: string;
