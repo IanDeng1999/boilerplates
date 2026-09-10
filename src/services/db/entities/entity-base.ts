@@ -6,8 +6,9 @@ export abstract class EntityBase {
   [OptionalProps]?: "createdAt" | "updatedAt";
 
   @PrimaryKey({
-    type: "string",
+    type: "uuid",
     comment: "主键（雪花ID）",
+    defaultRaw: "gen_random_uuid()",
   })
   @ApiProperty({
     description: "主键（雪花ID）",

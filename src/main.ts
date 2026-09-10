@@ -5,6 +5,8 @@ import {
   FastifyAdapter,
   type NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { apiReference } from "@scalar/nestjs-api-reference";
 import { Logger } from "nestjs-pino";
 import { AppModule } from "./app.module.js";
 import { IdService } from "./services/id/id.service.js";
@@ -46,6 +48,25 @@ async function bootstrap() {
   });
 
   const isProd = configService.get("IS_PRODUCTION", false);
+
+  // Swagger 配置
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle("NestJS API")
+    .setDescription("The NestJS API description")
+    .setVersion("1.0")
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+
+  // 注册 Scalar API Reference 中间件
+  app.use(
+    "/reference",
+    apiReference({
+      content: document,
+      withFastify: true,
+    }),
+  );
 
   const portStr = configService.get("APP_PORT", "8080");
   const host = configService.get("APP_HOST", "0.0.0.0");

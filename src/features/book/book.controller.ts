@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -40,7 +41,9 @@ export class BookController {
   async findOne(@Param("id") id: string): Promise<Book> {
     const book = await this.bookService.findOne(id);
     if (!book) {
-      throw new Error("书籍不存在");
+      throw new NotFoundException("书籍不存在", {
+        errorCode: "40400",
+      });
     }
     return book;
   }
@@ -54,7 +57,9 @@ export class BookController {
   ): Promise<Book> {
     const book = await this.bookService.update(id, updateBookDto);
     if (!book) {
-      throw new Error("书籍不存在");
+      throw new NotFoundException("书籍不存在", {
+        errorCode: "40400",
+      });
     }
     return book;
   }
@@ -63,10 +68,13 @@ export class BookController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: "删除书籍" })
   @ApiResponse({ status: 204, description: "删除成功" })
-  async remove(@Param("id") id: string): Promise<void> {
+  async remove(@Param("id") id: string): Promise<boolean> {
     const result = await this.bookService.remove(id);
     if (!result) {
-      throw new Error("书籍不存在");
+      throw new NotFoundException("书籍不存在", {
+        errorCode: "40400",
+      });
     }
+    return result;
   }
 }
