@@ -1,5 +1,6 @@
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ThrottlerModule } from "@nestjs/throttler";
 import { LoggerModule, Params } from "nestjs-pino";
 import pino from "pino";
 import { CronjobService } from "./cronjob/cronjob.service.js";
@@ -86,6 +87,25 @@ import { RedisModule } from "./redis/redis.module.js";
           },
         } as Params;
       },
+    }),
+
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      imports: [],
+      useFactory: (config: ConfigService) => ({
+        throttlers: [
+          {
+            name: "default",
+            ttl: config.get("THROTTLE_TTL", 60000), // 60秒
+            limit: config.get("THROTTLE_LIMIT", 60), // 100次请求
+          },
+          {
+            name: "short",
+            ttl: config.get("SHORT_THROTTLE_TTL", 20000),
+            limit: config.get("SHORT_THROTTLE_LIMIT", 10),
+          },
+        ],
+      }),
     }),
   ],
   providers: [IdService, CronjobService],
