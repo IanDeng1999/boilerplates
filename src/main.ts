@@ -55,8 +55,8 @@ async function bootstrap() {
 
   // Swagger 配置
   const swaggerConfig = new DocumentBuilder()
-    .setTitle("NestJS API")
-    .setDescription("The NestJS API description")
+    .setTitle("API Document For unnamed")
+    .setDescription("The unnamed API description")
     .setVersion("1.0")
     .addBearerAuth()
     .build();
