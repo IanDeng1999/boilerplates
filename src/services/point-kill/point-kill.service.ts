@@ -6,8 +6,8 @@ import type { Cache } from "cache-manager";
 import {
   PointKill,
   PointKillTargetType,
-} from "../db/entities/point-kill.entity.js";
-import { HttpContextService } from "../http-context/http-context.service.js";
+} from "../db/entities/point-kill.entity.ts";
+import { HttpContextService } from "../http-context/http-context.service.ts";
 
 const CACHE_TTL = 60_000;
 
@@ -32,10 +32,7 @@ export class PointKillService {
     }
   }
 
-  async isBlocked(
-    targetType: PointKillTargetType,
-    targetValue: string,
-  ) {
+  async isBlocked(targetType: PointKillTargetType, targetValue: string) {
     const cacheKey = `point-kill:${targetType}:${encodeURIComponent(targetValue)}`;
     const cached = await this.cacheManager.get<boolean>(cacheKey);
     if (cached !== undefined) {
@@ -66,10 +63,7 @@ export class PointKillService {
     return rule;
   }
 
-  async unblock(
-    targetType: PointKillTargetType,
-    targetValue: string,
-  ) {
+  async unblock(targetType: PointKillTargetType, targetValue: string) {
     await this.pointKillRepository.nativeUpdate(
       { targetType, targetValue },
       { enabled: false },
@@ -77,10 +71,7 @@ export class PointKillService {
     return this.invalidate(targetType, targetValue);
   }
 
-  async invalidate(
-    targetType: PointKillTargetType,
-    targetValue: string,
-  ) {
+  async invalidate(targetType: PointKillTargetType, targetValue: string) {
     return this.cacheManager.del(
       `point-kill:${targetType}:${encodeURIComponent(targetValue)}`,
     );

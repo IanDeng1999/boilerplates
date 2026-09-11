@@ -6,8 +6,8 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Redis } from "ioredis";
-import { HttpContextService } from "../../services/http-context/http-context.service.js";
-import { REDIS_CLIENT } from "../../services/redis/redis.module.js";
+import { HttpContextService } from "../../services/http-context/http-context.service.ts";
+import { REDIS_CLIENT } from "../../services/redis/redis.module.ts";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     private readonly httpContextService: HttpContextService,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     const sessionId = this.httpContextService.getCookie("session");
 

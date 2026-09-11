@@ -4,13 +4,13 @@ import { HttpStatus, Module, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
 import { ThrottlerGuard } from "@nestjs/throttler";
-import { DefaultFilter } from "./aspects/filters/default/default.filter.js";
-import { HttpFilter } from "./aspects/filters/http/http.filter.js";
-import { ValidationFilter } from "./aspects/filters/validation/validation.filter.js";
-import { PointKillGuard } from "./aspects/guards/point-kill.guard.js";
-import { FormatterInterceptor } from "./aspects/interceptors/formatter/formatter.interceptor.js";
-import { BookModule } from "./features/book/book.module.js";
-import { ServicesModule } from "./services/services.module.js";
+import { DefaultFilter } from "./aspects/filters/default/default.filter.ts";
+import { HttpFilter } from "./aspects/filters/http/http.filter.ts";
+import { ValidationFilter } from "./aspects/filters/validation/validation.filter.ts";
+import { PointKillGuard } from "./aspects/guards/point-kill.guard.ts";
+import { FormatterInterceptor } from "./aspects/interceptors/formatter/formatter.interceptor.ts";
+import { BookModule } from "./features/book/book.module.ts";
+import { ServicesModule } from "./services/services.module.ts";
 
 @Module({
   imports: [

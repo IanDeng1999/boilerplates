@@ -2,9 +2,9 @@ import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
 import { pick } from "es-toolkit";
-import { Book } from "../../services/db/entities/book.entity.js";
-import { CreateBookDto } from "./dto/create-book.dto.js";
-import { UpdateBookDto } from "./dto/update-book.dto.js";
+import { Book } from "../../services/db/entities/book.entity.ts";
+import { CreateBookDto } from "./dto/create-book.dto.ts";
+import { UpdateBookDto } from "./dto/update-book.dto.ts";
 
 @Injectable()
 export class BookService {
@@ -14,7 +14,7 @@ export class BookService {
     private readonly em: EntityManager,
   ) {}
 
-  async create(createBookDto: CreateBookDto): Promise<Book> {
+  async create(createBookDto: CreateBookDto) {
     const book = this.bookRepository.create(createBookDto);
     this.em.persist(book);
     await this.em.flush();

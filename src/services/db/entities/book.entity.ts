@@ -1,6 +1,6 @@
 import { t } from "@mikro-orm/core";
 import { Entity, Property } from "@mikro-orm/decorators/legacy";
-import { EntityBase } from "./entity-base.js";
+import { EntityBase } from "./entity-base.ts";
 
 @Entity({ tableName: "book" })
 export class Book extends EntityBase {

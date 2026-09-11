@@ -4,7 +4,7 @@ import { FastifyRequest } from "fastify";
 
 @Injectable()
 export class ThrottlerGuard extends BaseThrottlerGuard {
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(context: ExecutionContext) {
     // 调用父类的canActivate方法进行限流检查
     // 如果限流失败，父类会抛出异常，不会继续执行
     await super.canActivate(context);
@@ -12,7 +12,7 @@ export class ThrottlerGuard extends BaseThrottlerGuard {
     return true;
   }
 
-  protected async getTracker(req: FastifyRequest): Promise<string> {
+  protected async getTracker(req: FastifyRequest) {
     return (
       req.cookies?.["client-id"] ??
       req.ip ??

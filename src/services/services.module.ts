@@ -8,14 +8,14 @@ import { ThrottlerModule } from "@nestjs/throttler";
 import type { Redis } from "ioredis";
 import { LoggerModule, Params } from "nestjs-pino";
 import pino from "pino";
-import { CronjobService } from "./cronjob/cronjob.service.js";
-import { CryptoService } from "./crypto/crypto.service.js";
-import { DbModule } from "./db/db.module.js";
-import { PointKill } from "./db/entities/point-kill.entity.js";
-import { HttpContextService } from "./http-context/http-context.service.js";
-import { OssService } from "./oss/oss.service.js";
-import { PointKillService } from "./point-kill/point-kill.service.js";
-import { REDIS_CLIENT, RedisModule } from "./redis/redis.module.js";
+import { CronjobService } from "./cronjob/cronjob.service.ts";
+import { CryptoService } from "./crypto/crypto.service.ts";
+import { DbModule } from "./db/db.module.ts";
+import { PointKill } from "./db/entities/point-kill.entity.ts";
+import { HttpContextService } from "./http-context/http-context.service.ts";
+import { OssService } from "./oss/oss.service.ts";
+import { PointKillService } from "./point-kill/point-kill.service.ts";
+import { REDIS_CLIENT, RedisModule } from "./redis/redis.module.ts";
 
 @Global()
 @Module({

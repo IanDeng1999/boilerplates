@@ -1,9 +1,9 @@
 import type { EntityManager } from "@mikro-orm/core";
 import { Seeder } from "@mikro-orm/seeder";
-import { Book } from "../entities/book.entity.js";
+import { Book } from "../entities/book.entity.ts";
 
 export class BookSeeder extends Seeder {
-  async run(em: EntityManager): Promise<void> {
+  async run(em: EntityManager) {
     // 检查是否已存在用户，避免重复插入
     const record = await em.findOne(Book, { title: "钢铁是怎样炼成的" });
     if (record) {

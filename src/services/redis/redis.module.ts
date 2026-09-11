@@ -1,4 +1,4 @@
-import { DynamicModule, Module, Provider } from "@nestjs/common";
+import { Module, Provider } from "@nestjs/common";
 import { Redis } from "ioredis";
 
 export const REDIS_CLIENT = Symbol("REDIS_CLIENT");
@@ -21,7 +21,7 @@ export interface RedisModuleOptionsProvider {
 // https://github.com/redis/ioredis
 @Module({})
 export class RedisModule {
-  static forRoot(options: RedisModuleOptions = {}): DynamicModule {
+  static forRoot(options: RedisModuleOptions = {}) {
     const redisProvider: Provider = {
       provide: REDIS_CLIENT,
       useFactory: () => {
@@ -38,7 +38,7 @@ export class RedisModule {
     };
   }
 
-  static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
+  static forRootAsync(options: RedisModuleAsyncOptions) {
     return {
       module: RedisModule,
       providers: [

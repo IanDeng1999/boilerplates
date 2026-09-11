@@ -20,10 +20,10 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Book } from "../../services/db/entities/book.entity.js";
-import { BookService } from "./book.service.js";
-import { CreateBookDto } from "./dto/create-book.dto.js";
-import { UpdateBookDto } from "./dto/update-book.dto.js";
+import { Book } from "../../services/db/entities/book.entity.ts";
+import { BookService } from "./book.service.ts";
+import { CreateBookDto } from "./dto/create-book.dto.ts";
+import { UpdateBookDto } from "./dto/update-book.dto.ts";
 
 @ApiTags("book")
 @Controller("api/book")

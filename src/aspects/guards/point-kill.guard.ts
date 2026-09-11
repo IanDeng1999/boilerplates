@@ -4,7 +4,7 @@ import {
   Injectable,
   Scope,
 } from "@nestjs/common";
-import { PointKillService } from "../../services/point-kill/point-kill.service.js";
+import { PointKillService } from "../../services/point-kill/point-kill.service.ts";
 
 @Injectable({ scope: Scope.REQUEST })
 export class PointKillGuard implements CanActivate {

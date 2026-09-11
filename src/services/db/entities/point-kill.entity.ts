@@ -1,6 +1,6 @@
 import { t } from "@mikro-orm/core";
 import { Entity, Index, Property, Unique } from "@mikro-orm/decorators/legacy";
-import { EntityBase } from "./entity-base.js";
+import { EntityBase } from "./entity-base.ts";
 
 export enum PointKillTargetType {
   UserId = "user_id",

@@ -2,7 +2,7 @@ import { Inject, Injectable, Scope } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { REQUEST } from "@nestjs/core";
 import type { Redis } from "ioredis";
-import { REDIS_CLIENT } from "../redis/redis.module.js";
+import { REDIS_CLIENT } from "../redis/redis.module.ts";
 
 const SESSION_DATA_FIELD = "data";
 

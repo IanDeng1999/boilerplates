@@ -7,7 +7,7 @@ import {
   NestInterceptor,
   SetMetadata,
 } from "@nestjs/common";
-import { map, Observable } from "rxjs";
+import { map } from "rxjs";
 
 export const SKIP_RESPONSE_FORMAT_KEY = Symbol("SKIP_RESPONSE_FORMAT_KEY");
 
@@ -19,7 +19,7 @@ export function SkipFormat() {
 export class FormatterInterceptor implements NestInterceptor {
   private readonly logger = new Logger(FormatterInterceptor.name);
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler) {
     const handler = context.getHandler();
     const reply = context.switchToHttp().getResponse<FastifyReply>();
     const skipFormat = Reflect.getMetadata(SKIP_RESPONSE_FORMAT_KEY, handler);
