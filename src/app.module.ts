@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { CommonModule } from "./common/common.module.js";
-import { FeaturesModule } from "./features/features.module.js";
+import { CommonModule } from "./common/common.module.ts";
+import { FeaturesModule } from "./features/features.module.ts";
 import { InfraModule } from "./infra/core.module.ts";
 
 @Module({

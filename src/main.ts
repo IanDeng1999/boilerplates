@@ -11,7 +11,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
 import { Logger } from "nestjs-pino";
 import { v7 as uuidv7 } from "uuid";
-import { AppModule } from "#src/app.module.js";
+import { AppModule } from "./app.module.ts";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

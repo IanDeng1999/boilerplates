@@ -22,7 +22,7 @@ import type { Redis } from "ioredis";
 import {
   ApiErrorResponse,
   ApiSuccessResponse,
-} from "#src/common/swagger/api-response.decorator.js";
+} from "#src/common/swagger/api-response.decorator.ts";
 import { OssService } from "../../infra/oss/oss.service.ts";
 import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
 import { SkipPointKill } from "../aspects/guards/point-kill.guard.ts";

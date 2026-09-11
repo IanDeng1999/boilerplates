@@ -22,7 +22,7 @@ import {
   ApiNotFoundErrorResponse,
   ApiSuccessResponse,
   ApiValidationErrorResponse,
-} from "#src/common/swagger/api-response.decorator.js";
+} from "#src/common/swagger/api-response.decorator.ts";
 import { BookService } from "./book.service.ts";
 import {
   BookResponseDto,
