@@ -13,7 +13,7 @@ import pino from "pino";
       useFactory: async (config: ConfigService) => {
         const isProd = config.get("NODE_ENV") === "production";
         const logDirectory = isProd
-          ? join(homedir(), ".data", "unnamed", "logs")
+          ? join(homedir(), ".log", "unnamed")
           : "./logs";
         // 确保目录存在
         mkdirSync(logDirectory, { recursive: true });
