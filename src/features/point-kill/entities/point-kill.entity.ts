@@ -1,6 +1,12 @@
-import { t } from "@mikro-orm/core";
-import { Entity, Index, Property, Unique } from "@mikro-orm/decorators/legacy";
-import { EntityBase } from "./entity-base.ts";
+import { OptionalProps, t } from "@mikro-orm/core";
+import {
+  Entity,
+  Index,
+  PrimaryKey,
+  Property,
+  Unique,
+} from "@mikro-orm/decorators/legacy";
+import { ApiProperty } from "@nestjs/swagger";
 
 export enum PointKillTargetType {
   UserId = "user_id",
@@ -16,7 +22,16 @@ export enum PointKillTargetType {
   name: "point_kill_enabled_target_idx",
   properties: ["enabled", "targetType", "targetValue"],
 })
-export class PointKill extends EntityBase {
+export class PointKill {
+  [OptionalProps]?: "createdAt" | "updatedAt";
+
+  @PrimaryKey({
+    type: "uuid",
+    comment: "主键（雪花ID）",
+    defaultRaw: "gen_random_uuid()",
+  })
+  id: string;
+
   @Property({
     type: t.string,
     name: "target_type",
@@ -51,4 +66,20 @@ export class PointKill extends EntityBase {
     comment: "封禁原因",
   })
   reason?: string;
+
+  @Property({
+    type: "timestamp",
+    comment: "创建时间",
+    defaultRaw: "CURRENT_TIMESTAMP",
+  })
+  @ApiProperty({ description: "创建时间", example: "2024-01-01T00:00:00.000Z" })
+  createdAt: Date;
+
+  @Property({
+    type: "timestamp",
+    comment: "更新时间",
+    defaultRaw: "CURRENT_TIMESTAMP",
+  })
+  @ApiProperty({ description: "更新时间", example: "2024-01-01T00:00:00.000Z" })
+  updatedAt: Date;
 }

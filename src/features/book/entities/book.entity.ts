@@ -1,8 +1,9 @@
-import { OptionalProps } from "@mikro-orm/core";
-import { PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
+import { OptionalProps, t } from "@mikro-orm/core";
+import { Entity, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
 import { ApiProperty } from "@nestjs/swagger";
 
-export abstract class EntityBase {
+@Entity({ tableName: "book" })
+export class Book {
   [OptionalProps]?: "createdAt" | "updatedAt";
 
   @PrimaryKey({
@@ -15,6 +16,24 @@ export abstract class EntityBase {
     example: "1234567890123456789",
   })
   id: string;
+
+  @Property({
+    type: t.text,
+    name: "title",
+    length: 10,
+    nullable: false,
+    comment: "用户昵称",
+  })
+  title!: string;
+
+  @Property({
+    type: t.text,
+    name: "description",
+    length: 10,
+    nullable: false,
+    comment: "用户昵称",
+  })
+  description!: string;
 
   @Property({
     type: "timestamp",

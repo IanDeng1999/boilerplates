@@ -1,7 +1,7 @@
 import { defineConfig } from "@mikro-orm/core";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
-import { Global, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 @Module({

@@ -2,9 +2,9 @@ import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
 import { pick } from "es-toolkit";
-import { Book } from "../../infra/database/entities/book.entity.ts";
 import { CreateBookDto } from "./dto/create-book.dto.ts";
 import { UpdateBookDto } from "./dto/update-book.dto.ts";
+import { Book } from "./entities/book.entity.ts";
 
 @Injectable()
 export class BookService {

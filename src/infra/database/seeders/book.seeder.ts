@@ -1,6 +1,6 @@
 import type { EntityManager } from "@mikro-orm/core";
 import { Seeder } from "@mikro-orm/seeder";
-import { Book } from "../entities/book.entity.ts";
+import { Book } from "../../../features/book/entities/book.entity.ts";
 
 export class BookSeeder extends Seeder {
   async run(em: EntityManager) {

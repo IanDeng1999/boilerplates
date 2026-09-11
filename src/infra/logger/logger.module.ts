@@ -1,4 +1,4 @@
-import { Global, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { LoggerModule, Params } from "nestjs-pino";
 import pino from "pino";
