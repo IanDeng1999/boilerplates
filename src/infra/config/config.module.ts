@@ -27,6 +27,13 @@ const configSchema = z.object({
   OSS_BUCKET: z.string().trim().min(1),
   ECIES_PRIVATE_KEY: z.string().trim().min(1),
   ECIES_PUBLIC_KEY: z.string().trim().min(1),
+  // OAuth
+  GOOGLE_CLIENT_ID: z.string().trim().min(1),
+  GOOGLE_CLIENT_SECRET: z.string().trim().min(1),
+  GOOGLE_REDIRECT_URI: z.string().trim().min(1),
+  GITHUB_CLIENT_ID: z.string().trim().min(1),
+  GITHUB_CLIENT_SECRET: z.string().trim().min(1),
+  GITHUB_REDIRECT_URI: z.string().trim().min(1),
 });
 
 @Module({

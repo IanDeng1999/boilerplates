@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登录 / 注册 · Mige</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <script>
+      // 单页涵盖：登录 / 注册 / 登录态展示 / 登出，只调后端已有接口。
+      document.addEventListener("alpine:init", () => {
+        Alpine.data("authPage", () => ({
+          providers: [
+            { id: "github", label: "GitHub" },
+            { id: "google", label: "Google" },
+          ],
+          tab: "login",
+          loading: false,
+          account: null,
+          error: "",
+          detail: "",
+          logs: [],
+
+          init() {
+            const params = new URLSearchParams(window.location.search);
+            // 后端回调成功后重定向回本页，失败时带 loginError
+            const loginError = params.get("loginError");
+            const failure = params.get("error");
+            if (loginError) {
+              this.fail(loginError);
+            } else if (failure) {
+              this.fail(params.get("error_description") ?? `授权失败：${failure}`);
+            }
+            window.history.replaceState({}, "", window.location.pathname);
+            this.checkAccount();
+          },
+
+          async startOAuth(provider) {
+            this.loading = true;
+            this.error = "";
+            const { ok, status, payload } = await this.call(
+              `/api/auth/login/${provider}`,
+            );
+            this.loading = false;
+            this.log(`GET /api/auth/login/${provider} → ${status}`, ok ? "ok" : "error");
+            if (!ok || !payload?.data?.url) {
+              return this.fail(payload?.msg ?? "获取授权地址失败");
+            }
+            window.location.assign(payload.data.url);
+          },
+
+          async checkAccount() {
+            const { ok, status, payload } = await this.call("/api/auth/account");
+            this.log(`GET /api/auth/account → ${status}`, ok ? "ok" : "warn");
+            this.detail = this.stringify(payload);
+            this.account = ok ? (payload?.data ?? null) : null;
+          },
+
+          async logout() {
+            this.loading = true;
+            const { ok, status, payload } = await this.call("/api/auth/logout", {
+              method: "POST",
+            });
+            this.loading = false;
+            this.log(`POST /api/auth/logout → ${status}`, ok ? "ok" : "error");
+            this.detail = this.stringify(payload);
+            if (!ok) return this.fail(payload?.msg ?? "登出失败");
+
+            this.account = null;
+            this.error = "";
+            this.tab = "login";
+          },
+
+          async call(path, options = {}) {
+            const response = await fetch(path, { credentials: "include", ...options });
+            const payload = await response.json().catch(() => null);
+            return { ok: response.ok, status: response.status, payload };
+          },
+
+          fail(message) {
+            this.error = message;
+            this.log(`✗ ${message}`, "error");
+          },
+
+          log(text, tone = "muted") {
+            const time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+            this.logs = [{ time, text, tone }, ...this.logs].slice(0, 20);
+          },
+
+          stringify(payload) {
+            return payload ? JSON.stringify(payload, null, 2) : "(无响应体)";
+          },
+        }));
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
+    <style>
+      [x-cloak] { display: none !important; }
+      .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+      .tabs a { padding: 0.25rem 0.9rem; border-radius: var(--pico-border-radius); text-decoration: none; }
+      .tabs a[aria-current="true"] { background: var(--pico-primary-background); color: var(--pico-primary-inverse); }
+      .providers { display: grid; gap: 0.75rem; }
+      .avatar { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; margin: 0; }
+      .logs { max-height: 10rem; overflow: auto; font-size: 0.8125rem; }
+      .logs [data-tone="error"] { color: var(--pico-del-color); }
+    </style>
+  </head>
+  <body>
+    <main class="container" x-data="authPage" x-cloak>
+      <hgroup>
+        <h1>登录 / 注册</h1>
+        <p>首次用第三方账号登录即完成注册，再次登录会回到同一个账户。</p>
+      </hgroup>
+
+      <!-- 登录态：当前账户 + 登出 -->
+      <article x-show="account">
+        <header>
+          <img class="avatar" x-show="account?.avatar" :src="account?.avatar" :alt="account?.username ?? 'avatar'" />
+          <h2>已登录</h2>
+        </header>
+        <ul>
+          <li>账户 ID：<code x-text="account?.id"></code></li>
+          <li>用户名：<span x-text="account?.username ?? '—'"></span></li>
+          <li>邮箱：<span x-text="account?.email ?? '—'"></span></li>
+          <li>创建时间：<span x-text="account?.createdAt ? new Date(account.createdAt).toLocaleString('zh-CN') : '—'"></span></li>
+        </ul>
+        <footer>
+          <button class="secondary" :disabled="loading" @click="logout()">退出登录</button>
+          <button class="outline" :disabled="loading" @click="checkAccount()">重新校验会话</button>
+        </footer>
+      </article>
+
+      <!-- 未登录：登录 / 注册入口 -->
+      <article x-show="!account">
+        <div class="tabs" role="tablist">
+          <a href="#" role="tab" :aria-current="tab === 'login'" @click.prevent="tab = 'login'">登录</a>
+          <a href="#" role="tab" :aria-current="tab === 'register'" @click.prevent="tab = 'register'">注册</a>
+        </div>
+        <p x-show="tab === 'login'">已注册过的账号，直接授权即可。</p>
+        <p x-show="tab === 'register'">没有账号密码注册接口，首次授权即建档；邮箱相同的第三方账号会合并到已有账户。</p>
+        <div class="providers">
+          <template x-for="provider in providers" :key="provider.id">
+            <button :disabled="loading" @click="startOAuth(provider.id)">
+              使用 <span x-text="provider.label"></span><span x-text="tab === 'login' ? '登录' : '注册'"></span>
+            </button>
+          </template>
+        </div>
+        <small>第三方回调地址需指向后端 <code>/api/auth/callback/{provider}</code>，由后端换码后重定向回本页。</small>
+      </article>
+
+      <p x-show="error" role="alert"><strong x-text="error"></strong></p>
+
+      <details>
+        <summary>调试信息（<span x-text="logs.length"></span> 条请求记录）</summary>
+        <ul class="logs">
+          <template x-for="(item, index) in logs" :key="`${item.time}-${index}`">
+            <li :data-tone="item.tone"><code x-text="item.time"></code> <span x-text="item.text"></span></li>
+          </template>
+        </ul>
+        <pre x-text="detail"></pre>
+      </details>
+
+      <footer><small><a href="/index.html">返回首页</a></small></footer>
+    </main>
+  </body>
+</html>

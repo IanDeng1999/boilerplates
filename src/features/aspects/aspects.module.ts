@@ -5,7 +5,6 @@ import { PointKillModule } from "../point-kill/point-kill.module.ts";
 import { DefaultFilter } from "./filters/default/default.filter.ts";
 import { HttpFilter } from "./filters/http/http.filter.ts";
 import { ValidationFilter } from "./filters/validation/validation.filter.ts";
-import { AuthGuard } from "./guards/auth.guard.ts";
 import { PointKillGuard } from "./guards/point-kill.guard.ts";
 import { ThrottlerGuard } from "./guards/throttler.guard.ts";
 import { FormatterInterceptor } from "./interceptors/formatter/formatter.interceptor.ts";
@@ -13,7 +12,6 @@ import { FormatterInterceptor } from "./interceptors/formatter/formatter.interce
 @Module({
   imports: [HttpContextModule, PointKillModule],
   providers: [
-    AuthGuard,
     {
       provide: APP_INTERCEPTOR,
       useClass: FormatterInterceptor,
@@ -50,6 +48,5 @@ import { FormatterInterceptor } from "./interceptors/formatter/formatter.interce
       useClass: ThrottlerGuard,
     },
   ],
-  exports: [AuthGuard],
 })
 export class AspectsModule {}

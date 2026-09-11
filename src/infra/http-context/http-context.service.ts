@@ -80,7 +80,7 @@ export class HttpContextService {
   }
 }
 
-type CookieKeys = "session" | "client-id";
+type CookieKeys = "session" | "client-id" | "oauth-state";
 
 export interface CookieOptions {
   httpOnly?: boolean;

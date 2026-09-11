@@ -40,6 +40,7 @@ async function bootstrap() {
   app.useLogger(logger);
 
   const configService = app.get(ConfigService);
+  app.enableShutdownHooks();
 
   // 注册cookie插件
   await app.register(fastifyCookie as any, {
@@ -76,5 +77,6 @@ async function bootstrap() {
   const host = configService.get("APP_HOST");
   await app.listen(port, host);
   logger.log({ isProd }, `Server running in http://${host}:${port}`, "NestApp");
+  process.send?.("ready");
 }
 await bootstrap();
