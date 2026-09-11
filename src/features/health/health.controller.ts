@@ -79,28 +79,27 @@ export class HealthController {
     if (auth !== this.configService.getOrThrow("SECRET")) {
       throw new UnauthorizedException();
     }
-    const settings = Object.assign(new HealthCheckOptionsDto(), options);
 
     const checks = {
       database: () =>
         this.indicator
           .check("database")
           .attempt(() => this.orm.em.getConnection().execute("select 1"))
-          .withTimeout(settings.databaseTimeoutMs),
+          .withTimeout(options.databaseTimeoutMs),
       redis: () =>
         this.indicator
           .check("redis")
           .attempt(async () => {
             await this.redis.ping();
           })
-          .withTimeout(settings.dependencyTimeoutMs),
+          .withTimeout(options.dependencyTimeoutMs),
       oss: () =>
         this.indicator
           .check("oss")
           .attempt(({ signal }) => this.oss.checkConnectivity(signal))
-          .withTimeout(settings.dependencyTimeoutMs),
+          .withTimeout(options.dependencyTimeoutMs),
       memory_heap: () =>
-        this.memory.checkHeap("memory_heap", settings.memoryLimitBytes),
+        this.memory.checkHeap("memory_heap", options.memoryLimitBytes),
     };
 
     try {
