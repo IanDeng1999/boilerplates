@@ -1,4 +1,6 @@
+import { join } from "node:path";
 import fastifyCookie from "@fastify/cookie";
+import fastifyStatic from "@fastify/static";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import {
@@ -42,6 +44,11 @@ async function bootstrap() {
   // 注册cookie插件
   await app.register(fastifyCookie as any, {
     secret: configService.getOrThrow("COOKIE_SECRET") as string,
+  });
+
+  // 提供仓库根目录 public/ 下的静态资源，例如 /index.html。
+  await app.register(fastifyStatic as any, {
+    root: join(process.cwd(), "public"),
   });
 
   const isProd = configService.get("IS_PRODUCTION", false);
