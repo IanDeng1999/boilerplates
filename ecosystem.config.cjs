@@ -1,11 +1,11 @@
 module.exports = {
   apps: [
     {
-      name: "nest-app",
+      name: "unnamed",
       exec_interpreter: "node",
       script: "./dist/main.js",
       exec_mode: "cluster",
-      instances: 4,
+      instances: 2,
       autorestart: true,
       watch: false,
       max_memory_restart: "1000M",
