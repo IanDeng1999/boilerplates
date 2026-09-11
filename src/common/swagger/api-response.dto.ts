@@ -12,7 +12,7 @@ export class ApiErrorResponseDto {
   @ApiProperty({ description: "业务错误码", example: "40400" })
   code: string | number;
 
-  @ApiProperty({ description: "错误消息", example: "书籍不存在" })
+  @ApiProperty({ description: "错误消息", example: "Not Found" })
   msg: string;
 
   @ApiProperty({

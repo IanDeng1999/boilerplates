@@ -16,6 +16,8 @@ export class HttpFilter<T extends HttpException> implements ExceptionFilter {
     res.send({
       code: exception.errorCode ?? `${status * 100}`,
       msg: exception.message,
+      data:
+        exception.cause === "health_check" ? exception.getResponse() : void 0,
       logId: req.id,
     });
   }

@@ -1,5 +1,6 @@
 import {
   GetObjectCommand,
+  HeadBucketCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -28,6 +29,15 @@ export class OssService {
   sha256HexToBase64(hexSha256: string) {
     const buf = Buffer.from(hexSha256, "hex");
     return buf.toString("base64");
+  }
+
+  async checkConnectivity(signal: AbortSignal) {
+    await this.s3.send(
+      new HeadBucketCommand({
+        Bucket: this.configService.getOrThrow("OSS_BUCKET"),
+      }),
+      { abortSignal: signal },
+    );
   }
 
   getUploadUrl({

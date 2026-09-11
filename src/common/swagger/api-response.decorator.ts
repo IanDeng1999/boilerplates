@@ -1,7 +1,6 @@
 import { applyDecorators, Type } from "@nestjs/common";
 import {
   ApiExtraModels,
-  ApiNotFoundResponse,
   ApiResponse,
   ApiUnprocessableEntityResponse,
   getSchemaPath,
@@ -28,26 +27,42 @@ export function ApiSuccessResponse(options: SuccessResponseOptions) {
       status,
       description,
       schema: {
-        allOf: [
-          { $ref: getSchemaPath(ApiSuccessResponseDto) },
-          {
-            required: ["data"],
-            properties: {
-              data: isArray
-                ? { type: "array", items: { $ref: getSchemaPath(type) } }
-                : { $ref: getSchemaPath(type) },
-            },
+        type: "object",
+        required: ["code", "msg", "data"],
+        properties: {
+          code: {
+            type: "number",
+            description: "业务状态码；0 表示成功",
+            example: 0,
           },
-        ],
+          msg: {
+            type: "string",
+            description: "响应消息",
+            example: "success",
+          },
+          data: isArray
+            ? { type: "array", items: { $ref: getSchemaPath(type) } }
+            : { $ref: getSchemaPath(type) },
+        },
       },
     }),
   );
 }
 
 export function ApiNotFoundErrorResponse(description = "资源不存在") {
+  return ApiErrorResponse({ status: 404, description });
+}
+
+export function ApiErrorResponse({
+  description,
+  status,
+}: {
+  description: string;
+  status: number;
+}) {
   return applyDecorators(
     ApiExtraModels(ApiErrorResponseDto),
-    ApiNotFoundResponse({ description, type: ApiErrorResponseDto }),
+    ApiResponse({ status, description, type: ApiErrorResponseDto }),
   );
 }
 

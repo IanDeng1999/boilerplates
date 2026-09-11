@@ -10,7 +10,7 @@ const configSchema = z.object({
     .default("development"),
   APP_HOST: z.string().trim().min(1).default("0.0.0.0"),
   APP_PORT: positiveInteger.default(6363),
-  COOKIE_SECRET: z.string().trim().min(1),
+  SECRET: z.string().trim().min(1),
   DATABASE_URL: z.url(),
   REDIS_URL: z.url(),
   LOG_LEVEL: z

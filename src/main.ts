@@ -43,7 +43,7 @@ async function bootstrap() {
 
   // 注册cookie插件
   await app.register(fastifyCookie as any, {
-    secret: configService.getOrThrow("COOKIE_SECRET"),
+    secret: configService.getOrThrow("SECRET"),
   });
 
   // 提供仓库根目录 public/ 下的静态资源，例如 /index.html。

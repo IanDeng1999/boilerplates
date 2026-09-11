@@ -3,14 +3,28 @@ import {
   ExecutionContext,
   Injectable,
   Scope,
+  SetMetadata,
 } from "@nestjs/common";
 import { PointKillService } from "../../../features/point-kill/point-kill.service.ts";
+
+export const SKIP_POINT_KILL_KEY = Symbol("SKIP_POINT_KILL_KEY");
+
+export function SkipPointKill() {
+  return SetMetadata(SKIP_POINT_KILL_KEY, true);
+}
 
 @Injectable({ scope: Scope.REQUEST })
 export class PointKillGuard implements CanActivate {
   constructor(private readonly pointKillService: PointKillService) {}
 
-  async canActivate(_context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
+    if (
+      Reflect.getMetadata(SKIP_POINT_KILL_KEY, context.getHandler()) ||
+      Reflect.getMetadata(SKIP_POINT_KILL_KEY, context.getClass())
+    ) {
+      return true;
+    }
+
     await this.pointKillService.assertRequestAllowed();
     return true;
   }
