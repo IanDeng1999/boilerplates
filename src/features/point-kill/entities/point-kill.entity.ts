@@ -26,7 +26,7 @@ export class PointKill {
 
   @PrimaryKey({
     type: "uuid",
-    comment: "主键（雪花ID）",
+    comment: "UUID主键",
     defaultRaw: "gen_random_uuid()",
   })
   id: string;
