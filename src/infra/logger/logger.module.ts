@@ -1,3 +1,6 @@
+import { mkdirSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { LoggerModule, Params } from "nestjs-pino";
@@ -8,6 +11,12 @@ import pino from "pino";
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
+        const logDirectory = config.get("isProd")
+          ? join(homedir(), ".data", "unnamed", "logs")
+          : "./logs";
+        // 确保目录存在
+        mkdirSync(logDirectory, { recursive: true });
+
         const stream = pino.transport({
           targets: [
             {
@@ -18,10 +27,10 @@ import pino from "pino";
             {
               target: "pino-roll",
               options: {
-                file: "./logs/app.log",
+                file: join(logDirectory, "app.log"),
                 frequency: "daily",
                 size: "10m",
-                mkdir: true,
+                dateFormat: "yyyy-MM-dd",
                 symlink: true,
                 compress: true,
               },
@@ -43,6 +52,9 @@ import pino from "pino";
                   status: res.statusCode,
                   cost: val.responseTime,
                 };
+              },
+              base: {
+                pid: process.pid,
               },
               customErrorObject(req, res, _error, val) {
                 return {
