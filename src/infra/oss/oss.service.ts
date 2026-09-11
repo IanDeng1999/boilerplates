@@ -48,7 +48,7 @@ export class OssService {
     return getSignedUrl(
       this.s3,
       new PutObjectCommand({
-        Bucket: this.configService.get("OSS_BUCKET"),
+        Bucket: this.configService.getOrThrow("OSS_BUCKET"),
         Key: key,
         ContentType: contentType,
         ContentLength: contentLength,

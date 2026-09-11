@@ -10,7 +10,9 @@ import { ConfigService } from "@nestjs/config";
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         stores: [
-          createKeyv(config.getOrThrow("REDIS_URL"), { namespace: "cache" }),
+          createKeyv(config.getOrThrow("REDIS_URL"), {
+            namespace: "cache",
+          }),
         ],
         ttl: 60_000,
       }),

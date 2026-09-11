@@ -43,7 +43,7 @@ async function bootstrap() {
 
   // 注册cookie插件
   await app.register(fastifyCookie as any, {
-    secret: configService.getOrThrow("COOKIE_SECRET") as string,
+    secret: configService.getOrThrow("COOKIE_SECRET"),
   });
 
   // 提供仓库根目录 public/ 下的静态资源，例如 /index.html。
@@ -51,7 +51,7 @@ async function bootstrap() {
     root: join(process.cwd(), "public"),
   });
 
-  const isProd = configService.get("IS_PRODUCTION", false);
+  const isProd = configService.get("NODE_ENV") === "production";
 
   // Swagger 配置
   const swaggerConfig = new DocumentBuilder()
@@ -72,13 +72,9 @@ async function bootstrap() {
     }),
   );
 
-  const portStr = configService.get("APP_PORT", "8080");
-  const host = configService.get("APP_HOST", "0.0.0.0");
-  await app.listen(Number.parseInt(portStr, 10), host);
-  logger.log(
-    { isProd },
-    `Server running in http://${host}:${portStr}`,
-    "NestApp",
-  );
+  const port = configService.get("APP_PORT");
+  const host = configService.get("APP_HOST");
+  await app.listen(port, host);
+  logger.log({ isProd }, `Server running in http://${host}:${port}`, "NestApp");
 }
 await bootstrap();

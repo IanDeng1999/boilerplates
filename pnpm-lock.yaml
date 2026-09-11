@@ -125,6 +125,9 @@ importers:
       uuid:
         specifier: ^14.0.2
         version: 14.0.2
+      zod:
+        specifier: ^4.6.1
+        version: 4.6.1
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.5.12
@@ -2947,8 +2950,8 @@ packages:
     resolution: {integrity: sha512-xYqdZFUK/VYazNl/oCDYN+3WloWQwMfZxBoiNt6qNyk+xfOdi598muWE42rNZFp1kNOiqW936q5RhUdnpqElSg==}
     engines: {node: '>=18'}
 
-  zod@4.5.4:
-    resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
+  zod@4.6.1:
+    resolution: {integrity: sha512-341aRWQsve0rvronKNTqZpjmzdbUDlFuzHaI/XLg/Ej82qffDJRRfBTCuv7+9q/rMjB6LSLyEBnW4InJeMtt/Q==}
 
 snapshots:
 
@@ -3836,7 +3839,7 @@ snapshots:
       '@scalar/helpers': 0.11.3
       nanoid: 5.1.16
       type-fest: 5.9.0
-      zod: 4.5.4
+      zod: 4.6.1
 
   '@scalar/validation@0.6.3': {}
 
@@ -5611,4 +5614,4 @@ snapshots:
 
   yoctocolors@2.2.0: {}
 
-  zod@4.5.4: {}
+  zod@4.6.1: {}

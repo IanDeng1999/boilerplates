@@ -11,33 +11,39 @@ import pino from "pino";
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
-        const logDirectory = config.get("isProd")
+        const isProd = config.get("NODE_ENV") === "production";
+        const logDirectory = isProd
           ? join(homedir(), ".data", "unnamed", "logs")
           : "./logs";
         // 确保目录存在
         mkdirSync(logDirectory, { recursive: true });
 
-        const stream = pino.transport({
-          targets: [
-            {
-              target: "pino-pretty",
-              options: { colorize: true },
-              level: config.get("LOG_LEVEL", "debug"),
-            },
-            {
-              target: "pino-roll",
-              options: {
-                file: join(logDirectory, "app.log"),
-                frequency: "daily",
-                size: "10m",
-                dateFormat: "yyyy-MM-dd",
-                symlink: true,
-                compress: true,
-              },
-              level: config.get("LOG_LEVEL", "debug"),
-            },
-          ],
-        });
+        const fileTarget = {
+          target: "pino-roll",
+          options: {
+            file: join(logDirectory, "app.log"),
+            frequency: "daily",
+            size: "10m",
+            dateFormat: "yyyy-MM-dd",
+            symlink: true,
+            compress: true,
+          },
+          level: config.get("LOG_LEVEL", "debug"),
+        };
+        const stream = isProd
+          ? pino.transport({ targets: [fileTarget] })
+          : pino.transport({
+              // Transport options differ by target, so share a broad option type.
+              // Pino forwards these options unchanged to each transport.
+              targets: [
+                {
+                  target: "pino-pretty",
+                  options: { colorize: true },
+                  level: config.get("LOG_LEVEL", "debug"),
+                },
+                fileTarget,
+              ] as pino.TransportMultiOptions["targets"],
+            });
 
         return {
           pinoHttp: [

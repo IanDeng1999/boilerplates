@@ -21,7 +21,7 @@ export class HttpContextService {
   setCookie(key: CookieKeys, value: string, options: CookieOptions = {}) {
     const defaultOptions: CookieOptions = {
       httpOnly: true,
-      secure: this.configService.get("NODE_ENV") === "prod",
+      secure: this.configService.get("NODE_ENV") === "production",
       sameSite: "strict",
       path: "/",
     };

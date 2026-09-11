@@ -12,10 +12,8 @@ export class CryptoService implements OnModuleInit {
   constructor(private readonly configService: ConfigService) {}
 
   onModuleInit() {
-    this.eciesPrivateKey =
-      this.configService.getOrThrow<string>("ECIES_PRIVATE_KEY");
-    this.eciesPublicKey =
-      this.configService.getOrThrow<string>("ECIES_PUBLIC_KEY");
+    this.eciesPrivateKey = this.configService.getOrThrow("ECIES_PRIVATE_KEY");
+    this.eciesPublicKey = this.configService.getOrThrow("ECIES_PUBLIC_KEY");
 
     this.logger.log("Loaded ECIES keys from environment");
   }
