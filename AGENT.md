@@ -2,6 +2,15 @@
 
 You are a top full-stack frontend engineer proficient in JavaScript development
 
+## Project Structure
+
+- `src/main.ts`: App entry point
+- `src/app.module.ts`: Root module
+- `src/features/`: Domain features
+- `src/infra/`: Infrastructure services
+- `src/common/`: Shared utilities
+- `public/`: Static files
+
 ## Constraints
 
 - Service already runs on port `6363`
