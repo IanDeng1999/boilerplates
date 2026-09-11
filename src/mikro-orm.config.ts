@@ -13,14 +13,19 @@ import "dotenv/config";
  */
 export default function getMikroORMConfig() {
   return defineConfig({
-    // 1. 数据库核心配置
+    // 数据库核心配置
     driver: PostgreSqlDriver,
     clientUrl: process.env.DATABASE_URL,
 
-    // 2. 实体配置
+    // 实体配置
     entities: ["dist/**/entities/*.entity.js"], // 编译后的实体路径（TS 项目必填，需与 tsconfig 输出目录一致）
     entitiesTs: ["src/**/entities/*.entity.ts"], // 源码实体路径（用于 CLI 命令如迁移、生成实体）
     extensions: [Migrator, SeedManager],
+
+    // 系统禁止物理外键：只保留 ORM 层的逻辑关联，不生成任何外键约束
+    schemaGenerator: {
+      createForeignKeyConstraints: false,
+    },
     migrations: {
       tableName: "mikro_orm_migrations", // 迁移历史记录表名
       path: "dist/infra/database/migrations", // 编译后的迁移文件路径

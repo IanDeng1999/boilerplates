@@ -40,6 +40,7 @@ export class OAuthProvider {
   @ManyToOne(() => Account, {
     name: "account_id",
     comment: "关联账户",
+    createForeignKeyConstraint: false,
   })
   account!: Account;
 
