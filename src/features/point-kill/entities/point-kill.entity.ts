@@ -6,7 +6,6 @@ import {
   Property,
   Unique,
 } from "@mikro-orm/decorators/legacy";
-import { ApiProperty } from "@nestjs/swagger";
 
 export enum PointKillTargetType {
   UserId = "user_id",
@@ -72,7 +71,6 @@ export class PointKill {
     comment: "创建时间",
     defaultRaw: "CURRENT_TIMESTAMP",
   })
-  @ApiProperty({ description: "创建时间", example: "2024-01-01T00:00:00.000Z" })
   createdAt: Date;
 
   @Property({
@@ -80,6 +78,5 @@ export class PointKill {
     comment: "更新时间",
     defaultRaw: "CURRENT_TIMESTAMP",
   })
-  @ApiProperty({ description: "更新时间", example: "2024-01-01T00:00:00.000Z" })
   updatedAt: Date;
 }

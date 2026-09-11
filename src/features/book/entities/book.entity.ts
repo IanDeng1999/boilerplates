@@ -1,6 +1,5 @@
 import { OptionalProps, t } from "@mikro-orm/core";
 import { Entity, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
-import { ApiProperty } from "@nestjs/swagger";
 
 @Entity({ tableName: "book" })
 export class Book {
@@ -10,10 +9,6 @@ export class Book {
     type: "uuid",
     comment: "主键（雪花ID）",
     defaultRaw: "gen_random_uuid()",
-  })
-  @ApiProperty({
-    description: "主键（雪花ID）",
-    example: "1234567890123456789",
   })
   id: string;
 
@@ -40,7 +35,6 @@ export class Book {
     comment: "创建时间",
     defaultRaw: "CURRENT_TIMESTAMP",
   })
-  @ApiProperty({ description: "创建时间", example: "2024-01-01T00:00:00.000Z" })
   createdAt: Date;
 
   @Property({
@@ -48,6 +42,5 @@ export class Book {
     comment: "更新时间",
     defaultRaw: "CURRENT_TIMESTAMP",
   })
-  @ApiProperty({ description: "更新时间", example: "2024-01-01T00:00:00.000Z" })
   updatedAt: Date;
 }

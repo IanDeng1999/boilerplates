@@ -18,7 +18,7 @@ export class BookService {
     const book = this.bookRepository.create(createBookDto);
     this.em.persist(book);
     await this.em.flush();
-    return book;
+    return this.serialization(book);
   }
 
   async findAll() {
