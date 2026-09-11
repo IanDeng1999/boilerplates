@@ -40,7 +40,7 @@ async function bootstrap() {
   app.useLogger(logger);
 
   const configService = app.get(ConfigService);
-  app.enableShutdownHooks();
+  app.enableShutdownHooks(["SIGINT", "SIGTERM"]);
 
   // 注册cookie插件
   await app.register(fastifyCookie as any, {
