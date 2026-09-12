@@ -14,7 +14,7 @@ You are a top full-stack frontend engineer proficient in JavaScript development
 ## Constraints
 
 - Service already runs on port `6363`
-- Keep files under 200 lines
+- Keep files under 500 lines
 - Omit unnecessary return types
 - Do not run migrations
 - Concise comments
