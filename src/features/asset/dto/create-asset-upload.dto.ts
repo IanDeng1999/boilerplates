@@ -1,5 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
+  ArrayMaxSize,
+  ArrayNotEmpty,
+  IsArray,
   IsInt,
   IsNotEmpty,
   IsString,
@@ -7,8 +11,9 @@ import {
   Max,
   MaxLength,
   Min,
+  ValidateNested,
 } from "class-validator";
-import { MAX_UPLOAD_SIZE } from "../types/asset.type.ts";
+import { MAX_UPLOAD_BATCH_SIZE, MAX_UPLOAD_SIZE } from "../types/asset.type.ts";
 
 export class CreateAssetUploadDto {
   @ApiProperty({ description: "原始文件名（含扩展名）", example: "cover.png" })
@@ -39,4 +44,17 @@ export class CreateAssetUploadDto {
   @IsString()
   @Matches(/^[0-9a-f]{64}$/i, { message: "sha256 必须是 64 位十六进制字符串" })
   sha256: string;
+}
+
+export class CreateAssetUploadsDto {
+  @ApiProperty({
+    description: `待上传文件列表，最多 ${MAX_UPLOAD_BATCH_SIZE} 个；返回结果顺序与之一致`,
+    type: [CreateAssetUploadDto],
+  })
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMaxSize(MAX_UPLOAD_BATCH_SIZE)
+  @ValidateNested({ each: true })
+  @Type(() => CreateAssetUploadDto)
+  items: CreateAssetUploadDto[];
 }

@@ -1,8 +1,11 @@
+import { basename, extname } from "node:path";
 import {
   GetObjectCommand,
   HeadBucketCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
+  S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Injectable } from "@nestjs/common";
@@ -31,6 +34,42 @@ export class OssService {
     return buf.toString("base64");
   }
 
+  /** 提取安全扩展名：取小写扩展名，仅接受 [a-z0-9]{1,10}，否则返回 undefined */
+  resolveExt(name: string): string | undefined {
+    const ext = extname(basename(name)).slice(1).toLowerCase();
+    return /^[a-z0-9]{1,10}$/.test(ext) ? ext : undefined;
+  }
+
+  /**
+   * 把文件名转换为可直接用于对象 key 的安全形式：
+   * 去掉目录、空白转下划线、非 [A-Za-z0-9._-] 字符（中文/特殊符号等）转下划线，
+   * 压缩连续下划线、去除开头分隔符并限长。结果为空时回退为 file。
+   */
+  sanitizeFileName(name: string): string {
+    const base = basename(name)
+      .normalize("NFKD")
+      .replace(/\s+/g, "_")
+      .replace(/[^A-Za-z0-9._-]/g, "_")
+      .replace(/_{2,}/g, "_")
+      .replace(/^[._-]+/, "")
+      .slice(0, 120);
+    return base || "file";
+  }
+
+  /**
+   * 按内容生成对象 key，不采用源文件名：uploads/yyyy-mm-dd/{sha256}.{ext}
+   * 全 ASCII，同内容同 key，事件回调可直接匹配，无需转义。
+   */
+  buildObjectKey(sha256: string, ext?: string): string {
+    const now = new Date();
+    const date = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("-");
+    return `uploads/${date}/${sha256}${ext ? `.${ext}` : ""}`;
+  }
+
   async checkConnectivity(signal: AbortSignal) {
     await this.s3.send(
       new HeadBucketCommand({
@@ -40,6 +79,33 @@ export class OssService {
     );
   }
 
+  /** 读取对象元信息；对象不存在时返回 null（部分存储不改写 ContentLength/ChecksumSHA256） */
+  async statObject(key: string) {
+    try {
+      const result = await this.s3.send(
+        new HeadObjectCommand({
+          Bucket: this.configService.getOrThrow("OSS_BUCKET"),
+          Key: key,
+        }),
+      );
+      return {
+        contentLength: result.ContentLength,
+        checksumSha256: result.ChecksumSHA256,
+      };
+    } catch (error) {
+      if (
+        error instanceof S3ServiceException &&
+        error.$metadata.httpStatusCode === 404
+      ) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * 查看文件信息：https://json2.cc/doc/file_info
+   */
   getUploadUrl({
     key,
     contentType,

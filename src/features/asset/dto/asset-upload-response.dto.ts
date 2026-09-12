@@ -34,7 +34,8 @@ export class AssetUploadResponseDto {
   expiresIn: number;
 
   @ApiProperty({
-    description: "是否命中同内容资源（sha256 + size），命中时复用同一 key",
+    description:
+      "是否命中同内容资源（sha256 + size）；命中时复用同一 key。同一批内的重复文件同样标记为 true，key 与 uploadUrl 与首次一致，无需重复上传",
     example: false,
   })
   existed: boolean;
