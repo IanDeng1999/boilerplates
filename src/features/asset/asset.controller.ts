@@ -1,11 +1,15 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
+  Header,
+  Headers,
   HttpCode,
   HttpStatus,
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import {
   ApiErrorResponse,
@@ -22,7 +26,10 @@ import { OssUploadCallbackDto } from "./dto/oss-upload-callback.dto.ts";
 @ApiTags("资产")
 @Controller("api/asset")
 export class AssetController {
-  constructor(private readonly assetService: AssetService) {}
+  constructor(
+    private readonly assetService: AssetService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post("upload-urls")
   @UseGuards(AuthGuard)
@@ -60,7 +67,13 @@ export class AssetController {
     type: "boolean",
   })
   @ApiValidationErrorResponse()
-  async handleUploadCallback(@Body() dto: OssUploadCallbackDto) {
-    return this.assetService.handleUploadCallback(dto);
+  async handleUploadCallback(
+    @Body() body: OssUploadCallbackDto,
+    @Headers("authorization") auth: string,
+  ) {
+    if (auth !== `Bearer ${this.configService.getOrThrow("SECRET")}`) {
+      throw new ForbiddenException();
+    }
+    return this.assetService.handleUploadCallback(body);
   }
 }
