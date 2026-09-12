@@ -31,7 +31,7 @@ export class AssetController {
   @ApiOperation({
     summary: "批量获取上传地址",
     description:
-      "返回与入参同序的预签名 PUT 地址，客户端直传 OSS；需携带响应中的 headers，请求体大小须等于 size。同批内 sha256 + size 相同的文件共用同一 key。",
+      "返回与入参同序的预签名 PUT 地址，客户端直传 OSS；需携带响应中的 headers，请求体大小须等于 size。同批内 sha256 相同的文件共用同一 key。",
   })
   @ApiSuccessResponse({
     status: 200,
@@ -53,7 +53,7 @@ export class AssetController {
   @ApiOperation({
     summary: "OSS 对象事件回调",
     description:
-      "OSS 事件通知（S3 兼容）webhook，按 key 反查资产并以 HeadObject 校验，将 pending 流转为 ready 或 failed；幂等。",
+      "OSS 事件通知（S3 兼容）webhook，按 key 反查资产并把 pending 流转为 ready；幂等。",
   })
   @ApiSuccessResponse({
     status: 200,

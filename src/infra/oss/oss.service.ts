@@ -2,10 +2,8 @@ import { basename, extname } from "node:path";
 import {
   GetObjectCommand,
   HeadBucketCommand,
-  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
-  S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Injectable } from "@nestjs/common";
@@ -77,30 +75,6 @@ export class OssService {
       }),
       { abortSignal: signal },
     );
-  }
-
-  /** 读取对象元信息；对象不存在时返回 null（部分存储不改写 ContentLength/ChecksumSHA256） */
-  async statObject(key: string) {
-    try {
-      const result = await this.s3.send(
-        new HeadObjectCommand({
-          Bucket: this.configService.getOrThrow("OSS_BUCKET"),
-          Key: key,
-        }),
-      );
-      return {
-        contentLength: result.ContentLength,
-        checksumSha256: result.ChecksumSHA256,
-      };
-    } catch (error) {
-      if (
-        error instanceof S3ServiceException &&
-        error.$metadata.httpStatusCode === 404
-      ) {
-        return null;
-      }
-      throw error;
-    }
   }
 
   /**

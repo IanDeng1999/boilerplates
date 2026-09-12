@@ -10,8 +10,7 @@ export class AssetStatusResponseDto {
 
   @ApiProperty({
     enum: AssetStatus,
-    description:
-      "资产状态：pending 待上传 / ready 已就绪 / failed 校验失败（内容与声明的 size 不一致）",
+    description: "资产状态：pending 待上传 / ready 已就绪",
     example: AssetStatus.Ready,
   })
   status: AssetStatus;
