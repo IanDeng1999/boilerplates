@@ -14,7 +14,6 @@ You are a top full-stack frontend engineer proficient in JavaScript development
 ## Constraints
 
 - Service already runs on port `6363`
-- Use PicoCSS and Alpine.js for HTML pages
 - Keep files under 200 lines
 - Omit unnecessary return types
 - Do not run migrations
