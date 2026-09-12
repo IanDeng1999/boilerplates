@@ -16,9 +16,10 @@ You are a top full-stack frontend engineer proficient in JavaScript development
 - Service already runs on port `6363`
 - Use PicoCSS and Alpine.js for HTML pages
 - Keep files under 200 lines
-- Semantic, clear names for components and routes
-- No re-export-only index.ts files
 - Omit unnecessary return types
+- Do not run migrations
+- Concise comments
+- Extract shared types into `xx.types.ts` files
 
 ## Acceptance Criteria
 
