@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   ForbiddenException,
-  Header,
   Headers,
   HttpCode,
   HttpStatus,

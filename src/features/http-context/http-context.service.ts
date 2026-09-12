@@ -3,9 +3,8 @@ import { ConfigService } from "@nestjs/config";
 import { REQUEST } from "@nestjs/core";
 import type { Redis } from "ioredis";
 import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
+import { SESSION_DATA_FIELD } from "./http-context.const.ts";
 import type { CookieKey, CookieOptions } from "./http-context.types.ts";
-
-const SESSION_DATA_FIELD = "data";
 
 @Injectable({ scope: Scope.REQUEST })
 export class HttpContextService {

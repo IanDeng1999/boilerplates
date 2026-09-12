@@ -1,11 +1,12 @@
 import { Module, Provider } from "@nestjs/common";
 import { Redis } from "ioredis";
+import { REDIS_CLIENT } from "./redis.const.ts";
 import type {
   RedisModuleAsyncOptions,
   RedisModuleOptions,
 } from "./redis.types.ts";
 
-export const REDIS_CLIENT = Symbol("REDIS_CLIENT");
+export { REDIS_CLIENT } from "./redis.const.ts";
 
 // https://github.com/redis/ioredis
 @Module({})

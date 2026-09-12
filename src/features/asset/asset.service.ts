@@ -9,6 +9,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { OssService } from "../../infra/oss/oss.service.ts";
 import { Account } from "../auth/entities/account.entity.ts";
+import { ALLOWED_EXTENSION_SET, UPLOAD_URL_EXPIRES_IN } from "./asset.const.ts";
 import { AssetUploadResponseDto } from "./dto/asset-upload-response.dto.ts";
 import {
   CreateAssetUploadDto,
@@ -16,10 +17,6 @@ import {
 } from "./dto/create-asset-upload.dto.ts";
 import { OssUploadCallbackDto } from "./dto/oss-upload-callback.dto.ts";
 import { Asset, AssetKind, AssetStatus } from "./entities/asset.entity.ts";
-import {
-  ALLOWED_EXTENSION_SET,
-  UPLOAD_URL_EXPIRES_IN,
-} from "./types/asset.type.ts";
 
 @Injectable()
 export class AssetService {

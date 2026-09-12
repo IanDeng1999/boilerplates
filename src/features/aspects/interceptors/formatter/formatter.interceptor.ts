@@ -8,8 +8,9 @@ import {
   SetMetadata,
 } from "@nestjs/common";
 import { map } from "rxjs";
+import { SKIP_RESPONSE_FORMAT_KEY } from "./formatter.const.ts";
 
-export const SKIP_RESPONSE_FORMAT_KEY = Symbol("SKIP_RESPONSE_FORMAT_KEY");
+export { SKIP_RESPONSE_FORMAT_KEY } from "./formatter.const.ts";
 
 export function SkipFormat() {
   return SetMetadata(SKIP_RESPONSE_FORMAT_KEY, true);

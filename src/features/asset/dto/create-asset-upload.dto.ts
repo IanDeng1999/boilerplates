@@ -19,7 +19,7 @@ import {
   ALLOWED_MIME_TYPE_PATTERN,
   MAX_UPLOAD_BATCH_SIZE,
   MAX_UPLOAD_SIZE,
-} from "../types/asset.type.ts";
+} from "../asset.const.ts";
 
 export class CreateAssetUploadDto {
   @ApiProperty({

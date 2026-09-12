@@ -5,6 +5,7 @@ import { ConfigService } from "@nestjs/config";
 import { Redis } from "ioredis";
 import { v4 as uuidv4 } from "uuid";
 import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
+import { OAUTH_ENDPOINTS } from "./auth.const.ts";
 import type {
   GitHubUserInfo,
   GoogleUserInfo,
@@ -15,21 +16,6 @@ import {
   OAuthProvider,
   OAuthProviderType,
 } from "./entities/oauth-provider.entity.ts";
-
-const OAUTH_ENDPOINTS = {
-  google: {
-    authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
-    tokenUrl: "https://oauth2.googleapis.com/token",
-    userInfoUrl: "https://www.googleapis.com/oauth2/v2/userinfo",
-    scope: "openid email profile",
-  },
-  github: {
-    authorizationUrl: "https://github.com/login/oauth/authorize",
-    tokenUrl: "https://github.com/login/oauth/access_token",
-    userInfoUrl: "https://api.github.com/user",
-    scope: "read:user user:email",
-  },
-} as const;
 
 @Injectable()
 export class AuthService {

@@ -8,8 +8,7 @@ import {
   PointKill,
   PointKillTargetType,
 } from "./entities/point-kill.entity.ts";
-
-const CACHE_TTL = 60_000;
+import { POINT_KILL_CACHE_TTL } from "./point-kill.const.ts";
 
 @Injectable({ scope: Scope.REQUEST })
 export class PointKillService {
@@ -44,7 +43,7 @@ export class PointKillService {
       targetValue,
       enabled: true,
     }));
-    await this.cacheManager.set(cacheKey, blocked, CACHE_TTL);
+    await this.cacheManager.set(cacheKey, blocked, POINT_KILL_CACHE_TTL);
     return blocked;
   }
 

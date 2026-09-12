@@ -6,8 +6,9 @@ import {
   SetMetadata,
 } from "@nestjs/common";
 import { PointKillService } from "../../../features/point-kill/point-kill.service.ts";
+import { SKIP_POINT_KILL_KEY } from "./point-kill.const.ts";
 
-export const SKIP_POINT_KILL_KEY = Symbol("SKIP_POINT_KILL_KEY");
+export { SKIP_POINT_KILL_KEY } from "./point-kill.const.ts";
 
 export function SkipPointKill() {
   return SetMetadata(SKIP_POINT_KILL_KEY, true);
