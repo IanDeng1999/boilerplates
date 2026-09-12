@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { REQUEST } from "@nestjs/core";
 import type { Redis } from "ioredis";
 import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
+import type { CookieKey, CookieOptions } from "./http-context.types.ts";
 
 const SESSION_DATA_FIELD = "data";
 
@@ -18,7 +19,7 @@ export class HttpContextService {
     return this.request.replyRef;
   }
 
-  setCookie(key: CookieKeys, value: string, options: CookieOptions = {}) {
+  setCookie(key: CookieKey, value: string, options: CookieOptions = {}) {
     const defaultOptions: CookieOptions = {
       httpOnly: true,
       secure: this.configService.get("NODE_ENV") === "production",
@@ -62,7 +63,7 @@ export class HttpContextService {
   }
 
   clearCookie(
-    key: CookieKeys,
+    key: CookieKey,
     options: CookieOptions = {
       path: "/",
     },
@@ -78,16 +79,4 @@ export class HttpContextService {
   setHeader(name: string, value: string) {
     this.reply.header(name, value);
   }
-}
-
-type CookieKeys = "session" | "client-id" | "oauth-state";
-
-export interface CookieOptions {
-  httpOnly?: boolean;
-  secure?: boolean;
-  sameSite?: "strict" | "lax" | "none" | boolean;
-  maxAge?: number;
-  path?: string;
-  domain?: string;
-  expires?: Date;
 }

@@ -5,6 +5,11 @@ import { ConfigService } from "@nestjs/config";
 import { Redis } from "ioredis";
 import { v4 as uuidv4 } from "uuid";
 import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
+import type {
+  GitHubUserInfo,
+  GoogleUserInfo,
+  OAuthTokenResponse,
+} from "./auth.types.ts";
 import { Account } from "./entities/account.entity.ts";
 import {
   OAuthProvider,
@@ -25,28 +30,6 @@ const OAUTH_ENDPOINTS = {
     scope: "read:user user:email",
   },
 } as const;
-
-interface OAuthTokenResponse {
-  access_token: string;
-  token_type: string;
-  scope: string;
-  refresh_token?: string;
-}
-
-interface GoogleUserInfo {
-  id: string;
-  email: string;
-  name: string;
-  picture: string;
-}
-
-interface GitHubUserInfo {
-  id: number;
-  login: string;
-  email: string;
-  avatar_url: string;
-  name: string;
-}
 
 @Injectable()
 export class AuthService {

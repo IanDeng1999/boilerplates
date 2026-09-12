@@ -1,4 +1,4 @@
-import { applyDecorators, Type } from "@nestjs/common";
+import { applyDecorators } from "@nestjs/common";
 import {
   ApiExtraModels,
   ApiResponse,
@@ -10,13 +10,10 @@ import {
   ApiSuccessResponseDto,
   ApiValidationErrorResponseDto,
 } from "./api-response.dto.ts";
-
-type SuccessResponseOptions = {
-  type: Type<unknown>;
-  status: number;
-  description: string;
-  isArray?: boolean;
-};
+import type {
+  ErrorResponseOptions,
+  SuccessResponseOptions,
+} from "./api-response.types.ts";
 
 export function ApiSuccessResponse(options: SuccessResponseOptions) {
   const { description, isArray = false, status, type } = options;
@@ -56,10 +53,7 @@ export function ApiNotFoundErrorResponse(description = "资源不存在") {
 export function ApiErrorResponse({
   description,
   status,
-}: {
-  description: string;
-  status: number;
-}) {
+}: ErrorResponseOptions) {
   return applyDecorators(
     ApiExtraModels(ApiErrorResponseDto),
     ApiResponse({ status, description, type: ApiErrorResponseDto }),
