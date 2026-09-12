@@ -31,7 +31,7 @@ export class AssetController {
   @ApiOperation({
     summary: "批量获取上传地址",
     description:
-      "入参为文件列表，返回与入参同序的预签名上传地址数组（PUT），客户端直传 OSS。上传时需携带响应中的 headers，且请求体大小必须等于 size，否则会被 OSS 拒绝。同一批内 sha256 + size 相同的文件共用同一 key，只需上传一次。",
+      "返回与入参同序的预签名 PUT 地址，客户端直传 OSS；需携带响应中的 headers，请求体大小须等于 size。同批内 sha256 + size 相同的文件共用同一 key。",
   })
   @ApiSuccessResponse({
     status: 200,
@@ -53,11 +53,11 @@ export class AssetController {
   @ApiOperation({
     summary: "OSS 对象事件回调",
     description:
-      "由 OSS 事件通知（S3 兼容格式）触发的 webhook。按事件中的对象 key 反查资产，再以 HeadObject 为准将资产由 pending 流转为 ready（内容大小或校验和不符则标为 failed）。幂等：已 ready 的资产直接返回，不重复回源；对象尚未出现时保持 pending。非本 bucket、非 ObjectCreated 或未登记的 key 会被忽略，返回空数组。",
+      "OSS 事件通知（S3 兼容）webhook，按 key 反查资产并以 HeadObject 校验，将 pending 流转为 ready 或 failed；幂等。",
   })
   @ApiSuccessResponse({
     status: 200,
-    description: "处理完成，返回被更新资产的最新状态；无关对象返回空数组",
+    description: "处理完成；无关对象返回空数组",
     type: AssetStatusResponseDto,
     isArray: true,
   })
