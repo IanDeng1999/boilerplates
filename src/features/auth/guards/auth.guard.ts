@@ -6,8 +6,8 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Redis } from "ioredis";
-import { HttpContextService } from "../../../infra/http-context/http-context.service.ts";
 import { REDIS_CLIENT } from "../../../infra/redis/redis.module.ts";
+import { HttpContextService } from "../../http-context/http-context.service.ts";
 
 @Injectable()
 export class AuthGuard implements CanActivate {

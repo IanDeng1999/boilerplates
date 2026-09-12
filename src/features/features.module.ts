@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AspectsModule } from "./aspects/aspects.module.ts";
+import { AssetModule } from "./asset/asset.module.ts";
 import { AuthModule } from "./auth/auth.module.ts";
 import { BookModule } from "./book/book.module.ts";
 import { CronjobModule } from "./cronjob/cronjob.module.ts";
@@ -14,6 +15,7 @@ import { PointKillModule } from "./point-kill/point-kill.module.ts";
     CronjobModule,
     HealthModule,
     AuthModule,
+    AssetModule,
   ],
 })
 export class FeaturesModule {}

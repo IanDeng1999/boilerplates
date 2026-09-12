@@ -3,7 +3,7 @@ import { EntityRepository } from "@mikro-orm/postgresql";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { ForbiddenException, Inject, Injectable, Scope } from "@nestjs/common";
 import type { Cache } from "cache-manager";
-import { HttpContextService } from "../../infra/http-context/http-context.service.ts";
+import { HttpContextService } from "../http-context/http-context.service.ts";
 import {
   PointKill,
   PointKillTargetType,

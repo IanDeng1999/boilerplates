@@ -1,6 +1,6 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
-import { HttpContextModule } from "../../infra/http-context/http-context.module.ts";
+import { HttpContextModule } from "../http-context/http-context.module.ts";
 import { AuthController } from "./auth.controller.ts";
 import { AuthService } from "./auth.service.ts";
 import { Account } from "./entities/account.entity.ts";

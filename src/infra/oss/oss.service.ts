@@ -51,7 +51,7 @@ export class OssService {
     key: string;
     contentType: string;
     contentLength: number;
-    metaData: Record<string, string>;
+    metaData?: Record<string, string>;
     sha256: string;
     expiresIn: number;
   }) {

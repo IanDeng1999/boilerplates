@@ -23,7 +23,7 @@ import {
   ApiErrorResponse,
   ApiSuccessResponse,
 } from "#src/common/swagger/api-response.decorator.ts";
-import { HttpContextService } from "../../infra/http-context/http-context.service.ts";
+import { HttpContextService } from "../http-context/http-context.service.ts";
 import { AuthService } from "./auth.service.ts";
 import { AccountResponseDto } from "./dto/account-response.dto.ts";
 import { LogoutResponseDto } from "./dto/logout-response.dto.ts";

@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AppCacheModule } from "./cache/cache.module.ts";
 import { AppConfigModule } from "./config/config.module.ts";
@@ -8,6 +8,7 @@ import { OssModule } from "./oss/oss.module.ts";
 import { RedisModule } from "./redis/redis.module.ts";
 import { AppThrottlerModule } from "./throttler/throttler.module.ts";
 
+@Global()
 @Module({
   imports: [
     AppConfigModule,
