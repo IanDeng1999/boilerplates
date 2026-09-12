@@ -5,7 +5,7 @@ import {
   UniqueConstraintViolationException,
 } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { OssService } from "../../infra/oss/oss.service.ts";
 import { Account } from "../auth/entities/account.entity.ts";
@@ -16,7 +16,10 @@ import {
 } from "./dto/create-asset-upload.dto.ts";
 import { OssUploadCallbackDto } from "./dto/oss-upload-callback.dto.ts";
 import { Asset, AssetKind, AssetStatus } from "./entities/asset.entity.ts";
-import { UPLOAD_URL_EXPIRES_IN } from "./types/asset.type.ts";
+import {
+  ALLOWED_EXTENSION_SET,
+  UPLOAD_URL_EXPIRES_IN,
+} from "./types/asset.type.ts";
 
 @Injectable()
 export class AssetService {
@@ -122,6 +125,10 @@ export class AssetService {
     uploaderId: string,
   ) {
     const ext = this.ossService.resolveExt(dto.name);
+    // DTO 已拦一道，这里兜底，保证任何调用入口都不会落库白名单外的扩展名
+    if (!ext || !ALLOWED_EXTENSION_SET.has(ext)) {
+      throw new BadRequestException(`不支持的扩展名：${ext ?? dto.name}`);
+    }
     const asset = this.assetRepository.create({
       bucket: this.configService.getOrThrow("OSS_BUCKET"),
       key: this.ossService.buildObjectKey(sha256, ext),

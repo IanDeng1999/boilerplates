@@ -13,18 +13,35 @@ import {
   Min,
   ValidateNested,
 } from "class-validator";
-import { MAX_UPLOAD_BATCH_SIZE, MAX_UPLOAD_SIZE } from "../types/asset.type.ts";
+import {
+  ALLOWED_EXTENSION_PATTERN,
+  ALLOWED_EXTENSIONS,
+  ALLOWED_MIME_TYPE_PATTERN,
+  MAX_UPLOAD_BATCH_SIZE,
+  MAX_UPLOAD_SIZE,
+} from "../types/asset.type.ts";
 
 export class CreateAssetUploadDto {
-  @ApiProperty({ description: "原始文件名（含扩展名）", example: "cover.png" })
+  @ApiProperty({
+    description: `原始文件名（含扩展名），仅支持 ${ALLOWED_EXTENSIONS.join("/")}`,
+    example: "cover.png",
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
+  @Matches(ALLOWED_EXTENSION_PATTERN, {
+    message: "不支持的扩展名：$value",
+  })
   name: string;
 
-  @ApiProperty({ description: "MIME 类型", example: "image/png" })
+  @ApiProperty({
+    description: "MIME 类型，仅支持 image/* 与 video/*",
+    example: "image/png",
+  })
   @IsString()
-  @Matches(/^[\w.+-]+\/[\w.+-]+$/, { message: "mimeType 格式不正确" })
+  @Matches(ALLOWED_MIME_TYPE_PATTERN, {
+    message: "mimeType 仅支持 image/* 或 video/*，且格式须为 type/subtype",
+  })
   mimeType: string;
 
   @ApiProperty({
