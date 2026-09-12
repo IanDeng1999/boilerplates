@@ -39,7 +39,7 @@ export class OAuthProvider {
 
   @ManyToOne(() => Account, {
     name: "account_id",
-    comment: "关联账户",
+    comment: "关联账户（只允许逻辑外键）",
     createForeignKeyConstraint: false,
   })
   account!: Account;
