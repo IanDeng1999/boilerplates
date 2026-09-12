@@ -15,7 +15,6 @@ import {
 import { CurrentAccount } from "../aspects/decorators/context.decorator.ts";
 import { AuthGuard } from "../auth/guards/auth.guard.ts";
 import { AssetService } from "./asset.service.ts";
-import { AssetStatusResponseDto } from "./dto/asset-status-response.dto.ts";
 import { AssetUploadResponseDto } from "./dto/asset-upload-response.dto.ts";
 import { CreateAssetUploadsDto } from "./dto/create-asset-upload.dto.ts";
 import { OssUploadCallbackDto } from "./dto/oss-upload-callback.dto.ts";
@@ -53,13 +52,12 @@ export class AssetController {
   @ApiOperation({
     summary: "OSS 对象事件回调",
     description:
-      "OSS 事件通知（S3 兼容）webhook，按 key 反查资产并把 pending 流转为 ready；幂等。",
+      "OSS 事件通知（S3 兼容）webhook。按对象 key（服务端会先 URL 解码）反查资产，把 pending 流转为 ready；幂等，重复投递不会重复流转。已 ready 的资产不参与流转，未登记的对象、非本 bucket 或非 ObjectCreated 事件直接忽略。",
   })
   @ApiSuccessResponse({
     status: 200,
-    description: "处理完成；无关对象返回空数组",
-    type: AssetStatusResponseDto,
-    isArray: true,
+    description: "处理完成",
+    type: "boolean",
   })
   @ApiValidationErrorResponse()
   async handleUploadCallback(@Body() dto: OssUploadCallbackDto) {

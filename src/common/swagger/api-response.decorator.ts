@@ -18,8 +18,12 @@ import type {
 export function ApiSuccessResponse(options: SuccessResponseOptions) {
   const { description, isArray = false, status, type } = options;
 
+  // 基础类型（如固定的 true）直接描述 data，只有类才需要注册 model
+  const isPrimitive = typeof type === "string";
+  const dataSchema = isPrimitive ? { type } : { $ref: getSchemaPath(type) };
+
   return applyDecorators(
-    ApiExtraModels(ApiSuccessResponseDto, type),
+    ...(isPrimitive ? [] : [ApiExtraModels(ApiSuccessResponseDto, type)]),
     ApiResponse({
       status,
       description,
@@ -37,9 +41,7 @@ export function ApiSuccessResponse(options: SuccessResponseOptions) {
             description: "响应消息",
             example: "success",
           },
-          data: isArray
-            ? { type: "array", items: { $ref: getSchemaPath(type) } }
-            : { $ref: getSchemaPath(type) },
+          data: isArray ? { type: "array", items: dataSchema } : dataSchema,
         },
       },
     }),

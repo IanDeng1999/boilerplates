@@ -9,7 +9,6 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { OssService } from "../../infra/oss/oss.service.ts";
 import { Account } from "../auth/entities/account.entity.ts";
-import { AssetStatusResponseDto } from "./dto/asset-status-response.dto.ts";
 import { AssetUploadResponseDto } from "./dto/asset-upload-response.dto.ts";
 import {
   CreateAssetUploadDto,
@@ -80,42 +79,28 @@ export class AssetService {
    * 幂等，已 ready 的资产不重复处理；非本 bucket、非 ObjectCreated 或 key 未登记
    * （不是本服务产生的对象）的记录直接忽略。
    */
-  async handleUploadCallback(
-    event: OssUploadCallbackDto,
-  ): Promise<AssetStatusResponseDto[]> {
+  async handleUploadCallback(event: OssUploadCallbackDto) {
     const bucket = this.configService.getOrThrow<string>("OSS_BUCKET");
 
     const keys = new Set<string>();
     for (const record of event.Records) {
       if (!record.eventName.startsWith("s3:ObjectCreated:")) continue;
       if (record.s3.bucket.name !== bucket) continue;
-      keys.add(record.s3.object.key);
+      // 事件里的 key 是 URL 编码的（uploads%2F...），需还原；未编码的原文解码后不变
+      keys.add(decodeURIComponent(record.s3.object.key));
     }
 
-    if (keys.size === 0) return [];
+    if (keys.size === 0) return true;
 
-    // 读取只为把 key 映射成 assetId，并过滤掉未登记的对象，不可避免
-    const assets = await this.assetRepository.find({
-      key: { $in: [...keys] },
-    });
-    if (assets.length === 0) return [];
-
-    // 一条 UPDATE 完成本批流转；只动 pending，重复回调或并发回调都不会互相覆盖
+    // 一条 UPDATE 完成本批流转，不先把记录查出来：本次转没转成功无所谓，
+    // 事件是至少一次投递，已 ready 的重投在这里自然不更新
     await this.em.nativeUpdate(
       Asset,
-      {
-        id: { $in: assets.map((asset) => asset.id) },
-        status: AssetStatus.Pending,
-      },
+      { key: { $in: [...keys] }, status: AssetStatus.Pending },
       { status: AssetStatus.Ready },
     );
 
-    // nativeUpdate 不回写身份映射，上面的实体仍是 pending，此处按同一规则推导即可
-    return assets.map((asset) => ({
-      assetId: asset.id,
-      status:
-        asset.status === AssetStatus.Pending ? AssetStatus.Ready : asset.status,
-    }));
+    return true;
   }
 
   /** 内容标识就是 sha256（同 hash 同内容，size 由内容决定，无需参与匹配） */

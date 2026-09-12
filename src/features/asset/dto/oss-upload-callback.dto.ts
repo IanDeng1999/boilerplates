@@ -23,7 +23,7 @@ export class OssEventBucketDto {
 
 export class OssEventObjectDto {
   @ApiProperty({
-    description: "对象键（URL 编码，空格为 +）",
+    description: "对象键（URL 编码，空格为 +）；服务端解码后与库中 key 匹配",
     example: "asset%2Ffile%2F202609%2Fxxx.csv",
   })
   @IsString()
