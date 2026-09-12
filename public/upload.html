@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>上传测试 · Mige</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <script>
+      // 直传流程：本地算 sha256 → 换预签名 PUT 地址 → 携带签名头直传 OSS
+      const MAX_SIZE = 5 * 1024 ** 3;
+      const MAX_BATCH = 10;
+
+      async function sha256Hex(file) {
+        const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+        return [...new Uint8Array(digest)]
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+      }
+
+      function formatSize(bytes) {
+        const units = ["B", "KB", "MB", "GB"];
+        let value = bytes;
+        let i = 0;
+        while (value >= 1024 && i < units.length - 1) {
+          value /= 1024;
+          i++;
+        }
+        return `${value.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+      }
+
+      document.addEventListener("alpine:init", () => {
+        Alpine.data("uploadPage", () => ({
+          account: null,
+          files: [],
+          running: false,
+          error: "",
+          init() {
+            this.checkAccount();
+          },
+
+          async checkAccount() {
+            const { ok, payload } = await this.call("/api/auth/account");
+            this.account = ok ? (payload?.data ?? null) : null;
+            if (!this.account) this.fail("未登录，请先到登录页完成授权");
+          },
+
+          onPick(event) {
+            const picked = [...event.target.files];
+            event.target.value = "";
+            if (picked.length > MAX_BATCH) this.fail(`单次最多 ${MAX_BATCH} 个文件`);
+            this.files = picked.slice(0, MAX_BATCH).map((file) => ({
+              file,
+              name: file.name,
+              mimeType: file.type || "application/octet-stream",
+              size: file.size,
+              sizeText: formatSize(file.size),
+              sha256: "",
+              key: "",
+              status: file.size > MAX_SIZE ? "超过 5 GiB 上限" : "待上传",
+            }));
+          },
+
+          async start() {
+            if (!this.files.length) return this.fail("请先选择文件");
+            this.running = true;
+            this.error = "";
+            try {
+              await this.hashAll();
+              const items = this.files.map(({ name, mimeType, size, sha256 }) => ({ name, mimeType, size, sha256 }));
+              const { ok, payload } = await this.call("/api/asset/upload-urls", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ items }),
+              });
+              if (!ok) throw new Error(payload?.msg ?? "获取上传地址失败");
+              // 响应顺序与入参一致，按索引回填
+              await Promise.all(payload.data.map((result, i) => this.uploadOne(this.files[i], result)));
+            } catch (err) {
+              this.fail(err.message);
+            } finally {
+              this.running = false;
+            }
+          },
+          async hashAll() {
+            for (const item of this.files) {
+              if (item.sha256 || item.size > MAX_SIZE) continue;
+              item.status = "计算 sha256…";
+              item.sha256 = await sha256Hex(item.file);
+              item.status = "待上传";
+            }
+          },
+
+          async uploadOne(item, result) {
+            item.key = result.key;
+            if (result.existed) {
+              item.status = "内容已存在，复用同一 key";
+              return;
+            }
+            if (!item.sha256) return (item.status = "已跳过");
+            item.status = "上传中…";
+            // headers 含参与签名的 Content-Type 与 x-amz-checksum-sha256，必须原样回传
+            const res = await fetch(result.uploadUrl, { method: "PUT", headers: result.headers, body: item.file });
+            if (!res.ok) {
+              const text = await res.text().catch(() => "");
+              item.status = "直传失败";
+              return this.fail(`PUT ${item.name} → ${res.status} ${text.slice(0, 200)}`);
+            }
+            item.status = `直传成功，资产 ${result.assetId.slice(0, 8)}… 待回调置 ready`;
+          },
+
+          async call(path, options = {}) {
+            const response = await fetch(path, { credentials: "include", ...options });
+            const payload = await response.json().catch(() => null);
+            return { ok: response.ok, status: response.status, payload };
+          },
+
+          fail(message) {
+            this.error = message;
+          },
+        }));
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
+    <style>
+      [x-cloak] { display: none !important; }
+      .hash { word-break: break-all; font-size: 0.75rem; }
+    </style>
+  </head>
+  <body>
+    <main class="container" x-data="uploadPage" x-cloak>
+      <hgroup>
+        <h1>上传测试</h1>
+        <p>浏览器本地算 sha256，换取预签名地址后直传 OSS，单次最多 10 个、单个 5 GiB。</p>
+      </hgroup>
+
+      <article x-show="!account">
+        <p>当前未登录，上传接口需要会话。</p>
+        <a href="/auth.html" role="button">前往登录</a>
+      </article>
+      <article x-show="account">
+        <header>以 <strong x-text="account?.username ?? account?.id"></strong> 身份上传</header>
+        <input type="file" multiple @change="onPick($event)" :disabled="running" />
+        <small>上传相同内容的文件会命中已有资产（<code>existed: true</code>），不会重复占用存储。</small>
+      </article>
+
+      <article x-show="files.length">
+        <table>
+          <thead><tr><th>文件</th><th>大小</th><th>sha256</th><th>状态</th></tr></thead>
+          <tbody>
+            <template x-for="(item, index) in files" :key="index">
+              <tr>
+                <td>
+                  <span x-text="item.name"></span>
+                  <div class="hash" x-show="item.key"><code x-text="item.key"></code></div>
+                </td>
+                <td x-text="item.sizeText"></td>
+                <td class="hash" x-text="item.sha256 ? item.sha256.slice(0, 16) + '…' : '—'"></td>
+                <td x-text="item.status"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <footer>
+          <button :disabled="running || !account" @click="start()">
+            <span x-show="!running">计算哈希并上传</span>
+            <span x-show="running">处理中…</span>
+          </button>
+        </footer>
+      </article>
+
+      <p x-show="error" role="alert"><strong x-text="error"></strong></p>
+
+      <footer><small><a href="/index.html">返回首页</a></small></footer>
+    </main>
+  </body>
+</html>

@@ -20,8 +20,6 @@
           loading: false,
           account: null,
           error: "",
-          detail: "",
-          logs: [],
 
           init() {
             const params = new URLSearchParams(window.location.search);
@@ -40,11 +38,10 @@
           async startOAuth(provider) {
             this.loading = true;
             this.error = "";
-            const { ok, status, payload } = await this.call(
+            const { ok, payload } = await this.call(
               `/api/auth/login/${provider}`,
             );
             this.loading = false;
-            this.log(`GET /api/auth/login/${provider} → ${status}`, ok ? "ok" : "error");
             if (!ok || !payload?.data?.url) {
               return this.fail(payload?.msg ?? "获取授权地址失败");
             }
@@ -52,20 +49,16 @@
           },
 
           async checkAccount() {
-            const { ok, status, payload } = await this.call("/api/auth/account");
-            this.log(`GET /api/auth/account → ${status}`, ok ? "ok" : "warn");
-            this.detail = this.stringify(payload);
+            const { ok, payload } = await this.call("/api/auth/account");
             this.account = ok ? (payload?.data ?? null) : null;
           },
 
           async logout() {
             this.loading = true;
-            const { ok, status, payload } = await this.call("/api/auth/logout", {
+            const { ok, payload } = await this.call("/api/auth/logout", {
               method: "POST",
             });
             this.loading = false;
-            this.log(`POST /api/auth/logout → ${status}`, ok ? "ok" : "error");
-            this.detail = this.stringify(payload);
             if (!ok) return this.fail(payload?.msg ?? "登出失败");
 
             this.account = null;
@@ -81,16 +74,6 @@
 
           fail(message) {
             this.error = message;
-            this.log(`✗ ${message}`, "error");
-          },
-
-          log(text, tone = "muted") {
-            const time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
-            this.logs = [{ time, text, tone }, ...this.logs].slice(0, 20);
-          },
-
-          stringify(payload) {
-            return payload ? JSON.stringify(payload, null, 2) : "(无响应体)";
           },
         }));
       });
@@ -103,8 +86,6 @@
       .tabs a[aria-current="true"] { background: var(--pico-primary-background); color: var(--pico-primary-inverse); }
       .providers { display: grid; gap: 0.75rem; }
       .avatar { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; margin: 0; }
-      .logs { max-height: 10rem; overflow: auto; font-size: 0.8125rem; }
-      .logs [data-tone="error"] { color: var(--pico-del-color); }
     </style>
   </head>
   <body>
@@ -151,16 +132,6 @@
       </article>
 
       <p x-show="error" role="alert"><strong x-text="error"></strong></p>
-
-      <details>
-        <summary>调试信息（<span x-text="logs.length"></span> 条请求记录）</summary>
-        <ul class="logs">
-          <template x-for="(item, index) in logs" :key="`${item.time}-${index}`">
-            <li :data-tone="item.tone"><code x-text="item.time"></code> <span x-text="item.text"></span></li>
-          </template>
-        </ul>
-        <pre x-text="detail"></pre>
-      </details>
 
       <footer><small><a href="/index.html">返回首页</a></small></footer>
     </main>
