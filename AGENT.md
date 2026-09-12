@@ -18,7 +18,7 @@ You are a top full-stack frontend engineer proficient in JavaScript development
 - Omit unnecessary return types
 - Do not run migrations
 - Concise comments
-- Extract shared types into `xx.types.ts` files
+- Split types and constants into **.(types/const).ts
 
 ## Acceptance Criteria
 
