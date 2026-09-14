@@ -3,7 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable } from "@nestjs/common";
 import type { Redis } from "ioredis";
 import { v4 as uuidv4 } from "uuid";
-import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
+import { REDIS_CLIENT } from "../../core/redis/redis.module.ts";
 import { Auth, AuthProvider } from "./entities/auth.entity.ts";
 
 @Injectable()

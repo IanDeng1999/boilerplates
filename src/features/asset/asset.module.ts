@@ -1,14 +1,12 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
-import { OssModule } from "../../infra/oss/oss.module.ts";
-import { AspectsModule } from "../aspects/aspects.module.ts";
 import { User } from "../user/entities/user.entity.ts";
 import { AssetController } from "./asset.controller.ts";
 import { AssetService } from "./asset.service.ts";
 import { Asset } from "./entities/asset.entity.ts";
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Asset, User]), OssModule, AspectsModule],
+  imports: [MikroOrmModule.forFeature([Asset, User])],
   controllers: [AssetController],
   providers: [AssetService],
 })

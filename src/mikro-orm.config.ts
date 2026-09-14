@@ -28,8 +28,8 @@ export default function getMikroORMConfig() {
     },
     migrations: {
       tableName: "mikro_orm_migrations", // 迁移历史记录表名
-      path: "dist/infra/database/migrations", // 编译后的迁移文件路径
-      pathTs: "src/infra/database/migrations", // TypeScript 源文件路径
+      path: "dist/core/database/migrations", // 编译后的迁移文件路径
+      pathTs: "src/core/database/migrations", // TypeScript 源文件路径
       glob: "!(*.d).{js,ts}", // 迁移文件匹配模式
       silent: false, // 是否静默模式
       transactional: true, // 是否使用事务
@@ -40,8 +40,8 @@ export default function getMikroORMConfig() {
       snapshot: true, // 是否生成快照文件
     },
     seeder: {
-      path: "dist/infra/database/seeders", // 编译后的种子文件路径
-      pathTs: "src/infra/database/seeders", // TypeScript 源文件路径
+      path: "dist/core/database/seeders", // 编译后的种子文件路径
+      pathTs: "src/core/database/seeders", // TypeScript 源文件路径
       defaultSeeder: "DatabaseSeeder", // 默认种子执行器
       emit: "ts", // 种子文件格式
       glob: "seeder.ts", // 匹配模式

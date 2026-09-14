@@ -2,6 +2,7 @@ import { Global, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AppCacheModule } from "./cache/cache.module.ts";
 import { AppConfigModule } from "./config/config.module.ts";
+import { CryptoService } from "./crypto/crypto.service.ts";
 import { DbModule } from "./database/database.module.ts";
 import { AppLoggerModule } from "./logger/logger.module.ts";
 import { OssModule } from "./oss/oss.module.ts";
@@ -24,5 +25,7 @@ import { AppThrottlerModule } from "./throttler/throttler.module.ts";
     AppLoggerModule,
     AppThrottlerModule,
   ],
+  providers: [CryptoService],
+  exports: [CryptoService, OssModule],
 })
-export class InfraModule {}
+export class CoreModule {}

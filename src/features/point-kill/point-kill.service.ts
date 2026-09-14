@@ -5,7 +5,7 @@ import { ForbiddenException, Inject, Injectable, Scope } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import type { Cache } from "cache-manager";
 import type { Redis } from "ioredis";
-import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
+import { REDIS_CLIENT } from "../../core/redis/redis.module.ts";
 import {
   PointKill,
   PointKillTargetType,

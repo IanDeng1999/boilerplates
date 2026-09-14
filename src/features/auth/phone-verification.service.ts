@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { Redis } from "ioredis";
-import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
+import { REDIS_CLIENT } from "../../core/redis/redis.module.ts";
 
 const CODE_TTL_SECONDS = 5 * 60;
 const RESEND_TTL_SECONDS = 60;

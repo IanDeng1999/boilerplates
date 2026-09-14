@@ -14,7 +14,7 @@ import {
   ApiErrorResponse,
   ApiSuccessResponse,
   ApiValidationErrorResponse,
-} from "#src/common/swagger/api-response.decorator.ts";
+} from "#src/core/swagger/api-response.decorator.ts";
 import { CurrentUser } from "../aspects/decorators/context.decorator.ts";
 import { AuthGuard } from "../auth/guards/auth.guard.ts";
 import { AssetService } from "./asset.service.ts";
