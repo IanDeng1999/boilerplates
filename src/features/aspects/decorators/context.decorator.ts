@@ -4,15 +4,15 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 
-// 获取当前登录账户信息
-export const CurrentAccount = createParamDecorator(
+// 获取当前登录用户信息
+export const CurrentUser = createParamDecorator(
   (_: unknown, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest<FastifyRequest>();
-    const account = req.account;
-    if (!account) {
+    const user = req.user;
+    if (!user) {
       throw new UnauthorizedException();
     }
-    return account;
+    return user;
   },
 );
 

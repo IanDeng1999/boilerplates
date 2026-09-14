@@ -6,6 +6,7 @@ import { BookModule } from "./book/book.module.ts";
 import { CronjobModule } from "./cronjob/cronjob.module.ts";
 import { HealthModule } from "./health/health.module.ts";
 import { PointKillModule } from "./point-kill/point-kill.module.ts";
+import { UserModule } from "./user/user.module.ts";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PointKillModule } from "./point-kill/point-kill.module.ts";
     CronjobModule,
     HealthModule,
     AuthModule,
+    UserModule,
     AssetModule,
   ],
 })

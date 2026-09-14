@@ -1,8 +1,8 @@
 import { OptionalProps, t } from "@mikro-orm/core";
 import { Entity, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
 
-@Entity({ tableName: "account" })
-export class Account {
+@Entity({ tableName: "user" })
+export class User {
   [OptionalProps]?: "createdAt" | "updatedAt";
 
   @PrimaryKey({
@@ -12,26 +12,11 @@ export class Account {
   })
   id: string;
 
-  @Property({
-    type: t.text,
-    nullable: true,
-    comment: "用户名",
-  })
-  username!: string;
+  @Property({ type: t.text, nullable: true, comment: "用户名" })
+  username?: string;
 
-  @Property({
-    type: t.text,
-    nullable: true,
-    comment: "邮箱",
-  })
-  email!: string;
-
-  @Property({
-    type: t.text,
-    nullable: true,
-    comment: "头像URL",
-  })
-  avatar!: string;
+  @Property({ type: t.text, nullable: true, comment: "头像 URL" })
+  avatar?: string;
 
   @Property({
     type: "timestamp",

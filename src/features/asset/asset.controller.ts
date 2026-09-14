@@ -15,7 +15,7 @@ import {
   ApiSuccessResponse,
   ApiValidationErrorResponse,
 } from "#src/common/swagger/api-response.decorator.ts";
-import { CurrentAccount } from "../aspects/decorators/context.decorator.ts";
+import { CurrentUser } from "../aspects/decorators/context.decorator.ts";
 import { AuthGuard } from "../auth/guards/auth.guard.ts";
 import { AssetService } from "./asset.service.ts";
 import { AssetUploadResponseDto } from "./dto/asset-upload-response.dto.ts";
@@ -48,9 +48,9 @@ export class AssetController {
   @ApiValidationErrorResponse()
   async createUploadUrls(
     @Body() dto: CreateAssetUploadsDto,
-    @CurrentAccount() account: AuthedAccount,
+    @CurrentUser() user: AuthedUser,
   ) {
-    return this.assetService.createUploadUrls(dto, account.id);
+    return this.assetService.createUploadUrls(dto, user.id);
   }
 
   @Post("upload-callback")

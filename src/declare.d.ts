@@ -14,12 +14,12 @@ declare module "pino-roll" {
   }): NodeJS.WritableStream;
 }
 declare global {
-  interface AuthedAccount {
+  interface AuthedUser {
     id: string;
     session: string;
   }
   type FastifyRequest = FastifyRequestType & {
-    account?: AuthedAccount;
+    user?: AuthedUser;
     replyRef: FastifyReplyType;
   };
   type FastifyReply = FastifyReplyType;

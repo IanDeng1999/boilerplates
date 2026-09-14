@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class AccountResponseDto {
+export class UserResponseDto {
   @ApiProperty({
-    description: "账户唯一标识",
+    description: "用户唯一标识",
     format: "uuid",
     example: "018f10a7-4a6d-7f69-8e1b-123456789abc",
   })
@@ -14,13 +14,6 @@ export class AccountResponseDto {
     required: false,
   })
   username?: string;
-
-  @ApiProperty({
-    description: "邮箱",
-    example: "user@example.com",
-    required: false,
-  })
-  email?: string;
 
   @ApiProperty({
     description: "头像地址",

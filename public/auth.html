@@ -16,6 +16,8 @@
             { id: "github", label: "GitHub" },
             { id: "google", label: "Google" },
           ],
+          phone: "",
+          code: "",
           tab: "login",
           loading: false,
           account: null,
@@ -48,14 +50,39 @@
             window.location.assign(payload.data.url);
           },
 
+          async requestPhoneCode() {
+            this.loading = true;
+            this.error = "";
+            const { ok, payload } = await this.call("/api/user/phone/code", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ phone: this.phone }),
+            });
+            this.loading = false;
+            if (!ok) this.fail(payload?.msg ?? "发送验证码失败");
+          },
+
+          async loginWithPhone() {
+            this.loading = true;
+            this.error = "";
+            const { ok, payload } = await this.call("/api/user/phone/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ phone: this.phone, code: this.code }),
+            });
+            this.loading = false;
+            if (!ok) return this.fail(payload?.msg ?? "登录失败");
+            this.account = payload?.data ?? null;
+          },
+
           async checkAccount() {
-            const { ok, payload } = await this.call("/api/auth/account");
+            const { ok, payload } = await this.call("/api/user/me");
             this.account = ok ? (payload?.data ?? null) : null;
           },
 
           async logout() {
             this.loading = true;
-            const { ok, payload } = await this.call("/api/auth/logout", {
+            const { ok, payload } = await this.call("/api/user/logout", {
               method: "POST",
             });
             this.loading = false;
@@ -128,6 +155,18 @@
             </button>
           </template>
         </div>
+        <form @submit.prevent="loginWithPhone()">
+          <label>手机号（E.164 格式）
+            <input x-model.trim="phone" type="tel" placeholder="+8613800138000" required />
+          </label>
+          <label>验证码
+            <input x-model.trim="code" inputmode="numeric" pattern="[0-9]{6}" placeholder="6 位验证码" required />
+          </label>
+          <div class="grid">
+            <button type="button" class="secondary" :disabled="loading || !phone" @click="requestPhoneCode()">获取验证码</button>
+            <button type="submit" :disabled="loading">手机号登录</button>
+          </div>
+        </form>
         <small>第三方回调地址需指向后端 <code>/api/auth/callback/{provider}</code>，由后端换码后重定向回本页。</small>
       </article>
 

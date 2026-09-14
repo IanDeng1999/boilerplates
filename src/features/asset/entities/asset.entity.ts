@@ -7,7 +7,7 @@ import {
   Property,
   Unique,
 } from "@mikro-orm/decorators/legacy";
-import { Account } from "../../auth/entities/account.entity.ts";
+import { User } from "../../user/entities/user.entity.ts";
 
 export enum AssetKind {
   Image = "image",
@@ -148,13 +148,13 @@ export class Asset {
   })
   status: AssetStatus = AssetStatus.Pending;
 
-  @ManyToOne(() => Account, {
+  @ManyToOne(() => User, {
     name: "uploader_id",
     nullable: true,
     createForeignKeyConstraint: false,
     comment: "上传者（逻辑外键），空表示系统资源",
   })
-  uploader?: Account;
+  uploader?: User;
 
   @Property({
     type: "timestamp",

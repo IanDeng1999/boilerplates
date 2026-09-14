@@ -40,7 +40,7 @@ export class AuthGuard implements CanActivate {
       }
 
       // 将用户信息附加到请求对象上，供后续使用
-      request.account = {
+      request.user = {
         id: session.id,
         session: sessionId,
       };

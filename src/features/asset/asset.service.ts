@@ -8,7 +8,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { OssService } from "../../infra/oss/oss.service.ts";
-import { Account } from "../auth/entities/account.entity.ts";
+import { User } from "../user/entities/user.entity.ts";
 import { ALLOWED_EXTENSION_SET, UPLOAD_URL_EXPIRES_IN } from "./asset.const.ts";
 import { AssetUploadResponseDto } from "./dto/asset-upload-response.dto.ts";
 import {
@@ -135,7 +135,7 @@ export class AssetService {
       kind: this.resolveKind(dto.mimeType),
       size: dto.size,
       sha256,
-      uploader: this.em.getReference(Account, uploaderId),
+      uploader: this.em.getReference(User, uploaderId),
     });
     this.em.persist(asset);
 

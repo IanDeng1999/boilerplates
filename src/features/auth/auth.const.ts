@@ -1,3 +1,5 @@
+import { AuthProvider } from "./entities/auth.entity.ts";
+
 export const OAUTH_ENDPOINTS = {
   google: {
     authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
@@ -11,4 +13,14 @@ export const OAUTH_ENDPOINTS = {
     userInfoUrl: "https://api.github.com/user",
     scope: "read:user user:email",
   },
-} as const;
+} satisfies Partial<
+  Record<
+    AuthProvider,
+    {
+      authorizationUrl: string;
+      tokenUrl: string;
+      userInfoUrl: string;
+      scope: string;
+    }
+  >
+>;

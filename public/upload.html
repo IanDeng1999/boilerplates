@@ -39,7 +39,7 @@
           },
 
           async checkAccount() {
-            const { ok, payload } = await this.call("/api/auth/account");
+            const { ok, payload } = await this.call("/api/user/me");
             this.account = ok ? (payload?.data ?? null) : null;
             if (!this.account) this.fail("未登录，请先到登录页完成授权");
           },
