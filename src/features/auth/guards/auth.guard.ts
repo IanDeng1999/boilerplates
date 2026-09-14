@@ -7,18 +7,15 @@ import {
 } from "@nestjs/common";
 import { Redis } from "ioredis";
 import { REDIS_CLIENT } from "../../../infra/redis/redis.module.ts";
-import { HttpContextService } from "../../http-context/http-context.service.ts";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(
-    @Inject(REDIS_CLIENT) private readonly redisClient: Redis,
-    private readonly httpContextService: HttpContextService,
-  ) {}
+  constructor(@Inject(REDIS_CLIENT) private readonly redisClient: Redis) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
-    const sessionId = this.httpContextService.getCookie("session");
+    const reply = context.switchToHttp().getResponse<FastifyReply>();
+    const sessionId = request.cookies?.session;
 
     if (!sessionId) {
       throw new UnauthorizedException("请先登录");
@@ -29,7 +26,7 @@ export class AuthGuard implements CanActivate {
     const sessionData = await this.redisClient.hget(key, "data");
 
     if (!sessionData) {
-      this.httpContextService.clearCookie("session");
+      reply.clearCookie("session", { path: "/" });
       throw new UnauthorizedException("会话已过期，请重新登录");
     }
 

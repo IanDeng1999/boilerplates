@@ -2,8 +2,10 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { ForbiddenException, Inject, Injectable, Scope } from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
 import type { Cache } from "cache-manager";
-import { HttpContextService } from "../http-context/http-context.service.ts";
+import type { Redis } from "ioredis";
+import { REDIS_CLIENT } from "../../infra/redis/redis.module.ts";
 import {
   PointKill,
   PointKillTargetType,
@@ -16,18 +18,37 @@ export class PointKillService {
     @InjectRepository(PointKill)
     private readonly pointKillRepository: EntityRepository<PointKill>,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-    private readonly httpContextService: HttpContextService,
+    @Inject(REQUEST) private readonly request: FastifyRequest,
+    @Inject(REDIS_CLIENT) private readonly redisClient: Redis,
   ) {}
 
   async assertRequestAllowed() {
-    const ip = this.httpContextService.getClientIp();
+    const ip = this.request.ip ?? this.request.socket.remoteAddress;
     if (ip && (await this.isBlocked(PointKillTargetType.Ip, ip))) {
       throw new ForbiddenException("当前 IP 已被禁止访问");
     }
 
-    const userId = await this.httpContextService.getUserIdFromSession();
+    const userId = await this.getUserIdFromSession();
     if (userId && (await this.isBlocked(PointKillTargetType.UserId, userId))) {
       throw new ForbiddenException("当前用户已被禁止访问");
+    }
+  }
+
+  private async getUserIdFromSession() {
+    const sessionId = this.request.cookies?.session;
+    if (!sessionId) return undefined;
+
+    const sessionData = await this.redisClient.hget(
+      `session:${sessionId}`,
+      "data",
+    );
+    if (!sessionData) return undefined;
+
+    try {
+      const session = JSON.parse(sessionData) as { id?: unknown };
+      return typeof session.id === "string" ? session.id : undefined;
+    } catch {
+      return undefined;
     }
   }
 

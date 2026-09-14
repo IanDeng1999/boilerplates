@@ -20,7 +20,6 @@ declare global {
   }
   type FastifyRequest = FastifyRequestType & {
     user?: AuthedUser;
-    replyRef: FastifyReplyType;
   };
   type FastifyReply = FastifyReplyType;
 }

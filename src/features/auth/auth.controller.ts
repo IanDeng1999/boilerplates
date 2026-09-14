@@ -1,3 +1,4 @@
+import type { CookieSerializeOptions } from "@fastify/cookie";
 import {
   Controller,
   Get,
@@ -6,8 +7,10 @@ import {
   Logger,
   Param,
   Query,
+  Req,
   Res,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import {
   ApiOperation,
   ApiParam,
@@ -15,7 +18,6 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { HttpContextService } from "../http-context/http-context.service.ts";
 import { UserService } from "../user/user.service.ts";
 import { OAuthRedirectDto } from "./dto/oauth-redirect.dto.ts";
 import { AuthProvider } from "./entities/auth.entity.ts";
@@ -30,18 +32,25 @@ export class AuthController {
   constructor(
     private readonly oauthService: OauthService,
     private readonly userService: UserService,
-    private readonly httpContext: HttpContextService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get("login/:provider")
   @ApiOperation({ summary: "获取 OAuth 授权地址" })
   @ApiParam(providerParameter())
-  async getOAuthUrl(@Param("provider") provider: AuthProvider) {
+  async getOAuthUrl(
+    @Param("provider") provider: AuthProvider,
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ) {
     const { url, state } = this.oauthService.getRedirectUrl(provider);
-    this.httpContext.setCookie("oauth-state", state, {
-      sameSite: "lax",
-      maxAge: 10 * 60,
-    });
+    reply.setCookie(
+      "oauth-state",
+      state,
+      this.cookieOptions({
+        sameSite: "lax",
+        maxAge: 10 * 60,
+      }),
+    );
     return { url, state } satisfies OAuthRedirectDto;
   }
 
@@ -55,12 +64,13 @@ export class AuthController {
     @Param("provider") provider: AuthProvider,
     @Query("code") code: string,
     @Query("state") state: string,
+    @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,
   ) {
-    if (!state || state !== this.httpContext.getCookie("oauth-state")) {
+    if (!state || state !== request.cookies?.["oauth-state"]) {
       return this.redirectToLogin(reply, "state 校验失败，请重新登录");
     }
-    this.httpContext.clearCookie("oauth-state");
+    reply.clearCookie("oauth-state", { path: "/" });
 
     try {
       const authentication = await this.oauthService.authenticate(
@@ -69,9 +79,13 @@ export class AuthController {
       );
       const { sessionId } =
         await this.userService.loginWithOAuth(authentication);
-      this.httpContext.setCookie("session", sessionId, {
-        maxAge: 7 * 24 * 60 * 60,
-      });
+      reply.setCookie(
+        "session",
+        sessionId,
+        this.cookieOptions({
+          maxAge: 7 * 24 * 60 * 60,
+        }),
+      );
       return reply.redirect(this.loginPagePath, HttpStatus.FOUND);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -85,6 +99,16 @@ export class AuthController {
   private redirectToLogin(reply: FastifyReply, message: string) {
     const query = new URLSearchParams({ loginError: message });
     return reply.redirect(`${this.loginPagePath}?${query}`, HttpStatus.FOUND);
+  }
+
+  private cookieOptions(options: CookieSerializeOptions = {}) {
+    const defaultOptions: CookieSerializeOptions = {
+      httpOnly: true,
+      secure: this.configService.get("NODE_ENV") === "production",
+      sameSite: "strict",
+      path: "/",
+    };
+    return { ...defaultOptions, ...options };
   }
 }
 

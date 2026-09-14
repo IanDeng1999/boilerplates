@@ -7,8 +7,10 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "../auth/auth.service.ts";
 import { LogoutResponseDto } from "../auth/dto/logout-response.dto.ts";
@@ -16,7 +18,6 @@ import { PhoneLoginDto } from "../auth/dto/phone-login.dto.ts";
 import { RequestPhoneCodeDto } from "../auth/dto/request-phone-code.dto.ts";
 import { AuthGuard } from "../auth/guards/auth.guard.ts";
 import { PhoneVerificationService } from "../auth/phone-verification.service.ts";
-import { HttpContextService } from "../http-context/http-context.service.ts";
 import { UserService } from "./user.service.ts";
 
 @ApiTags("用户")
@@ -26,7 +27,7 @@ export class UserController {
     private readonly userService: UserService,
     private readonly authService: AuthService,
     private readonly phoneVerificationService: PhoneVerificationService,
-    private readonly httpContext: HttpContextService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post("phone/code")
@@ -39,12 +40,19 @@ export class UserController {
   @Post("phone/login")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "手机号验证码登录或注册" })
-  async loginWithPhone(@Body() dto: PhoneLoginDto) {
+  async loginWithPhone(
+    @Body() dto: PhoneLoginDto,
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ) {
     await this.phoneVerificationService.verifyLoginCode(dto.phone, dto.code);
     const { sessionId, user } = await this.userService.loginWithPhone(
       dto.phone,
     );
-    this.httpContext.setCookie("session", sessionId, {
+    reply.setCookie("session", sessionId, {
+      httpOnly: true,
+      secure: this.configService.get("NODE_ENV") === "production",
+      sameSite: "strict",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
     return user;

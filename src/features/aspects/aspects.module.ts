@@ -1,6 +1,5 @@
 import { HttpStatus, Module, ValidationPipe } from "@nestjs/common";
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
-import { HttpContextModule } from "../http-context/http-context.module.ts";
 import { PointKillModule } from "../point-kill/point-kill.module.ts";
 import { DefaultFilter } from "./filters/default/default.filter.ts";
 import { HttpFilter } from "./filters/http/http.filter.ts";
@@ -10,7 +9,7 @@ import { ThrottlerGuard } from "./guards/throttler.guard.ts";
 import { FormatterInterceptor } from "./interceptors/formatter/formatter.interceptor.ts";
 
 @Module({
-  imports: [HttpContextModule, PointKillModule],
+  imports: [PointKillModule],
   providers: [
     {
       provide: APP_INTERCEPTOR,

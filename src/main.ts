@@ -28,8 +28,6 @@ async function bootstrap() {
   fastifyInstance.addHook(
     "preHandler",
     (req: FastifyRequest, reply: FastifyReply, done: () => void) => {
-      // HACK: 把 Reply 挂到 Request 上
-      req.replyRef = reply;
       // 把 LogID 挂到响应头上
       reply.header("x-log-id", req.id);
       done();
