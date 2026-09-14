@@ -27,7 +27,7 @@ import { OauthService } from "./oauth.service.ts";
 @Controller("api/auth")
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
-  private readonly loginPagePath = "/login.html";
+  private readonly loginPagePath = "/auth.html";
 
   constructor(
     private readonly oauthService: OauthService,
