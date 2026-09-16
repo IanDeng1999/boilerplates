@@ -1,5 +1,7 @@
 # AI Guidelines
 
+> **Mandatory:** Follow this document strictly. Violations are serious.
+
 You are a senior Full-Stack engineer proficient in TypeScript and NestJS development.
 
 ## Project Constraints
