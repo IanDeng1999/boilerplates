@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" />
   </head>
   <body>
-    <main x-data>
+    <main x-data="wsTest()">
       <header>
         <nav aria-label="页面导航"><a href="/index.html">返回首页</a></nav>
       </header>
@@ -17,144 +17,103 @@
       <article>
         <header>
           <strong>连接状态</strong>
-          <span id="status" aria-live="polite">正在连接…</span>
+          <span aria-live="polite" x-text="status">正在连接…</span>
         </header>
         <p><small>此接口需要登录会话；未登录时请先前往登录页。</small></p>
         <p><a href="/auth.html">前往登录</a></p>
       </article>
 
       <article>
-        <form id="roomForm">
+        <form @submit.prevent="joinRoom">
           <label for="roomId">房间 ID</label>
           <p>
-            <input id="roomId" name="roomId" placeholder="general" value="general" required />
-            <button id="joinBtn" type="submit">加入房间</button>
-            <button id="leaveBtn" type="button" hidden>离开房间</button>
+            <input id="roomId" x-model="roomId" name="roomId" placeholder="general" required :disabled="currentRoom" />
+            <button type="submit" x-show="!currentRoom">加入房间</button>
+            <button type="button" x-show="currentRoom" @click="leaveRoom">离开房间</button>
           </p>
         </form>
 
-        <form id="messageForm">
+        <form @submit.prevent="sendMessage">
           <label for="msgInput">消息</label>
           <p>
-            <input id="msgInput" name="message" placeholder="输入消息…" autocomplete="off" required disabled />
-            <button id="sendBtn" type="submit" disabled>发送</button>
+            <input id="msgInput" x-ref="message" x-model="message" name="message" placeholder="输入消息…" autocomplete="off" required :disabled="!currentRoom" />
+            <button type="submit" :disabled="!currentRoom">发送</button>
           </p>
-          <small id="messageHint">请先加入一个房间。</small>
+          <small x-text="currentRoom ? '正在向房间“' + currentRoom + '”发送消息。' : '请先加入一个房间。'"></small>
         </form>
       </article>
 
       <article>
         <header><strong>事件日志</strong></header>
-        <ul id="messages" aria-live="polite"></ul>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">时间</th>
+              <th scope="col">事件</th>
+              <th scope="col">详情</th>
+            </tr>
+          </thead>
+          <tbody aria-live="polite">
+            <template x-for="item in messages" :key="item.id">
+              <tr>
+                <td x-text="item.time"></td>
+                <td x-text="item.event"></td>
+                <td x-text="item.detail"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
       </article>
     </main>
 
     <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
     <script>
-      const socket = io("/events", {
-        transports: ["websocket"],
-        withCredentials: true,
-      });
+      function wsTest() {
+        return {
+          status: "正在连接…",
+          roomId: "general",
+          currentRoom: null,
+          message: "",
+          messages: [],
+          socket: null,
 
-      const $status = document.getElementById("status");
-      const $messages = document.getElementById("messages");
-      const $roomForm = document.getElementById("roomForm");
-      const $messageForm = document.getElementById("messageForm");
-      const $roomId = document.getElementById("roomId");
-      const $msgInput = document.getElementById("msgInput");
-      const $joinBtn = document.getElementById("joinBtn");
-      const $leaveBtn = document.getElementById("leaveBtn");
-      const $sendBtn = document.getElementById("sendBtn");
-      const $messageHint = document.getElementById("messageHint");
+          init() {
+            this.socket = io("/events", { transports: ["websocket"], withCredentials: true });
+            this.socket.on("connect", () => { this.status = "已连接（" + this.socket.id + "）"; this.log("connect", "已连接到服务器"); });
+            this.socket.on("disconnect", () => { this.status = "连接已断开"; this.currentRoom = null; this.log("disconnect", "与服务器断开连接"); });
+            this.socket.on("connect_error", (error) => { this.status = "连接失败：" + error.message; this.log("connect_error", "连接失败：" + error.message); });
+            this.socket.on("user_joined", (data) => this.log("user_joined", "用户加入：" + data.userId));
+            this.socket.on("user_left", (data) => this.log("user_left", "用户离开：" + data.userId));
+            this.socket.on("new_message", (data) => this.log("new_message", (data.senderId === this.socket.id ? "你" : data.senderId) + "：" + data.message));
+            this.socket.on("error", (data) => { const message = data?.message ?? "发生未知错误"; this.status = "连接错误：" + message; this.log("error", "错误：" + message); });
+          },
 
-      let currentRoom = null;
-
-      function log(message) {
-        const item = document.createElement("li");
-        const text = document.createElement("span");
-        const time = document.createElement("small");
-        text.textContent = message;
-        time.textContent = new Date().toLocaleTimeString("zh-CN");
-        item.append(text, time);
-        $messages.appendChild(item);
+          log(event, detail) { this.messages.push({ id: crypto.randomUUID(), time: new Date().toLocaleTimeString("zh-CN"), event, detail }); },
+          joinRoom() {
+            const room = this.roomId.trim();
+            if (!room) return;
+            this.socket.emit("join_room", { roomId: room }, (response) => {
+              if (!response?.roomId) return this.log("join_room", "加入房间失败");
+              this.currentRoom = response.roomId;
+              this.log("join_room", "已加入房间：" + response.roomId);
+              this.$nextTick(() => this.$refs.message.focus());
+            });
+          },
+          leaveRoom() {
+            if (!this.currentRoom) return;
+            const room = this.currentRoom;
+            this.socket.emit("leave_room", { roomId: room }, () => { this.currentRoom = null; this.log("leave_room", "已离开房间：" + room); });
+          },
+          sendMessage() {
+            const message = this.message.trim();
+            if (!message || !this.currentRoom) return;
+            this.socket.emit("send_message", { roomId: this.currentRoom, message });
+            this.message = "";
+            this.$nextTick(() => this.$refs.message.focus());
+          },
+        };
       }
-
-      function setRoom(room) {
-        currentRoom = room;
-        const joined = Boolean(room);
-        $roomId.disabled = joined;
-        $joinBtn.hidden = joined;
-        $leaveBtn.hidden = !joined;
-        $msgInput.disabled = !joined;
-        $sendBtn.disabled = !joined;
-        $messageHint.textContent = joined
-          ? "正在向房间“" + room + "”发送消息。"
-          : "请先加入一个房间。";
-        if (joined) $msgInput.focus();
-      }
-
-      socket.on("connect", () => {
-        $status.textContent = "已连接（" + socket.id + "）";
-        log("已连接到服务器");
-      });
-
-      socket.on("disconnect", () => {
-        $status.textContent = "连接已断开";
-        setRoom(null);
-        log("与服务器断开连接");
-      });
-
-      socket.on("connect_error", (error) => {
-        $status.textContent = "连接失败：" + error.message;
-        log("连接失败：" + error.message);
-      });
-
-      socket.on("user_joined", (data) => log("用户加入：" + data.userId));
-      socket.on("user_left", (data) => log("用户离开：" + data.userId));
-
-      socket.on("new_message", (data) => {
-        const sender = data.senderId === socket.id ? "你" : data.senderId;
-        log(sender + "：" + data.message);
-      });
-
-      socket.on("error", (data) => {
-        const message = data?.message ?? "发生未知错误";
-        $status.textContent = "连接错误：" + message;
-        log("错误：" + message);
-      });
-
-      $roomForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const room = $roomId.value.trim();
-        if (!room) return;
-        socket.emit("join_room", { roomId: room }, (response) => {
-          if (!response?.roomId) {
-            log("加入房间失败");
-            return;
-          }
-          setRoom(response.roomId);
-          log("已加入房间：" + response.roomId);
-        });
-      });
-
-      $leaveBtn.addEventListener("click", () => {
-        if (!currentRoom) return;
-        const room = currentRoom;
-        socket.emit("leave_room", { roomId: room }, () => {
-          setRoom(null);
-          log("已离开房间：" + room);
-        });
-      });
-
-      $messageForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const message = $msgInput.value.trim();
-        if (!message || !currentRoom) return;
-        socket.emit("send_message", { roomId: currentRoom, message });
-        $msgInput.value = "";
-        $msgInput.focus();
-      });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
   </body>
 </html>
