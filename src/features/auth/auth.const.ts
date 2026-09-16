@@ -1,5 +1,11 @@
 import { AuthProvider } from "./entities/auth.entity.ts";
 
+export const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
+
+export function sessionKey(sessionId: string) {
+  return `session:${sessionId}`;
+}
+
 export const OAUTH_ENDPOINTS = {
   google: {
     authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",

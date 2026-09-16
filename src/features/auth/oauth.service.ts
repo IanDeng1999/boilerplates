@@ -11,7 +11,6 @@ import { OAUTH_ENDPOINTS } from "./auth.const.ts";
 import type {
   GitHubUserInfo,
   GoogleUserInfo,
-  OAuthAuthentication,
   OAuthProfile,
   OAuthTokenResponse,
 } from "./auth.types.ts";
@@ -42,21 +41,14 @@ export class OauthService {
       response_type: "code",
       scope: config.scope,
       state,
-      access_type: "offline",
-      prompt: "consent",
+      ...(provider === AuthProvider.GOOGLE
+        ? { access_type: "offline", prompt: "consent" }
+        : {}),
     });
-
-    if (provider === AuthProvider.GITHUB) {
-      params.delete("prompt");
-      params.delete("access_type");
-    }
     return { url: `${config.authorizationUrl}?${params.toString()}`, state };
   }
 
-  async authenticate(
-    provider: AuthProvider,
-    code: string,
-  ): Promise<OAuthAuthentication> {
+  async authenticate(provider: AuthProvider, code: string) {
     this.assertProvider(provider);
     const token = await this.exchangeCode(provider, code);
     const profile = await this.fetchProfile(provider, token.access_token);
@@ -198,7 +190,7 @@ export class OauthService {
   }
 
   private assertProvider(provider: string): asserts provider is OAuthProvider {
-    if (!(provider in OAUTH_ENDPOINTS)) {
+    if (!Object.hasOwn(OAUTH_ENDPOINTS, provider)) {
       throw new BadRequestException("不支持的 OAuth 提供商");
     }
   }

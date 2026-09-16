@@ -4,12 +4,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import type { Redis } from "ioredis";
 import { v4 as uuidv4 } from "uuid";
 import { REDIS_CLIENT } from "../../core/redis/redis.module.ts";
+import { SESSION_TTL_SECONDS, sessionKey } from "./auth.const.ts";
 import { Auth, AuthProvider } from "./entities/auth.entity.ts";
 
 @Injectable()
 export class AuthService {
-  private readonly sessionTtl = 7 * 24 * 60 * 60;
-
   constructor(
     @InjectRepository(Auth)
     private readonly authRepository: EntityRepository<Auth>,
@@ -33,22 +32,18 @@ export class AuthService {
     return auth;
   }
 
-  createSession(userId: string) {
-    return this.persistSession(userId);
-  }
-
   async logout(sessionId: string) {
-    await this.redisClient.del(`session:${sessionId}`);
+    await this.redisClient.del(sessionKey(sessionId));
   }
 
-  private async persistSession(userId: string) {
+  async createSession(userId: string) {
     const sessionId = uuidv4();
     await this.redisClient.hset(
-      `session:${sessionId}`,
+      sessionKey(sessionId),
       "data",
       JSON.stringify({ id: userId }),
     );
-    await this.redisClient.expire(`session:${sessionId}`, this.sessionTtl);
+    await this.redisClient.expire(sessionKey(sessionId), SESSION_TTL_SECONDS);
     return sessionId;
   }
 }

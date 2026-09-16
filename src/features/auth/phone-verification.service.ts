@@ -25,6 +25,10 @@ export class PhoneVerificationService {
   ) {}
 
   async requestLoginCode(phone: string) {
+    if (this.configService.get("NODE_ENV") === "production") {
+      throw new ServiceUnavailableException("短信服务尚未配置");
+    }
+
     const cooldownKey = `phone-login:cooldown:${phone}`;
     const available = await this.redisClient.set(
       cooldownKey,
@@ -45,18 +49,12 @@ export class PhoneVerificationService {
       CODE_TTL_SECONDS,
     );
 
-    if (this.configService.get("NODE_ENV") === "production") {
-      await this.redisClient.del(cooldownKey, `phone-login:code:${phone}`);
-      throw new ServiceUnavailableException("短信服务尚未配置");
-    }
-
     this.logger.warn(`开发环境短信验证码 [${phone}]: ${code}`);
   }
 
   async verifyLoginCode(phone: string, code: string) {
     const key = `phone-login:code:${phone}`;
-    const hash = await this.redisClient.get(key);
-    await this.redisClient.del(key);
+    const hash = await this.redisClient.getdel(key);
     if (!hash || hash !== this.hash(code)) {
       throw new UnauthorizedException("验证码无效或已过期");
     }

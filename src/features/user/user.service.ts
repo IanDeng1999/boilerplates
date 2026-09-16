@@ -40,52 +40,67 @@ export class UserService {
       AuthProvider.PHONE,
       phone,
     );
-    const user = auth ? await this.findById(auth.userId) : this.create({});
-    if (!user) throw new Error("认证关联的用户不存在");
-    if (!auth) {
-      await this.em.flush();
-      await this.authService.registerPhone(user.id, phone);
+
+    if (auth) {
+      const user = await this.findRequiredUser(auth.userId);
+      return this.createLoginResult(user);
     }
+
+    const user = this.create({});
+    // 用户 ID 由数据库生成，注册手机号前需要先落库。
     await this.em.flush();
-    return {
-      sessionId: await this.authService.createSession(user.id),
-      user: this.serialization(user),
-    };
+    await this.authService.registerPhone(user.id, phone);
+    return this.createLoginResult(user);
   }
 
   async loginWithOAuth(authentication: OAuthAuthentication) {
-    const existingAuth = await this.oauthService.findByProviderSubject(
+    const providerAuth = await this.oauthService.findByProviderSubject(
       authentication.provider,
       authentication.subject,
     );
     const emailAuth = authentication.profile.email
       ? await this.oauthService.findVerifiedEmail(authentication.profile.email)
       : null;
-    const isNewUser = !existingAuth && !emailAuth;
-    const user = existingAuth
-      ? await this.findById(existingAuth.userId)
-      : emailAuth
-        ? await this.findById(emailAuth.userId)
-        : this.create(authentication.profile);
-    if (!user) throw new Error("认证关联的用户不存在");
 
-    if (!existingAuth) {
-      if (emailAuth) this.updateMissingProfile(user, authentication.profile);
-      if (isNewUser) await this.em.flush();
+    if (providerAuth) {
+      const user = await this.findRequiredUser(providerAuth.userId);
+      await this.oauthService.updateToken(providerAuth, authentication.token);
+      return this.createLoginResult(user);
+    }
+
+    if (emailAuth) {
+      const user = await this.findRequiredUser(emailAuth.userId);
+      this.updateMissingProfile(user, authentication.profile);
       await this.oauthService.register(
         user.id,
         authentication.provider,
         authentication.subject,
-        authentication.verifiedEmail && !emailAuth
-          ? authentication.profile.email
-          : undefined,
+        undefined,
         authentication.token,
       );
-    } else {
-      await this.oauthService.updateToken(existingAuth, authentication.token);
+      return this.createLoginResult(user);
     }
 
+    const user = this.create(authentication.profile);
+    // OAuth 认证及令牌记录依赖数据库生成的用户 ID。
     await this.em.flush();
+    await this.oauthService.register(
+      user.id,
+      authentication.provider,
+      authentication.subject,
+      authentication.verifiedEmail ? authentication.profile.email : undefined,
+      authentication.token,
+    );
+    return this.createLoginResult(user);
+  }
+
+  private async findRequiredUser(id: string) {
+    const user = await this.findById(id);
+    if (!user) throw new Error("认证关联的用户不存在");
+    return user;
+  }
+
+  private async createLoginResult(user: User) {
     return {
       sessionId: await this.authService.createSession(user.id),
       user: this.serialization(user),

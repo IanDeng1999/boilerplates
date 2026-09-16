@@ -5,8 +5,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { Redis } from "ioredis";
+import type { Redis } from "ioredis";
 import { REDIS_CLIENT } from "../../../core/redis/redis.module.ts";
+import { sessionKey } from "../auth.const.ts";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -21,30 +22,29 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("请先登录");
     }
 
-    // 从Redis获取session数据
-    const key = `session:${sessionId}`;
-    const sessionData = await this.redisClient.hget(key, "data");
+    const sessionData = await this.redisClient.hget(
+      sessionKey(sessionId),
+      "data",
+    );
 
     if (!sessionData) {
       reply.clearCookie("session", { path: "/" });
       throw new UnauthorizedException("会话已过期，请重新登录");
     }
 
+    let session: { id?: unknown };
     try {
-      const session = JSON.parse(sessionData);
-      if (!session.id) {
-        throw new UnauthorizedException("会话数据无效");
-      }
-
-      // 将用户信息附加到请求对象上，供后续使用
-      request.user = {
-        id: session.id,
-        session: sessionId,
-      };
-
-      return true;
+      session = JSON.parse(sessionData);
     } catch {
+      reply.clearCookie("session", { path: "/" });
       throw new UnauthorizedException("会话数据格式错误");
     }
+    if (typeof session.id !== "string" || !session.id) {
+      reply.clearCookie("session", { path: "/" });
+      throw new UnauthorizedException("会话数据无效");
+    }
+
+    request.user = { id: session.id, session: sessionId };
+    return true;
   }
 }
