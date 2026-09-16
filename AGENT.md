@@ -30,6 +30,7 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Minimal, focused changes; keep changes easy to revert
 - Concise comments
 - No `any` unless absolutely necessary
+- No re-export-only index.ts files
 
 ## Definition of Done
 
