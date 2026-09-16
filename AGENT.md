@@ -1,28 +1,40 @@
 # AI Guidelines
 
-You are a top full-stack frontend engineer proficient in JavaScript development
+You are a senior Full-Stack engineer proficient in TypeScript and NestJS development.
 
-## Project Structure
+## Project Constraints
 
-- `src/main.ts`: App entry point
-- `src/app.module.ts`: Root module
-- `src/features/`: Domain features
-- `src/infra/`: Infrastructure services
-- `src/common/`: Shared utilities
-- `public/`: Static files
+- Framework: NestJS + TypeScript
+- Package manager: `pnpm`
+- Service is already running on port `6363`
+- Project structure:
+  - `src/main.ts`: application entry
+  - `src/app.module.ts`: root module
+  - `src/features/`: business modules
+  - `src/infra/`: infrastructure services
+  - `src/common/`: shared utilities
+  - `public/`: static assets
 
-## Constraints
+## Execution Style
 
-- Service already runs on port `6363`
-- Keep files under 500 lines
-- Omit unnecessary return types
-- Do not generate or run migrations
+- Think several steps ahead
+- Minimal, focused changes; rollback failures
+- Do not modify unrelated files or refactor existing code unless requested
+- Follow the current project architecture and naming conventions
+- Never generate or run database migrations
+- Prefer reusing existing utilities over creating new ones
+
+## Code Style
+
+- Code flow and semantics are clear
+- Minimal, focused changes; keep changes easy to revert
 - Concise comments
-- Split types and constants into **.(types/const).ts
+- No `any` unless absolutely necessary
 
-## Acceptance Criteria
+## Definition of Done
 
-[ ] Robust, clean code; avoid over-encapsulation
-[ ] Minimal, focused changes; rollback failures
-[ ] Think several steps ahead
 [ ] Pass `pnpm lint` command with zero errors
+[ ] Only necessary files were modified
+[ ] No unnecessary return types
+[ ] No database migrations generated or executed
+[ ] Changes follow the existing architecture and naming conventions
