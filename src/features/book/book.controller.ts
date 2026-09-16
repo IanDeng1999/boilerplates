@@ -23,6 +23,7 @@ import {
   ApiSuccessResponse,
   ApiValidationErrorResponse,
 } from "#src/core/swagger/api-response.decorator.ts";
+import { UseHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
 import { BookService } from "./book.service.ts";
 import {
   BookResponseDto,
@@ -33,6 +34,7 @@ import { UpdateBookDto } from "./dto/update-book.dto.ts";
 
 @ApiTags("书籍")
 @Controller("api/book")
+@UseHttpAspects()
 @UseInterceptors(CacheInterceptor)
 export class BookController {
   constructor(

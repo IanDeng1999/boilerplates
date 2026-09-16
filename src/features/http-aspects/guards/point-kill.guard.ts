@@ -5,7 +5,7 @@ import {
   Scope,
   SetMetadata,
 } from "@nestjs/common";
-import { PointKillService } from "../../../features/point-kill/point-kill.service.ts";
+import { PointKillService } from "../../point-kill/point-kill.service.ts";
 import { SKIP_POINT_KILL_KEY } from "./point-kill.const.ts";
 
 export { SKIP_POINT_KILL_KEY } from "./point-kill.const.ts";

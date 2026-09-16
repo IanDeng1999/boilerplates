@@ -25,12 +25,14 @@ import {
 } from "#src/core/swagger/api-response.decorator.ts";
 import { OssService } from "../../core/oss/oss.service.ts";
 import { REDIS_CLIENT } from "../../core/redis/redis.module.ts";
-import { SkipPointKill } from "../aspects/guards/point-kill.guard.ts";
+import { UseHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
+import { SkipPointKill } from "../http-aspects/guards/point-kill.guard.ts";
 import { HealthCheckOptionsDto } from "./dto/health-check-options.dto.ts";
 import { HealthResponseDto } from "./dto/health-response.dto.ts";
 
 @Controller("health")
 @ApiTags("health")
+@UseHttpAspects()
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,

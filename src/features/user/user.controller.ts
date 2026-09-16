@@ -18,10 +18,12 @@ import { PhoneLoginDto } from "../auth/dto/phone-login.dto.ts";
 import { RequestPhoneCodeDto } from "../auth/dto/request-phone-code.dto.ts";
 import { AuthGuard } from "../auth/guards/auth.guard.ts";
 import { PhoneVerificationService } from "../auth/phone-verification.service.ts";
+import { UseHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
 import { UserService } from "./user.service.ts";
 
 @ApiTags("用户")
 @Controller("api/user")
+@UseHttpAspects()
 export class UserController {
   constructor(
     private readonly userService: UserService,

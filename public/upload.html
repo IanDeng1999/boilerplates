@@ -4,7 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>上传测试</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" />
+    <style>
+      [x-cloak] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main x-data="uploadPage" x-cloak>
+      <header>
+        <nav aria-label="页面导航"><a href="/index.html">返回首页</a></nav>
+      </header>
+      <h1>上传测试</h1>
+      <p>浏览器本地算 sha256，换取预签名地址后直传 OSS，单次最多 10 个、单个 5 GiB。</p>
+
+      <article x-show="!account">
+        <p>当前未登录，上传接口需要会话。</p>
+        <p><a href="/auth.html">前往登录</a></p>
+      </article>
+      <article x-show="account">
+        <header>以 <strong x-text="account?.username ?? account?.id"></strong> 身份上传</header>
+        <input type="file" multiple @change="onPick($event)" :disabled="running" />
+        <small>上传相同内容的文件会命中已有资产（<code>existed: true</code>），不会重复占用存储。</small>
+      </article>
+
+      <article x-show="files.length">
+        <table>
+          <thead><tr><th>文件</th><th>大小</th><th>sha256</th><th>状态</th></tr></thead>
+          <tbody>
+            <template x-for="(item, index) in files" :key="index">
+              <tr>
+                <td>
+                  <span x-text="item.name"></span>
+                  <small x-show="item.key"><code x-text="item.key"></code></small>
+                </td>
+                <td x-text="item.sizeText"></td>
+                <td><code x-text="item.sha256 ? item.sha256.slice(0, 16) + '…' : '—'"></code></td>
+                <td x-text="item.status"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <p>
+          <button :disabled="running || !account" @click="start()">
+            <span x-show="!running">计算哈希并上传</span>
+            <span x-show="running">处理中…</span>
+          </button>
+        </p>
+      </article>
+
+      <p x-show="error" role="alert"><strong x-text="error"></strong></p>
+
+    </main>
+
     <script>
       // 直传流程：本地算 sha256 → 换预签名 PUT 地址 → 携带签名头直传 OSS
       const MAX_SIZE = 5 * 1024 ** 3;
@@ -121,56 +172,5 @@
       });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
-    <style>
-      [x-cloak] { display: none !important; }
-      .hash { word-break: break-all; font-size: 0.75rem; }
-    </style>
-  </head>
-  <body>
-    <main class="container" x-data="uploadPage" x-cloak>
-      <hgroup>
-        <h1>上传测试</h1>
-        <p>浏览器本地算 sha256，换取预签名地址后直传 OSS，单次最多 10 个、单个 5 GiB。</p>
-      </hgroup>
-
-      <article x-show="!account">
-        <p>当前未登录，上传接口需要会话。</p>
-        <a href="/auth.html" role="button">前往登录</a>
-      </article>
-      <article x-show="account">
-        <header>以 <strong x-text="account?.username ?? account?.id"></strong> 身份上传</header>
-        <input type="file" multiple @change="onPick($event)" :disabled="running" />
-        <small>上传相同内容的文件会命中已有资产（<code>existed: true</code>），不会重复占用存储。</small>
-      </article>
-
-      <article x-show="files.length">
-        <table>
-          <thead><tr><th>文件</th><th>大小</th><th>sha256</th><th>状态</th></tr></thead>
-          <tbody>
-            <template x-for="(item, index) in files" :key="index">
-              <tr>
-                <td>
-                  <span x-text="item.name"></span>
-                  <div class="hash" x-show="item.key"><code x-text="item.key"></code></div>
-                </td>
-                <td x-text="item.sizeText"></td>
-                <td class="hash" x-text="item.sha256 ? item.sha256.slice(0, 16) + '…' : '—'"></td>
-                <td x-text="item.status"></td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-        <footer>
-          <button :disabled="running || !account" @click="start()">
-            <span x-show="!running">计算哈希并上传</span>
-            <span x-show="running">处理中…</span>
-          </button>
-        </footer>
-      </article>
-
-      <p x-show="error" role="alert"><strong x-text="error"></strong></p>
-
-      <footer><small><a href="/index.html">返回首页</a></small></footer>
-    </main>
   </body>
 </html>

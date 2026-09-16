@@ -15,8 +15,9 @@ import {
   ApiSuccessResponse,
   ApiValidationErrorResponse,
 } from "#src/core/swagger/api-response.decorator.ts";
-import { CurrentUser } from "../aspects/decorators/context.decorator.ts";
 import { AuthGuard } from "../auth/guards/auth.guard.ts";
+import { CurrentUser } from "../http-aspects/decorators/context.decorator.ts";
+import { UseHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
 import { AssetService } from "./asset.service.ts";
 import { AssetUploadResponseDto } from "./dto/asset-upload-response.dto.ts";
 import { CreateAssetUploadsDto } from "./dto/create-asset-upload.dto.ts";
@@ -24,6 +25,7 @@ import { OssUploadCallbackDto } from "./dto/oss-upload-callback.dto.ts";
 
 @ApiTags("资产")
 @Controller("api/asset")
+@UseHttpAspects()
 export class AssetController {
   constructor(
     private readonly assetService: AssetService,

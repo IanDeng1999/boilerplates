@@ -19,10 +19,9 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 
 - Think several steps ahead
 - Minimal, focused changes; rollback failures
-- Do not modify unrelated files or refactor existing code unless requested
-- Follow the current project architecture and naming conventions
 - Never generate or run database migrations
 - Prefer reusing existing utilities over creating new ones
+- When creating new files, review existing similar files first for conventions and patterns
 
 ## Code Style
 

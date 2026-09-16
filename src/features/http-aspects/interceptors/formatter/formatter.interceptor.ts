@@ -21,6 +21,9 @@ export class FormatterInterceptor implements NestInterceptor {
   private readonly logger = new Logger(FormatterInterceptor.name);
 
   intercept(context: ExecutionContext, next: CallHandler) {
+    if (context.getType() !== "http") {
+      return next.handle();
+    }
     const handler = context.getHandler();
     const reply = context.switchToHttp().getResponse<FastifyReply>();
     const skipFormat = Reflect.getMetadata(SKIP_RESPONSE_FORMAT_KEY, handler);

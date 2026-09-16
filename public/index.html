@@ -4,12 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Boilerplates</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" />
   </head>
   <body>
-    <main>
-      <h1>Hello, world!</h1>
-      <p><a href="/auth.html">登录</a></p>
-      <p><a href="/upload.html">上传</a></p>
+    <main x-data>
+      <h1>Boilerplates</h1>
+      <p>请选择需要测试的功能。</p>
+      <nav aria-label="功能导航">
+        <ul>
+          <li><a href="/auth.html">登录与注册</a></li>
+          <li><a href="/upload.html">文件上传</a></li>
+          <li><a href="/ws-test.html">Socket.IO</a></li>
+        </ul>
+      </nav>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
   </body>
 </html>

@@ -40,6 +40,14 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.enableShutdownHooks(["SIGINT", "SIGTERM"]);
 
+  // Redis-backed Socket.IO adapter for horizontal scaling
+  const { RedisIoAdapter } = await import(
+    "./core/websocket/redis-io.adapter.ts"
+  );
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis(configService.getOrThrow("REDIS_URL"));
+  app.useWebSocketAdapter(redisIoAdapter);
+
   // 注册cookie插件
   await app.register(fastifyCookie as any, {
     secret: configService.getOrThrow("SECRET"),

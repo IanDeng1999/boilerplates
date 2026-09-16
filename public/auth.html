@@ -1,13 +1,75 @@
-<!doctype html>
+!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>登录 / 注册</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" />
+    <style>
+      [x-cloak] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main x-data="authPage" x-cloak>
+      <header>
+        <nav aria-label="页面导航"><a href="/index.html">返回首页</a></nav>
+      </header>
+      <h1>登录 / 注册</h1>
+      <p>首次用第三方账号登录即完成注册，再次登录会回到同一个账户。</p>
+
+      <!-- 登录态：当前账户 + 登出 -->
+      <article x-show="account">
+        <header>
+          <img width="48" height="48" x-show="account?.avatar" :src="account?.avatar" :alt="account?.username ?? 'avatar'" />
+          <h2>已登录</h2>
+        </header>
+        <ul>
+          <li>账户 ID：<code x-text="account?.id"></code></li>
+          <li>用户名：<span x-text="account?.username ?? '—'"></span></li>
+          <li>邮箱：<span x-text="account?.email ?? '—'"></span></li>
+          <li>创建时间：<span x-text="account?.createdAt ? new Date(account.createdAt).toLocaleString('zh-CN') : '—'"></span></li>
+        </ul>
+        <p>
+          <button :disabled="loading" @click="logout()">退出登录</button>
+          <button :disabled="loading" @click="checkAccount()">重新校验会话</button>
+        </p>
+      </article>
+
+      <!-- 未登录：登录 / 注册入口 -->
+      <article x-show="!account">
+        <fieldset>
+          <legend>操作</legend>
+          <button type="button" :disabled="tab === 'login'" @click="tab = 'login'">登录</button>
+          <button type="button" :disabled="tab === 'register'" @click="tab = 'register'">注册</button>
+        </fieldset>
+        <p x-show="tab === 'login'">已注册过的账号，直接授权即可。</p>
+        <p x-show="tab === 'register'">没有账号密码注册接口，首次授权即建档；邮箱相同的第三方账号会合并到已有账户。</p>
+        <p>
+          <template x-for="provider in providers" :key="provider.id">
+            <button :disabled="loading" @click="startOAuth(provider.id)">
+              使用 <span x-text="provider.label"></span><span x-text="tab === 'login' ? '登录' : '注册'"></span>
+            </button>
+          </template>
+        </p>
+        <form @submit.prevent="loginWithPhone()">
+          <label>手机号（E.164 格式）
+            <input x-model.trim="phone" type="tel" placeholder="+8613800138000" required />
+          </label>
+          <label>验证码
+            <input x-model.trim="code" inputmode="numeric" pattern="[0-9]{6}" placeholder="6 位验证码" required />
+          </label>
+          <p>
+            <button type="button" :disabled="loading || !phone" @click="requestPhoneCode()">获取验证码</button>
+            <button type="submit" :disabled="loading">手机号登录</button>
+          </p>
+        </form>
+        <small>第三方回调地址需指向后端 <code>/api/auth/callback/{provider}</code>，由后端换码后重定向回本页。</small>
+      </article>
+
+      <p x-show="error" role="alert"><strong x-text="error"></strong></p>
+
+    </main>
+
     <script>
       // 单页涵盖：登录 / 注册 / 登录态展示 / 登出，只调后端已有接口。
       document.addEventListener("alpine:init", () => {
@@ -106,73 +168,5 @@
       });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
-    <style>
-      [x-cloak] { display: none !important; }
-      .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-      .tabs a { padding: 0.25rem 0.9rem; border-radius: var(--pico-border-radius); text-decoration: none; }
-      .tabs a[aria-current="true"] { background: var(--pico-primary-background); color: var(--pico-primary-inverse); }
-      .providers { display: grid; gap: 0.75rem; }
-      .avatar { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; margin: 0; }
-    </style>
-  </head>
-  <body>
-    <main class="container" x-data="authPage" x-cloak>
-      <hgroup>
-        <h1>登录 / 注册</h1>
-        <p>首次用第三方账号登录即完成注册，再次登录会回到同一个账户。</p>
-      </hgroup>
-
-      <!-- 登录态：当前账户 + 登出 -->
-      <article x-show="account">
-        <header>
-          <img class="avatar" x-show="account?.avatar" :src="account?.avatar" :alt="account?.username ?? 'avatar'" />
-          <h2>已登录</h2>
-        </header>
-        <ul>
-          <li>账户 ID：<code x-text="account?.id"></code></li>
-          <li>用户名：<span x-text="account?.username ?? '—'"></span></li>
-          <li>邮箱：<span x-text="account?.email ?? '—'"></span></li>
-          <li>创建时间：<span x-text="account?.createdAt ? new Date(account.createdAt).toLocaleString('zh-CN') : '—'"></span></li>
-        </ul>
-        <footer>
-          <button class="secondary" :disabled="loading" @click="logout()">退出登录</button>
-          <button class="outline" :disabled="loading" @click="checkAccount()">重新校验会话</button>
-        </footer>
-      </article>
-
-      <!-- 未登录：登录 / 注册入口 -->
-      <article x-show="!account">
-        <div class="tabs" role="tablist">
-          <a href="#" role="tab" :aria-current="tab === 'login'" @click.prevent="tab = 'login'">登录</a>
-          <a href="#" role="tab" :aria-current="tab === 'register'" @click.prevent="tab = 'register'">注册</a>
-        </div>
-        <p x-show="tab === 'login'">已注册过的账号，直接授权即可。</p>
-        <p x-show="tab === 'register'">没有账号密码注册接口，首次授权即建档；邮箱相同的第三方账号会合并到已有账户。</p>
-        <div class="providers">
-          <template x-for="provider in providers" :key="provider.id">
-            <button :disabled="loading" @click="startOAuth(provider.id)">
-              使用 <span x-text="provider.label"></span><span x-text="tab === 'login' ? '登录' : '注册'"></span>
-            </button>
-          </template>
-        </div>
-        <form @submit.prevent="loginWithPhone()">
-          <label>手机号（E.164 格式）
-            <input x-model.trim="phone" type="tel" placeholder="+8613800138000" required />
-          </label>
-          <label>验证码
-            <input x-model.trim="code" inputmode="numeric" pattern="[0-9]{6}" placeholder="6 位验证码" required />
-          </label>
-          <div class="grid">
-            <button type="button" class="secondary" :disabled="loading || !phone" @click="requestPhoneCode()">获取验证码</button>
-            <button type="submit" :disabled="loading">手机号登录</button>
-          </div>
-        </form>
-        <small>第三方回调地址需指向后端 <code>/api/auth/callback/{provider}</code>，由后端换码后重定向回本页。</small>
-      </article>
-
-      <p x-show="error" role="alert"><strong x-text="error"></strong></p>
-
-      <footer><small><a href="/index.html">返回首页</a></small></footer>
-    </main>
   </body>
 </html>
