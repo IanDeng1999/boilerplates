@@ -28,7 +28,7 @@ import pino from "pino";
             symlink: true,
             compress: true,
           },
-          level: config.get("LOG_LEVEL", "debug"),
+          level: config.getOrThrow("LOG_LEVEL"),
         };
         const stream = isProd
           ? pino.transport({ targets: [fileTarget] })
@@ -39,7 +39,7 @@ import pino from "pino";
                 {
                   target: "pino-pretty",
                   options: { colorize: true },
-                  level: config.get("LOG_LEVEL", "debug"),
+                  level: config.getOrThrow("LOG_LEVEL"),
                 },
                 fileTarget,
               ] as pino.TransportMultiOptions["targets"],
@@ -72,7 +72,7 @@ import pino from "pino";
               },
               quietReqLogger: true,
               quietResLogger: true,
-              level: config.get("LOG_LEVEL", "debug"),
+              level: config.getOrThrow("LOG_LEVEL"),
             },
             stream,
           ] satisfies Params["pinoHttp"],

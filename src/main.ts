@@ -79,8 +79,8 @@ async function bootstrap() {
     }),
   );
 
-  const port = configService.get("APP_PORT");
-  const host = configService.get("APP_HOST");
+  const port = configService.getOrThrow("APP_PORT");
+  const host = configService.getOrThrow("APP_HOST");
   await app.listen(port, host);
   logger.log({ isProd }, `Server running in http://${host}:${port}`, "NestApp");
   process.send?.("ready");

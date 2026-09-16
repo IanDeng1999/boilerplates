@@ -102,14 +102,12 @@ export class OssService {
         Key: key,
         ContentType: contentType,
         ContentLength: contentLength,
-        Metadata: {
-          ...metaData,
-        },
+        Metadata: metaData,
         ChecksumAlgorithm: "SHA256",
         ChecksumSHA256: this.sha256HexToBase64(sha256),
       }),
       {
-        expiresIn: expiresIn,
+        expiresIn,
         unhoistableHeaders: new Set(["x-amz-checksum-sha256"]),
       },
     );

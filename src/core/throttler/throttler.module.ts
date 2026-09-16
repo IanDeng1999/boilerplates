@@ -15,13 +15,13 @@ import { REDIS_CLIENT } from "../redis/redis.module.ts";
         throttlers: [
           {
             name: "default",
-            ttl: config.get("THROTTLE_TTL", 60_000),
-            limit: config.get("THROTTLE_LIMIT", 60),
+            ttl: config.getOrThrow("THROTTLE_TTL"),
+            limit: config.getOrThrow("THROTTLE_LIMIT"),
           },
           {
             name: "short",
-            ttl: config.get("SHORT_THROTTLE_TTL", 20_000),
-            limit: config.get("SHORT_THROTTLE_LIMIT", 10),
+            ttl: config.getOrThrow("SHORT_THROTTLE_TTL"),
+            limit: config.getOrThrow("SHORT_THROTTLE_LIMIT"),
           },
         ],
       }),

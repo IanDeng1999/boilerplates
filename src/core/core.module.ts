@@ -15,7 +15,7 @@ import { AppThrottlerModule } from "./throttler/throttler.module.ts";
     AppConfigModule,
     DbModule,
     RedisModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         url: configService.getOrThrow("REDIS_URL"),
       }),
       inject: [ConfigService],
