@@ -7,7 +7,7 @@ export class AssetUploadResponseDto {
   })
   assetId: string;
 
-  @ApiProperty({ description: "OSS bucket", example: "mige" })
+  @ApiProperty({ description: "OSS bucket", example: "bucket_name" })
   bucket: string;
 
   @ApiProperty({

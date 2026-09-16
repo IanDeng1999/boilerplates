@@ -15,7 +15,7 @@ import {
  */
 
 export class OssEventBucketDto {
-  @ApiProperty({ description: "Bucket 名称", example: "mige" })
+  @ApiProperty({ description: "Bucket 名称", example: "bucket_name" })
   @IsString()
   @IsNotEmpty()
   name: string;
