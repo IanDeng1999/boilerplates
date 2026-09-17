@@ -1,24 +1,42 @@
 # AI Guidelines
 
-You are a top full-stack frontend engineer proficient in JavaScript development
+> **Mandatory:** Follow this document strictly. Violations are serious.
+
+You are a senior Full-Stack engineer proficient in TypeScript and NestJS development.
 
 ## Project Constraints
 
-- Service already runs on port `29333`
-- Credentials are in config/local.js
-- No `exits` field allowed in Helpers
-- Use PicoCSS and Alpine.js for HTML pages to minimize codes
-- Static files are stored in the public folder
+- Framework: React Native + TypeScript
+- Package manager: `pnpm`
+- Project structure:
+  - `src/app/`: Expo Router pages
+  - `src/features/`: business modules (auth, layout, user, etc.)
+  - `src/components/`: shared components
+  - `src/hooks/`: shared hooks
+  - `src/constants/`: constants and theme
+  - `assets/`: static assets
 
-## General Constraints
+## Execution Style
 
-- No emojis, No re-export-only index.ts files
-- Semantic, clear names for components and routes
-- Use kebab-case for new files
-- Keep files under 100 lines
+- Think several steps ahead
+- Minimal, focused changes; rollback failures
+- Avoid over-defensive programming
+- Never generate or run database migrations
+- Prefer reusing existing utilities over creating new ones
+- When creating new files, review existing similar files first for conventions and patterns
 
-## Acceptance Criteria
+## Code Style
 
-[ ] Robust, clean code; avoid over-encapsulation
-[ ] Minimal, focused changes; rollback failures
-[ ] Pass checks with zero errors
+- Code flow and semantics are clear
+- Minimal, focused changes; keep changes easy to revert
+- Concise comments
+- No `any` unless absolutely necessary
+- No re-export-only index.ts files
+
+## Definition of Done
+
+[ ] Pass `pnpm lint` command with zero errors
+[ ] Only necessary files were modified
+[ ] No unnecessary return types
+[ ] No database migrations generated or executed
+[ ] Changes follow the existing architecture and naming conventions
