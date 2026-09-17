@@ -9,8 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/iconoir@latest/css/iconoir.css" />
   </head>
-  <body class="min-h-screen bg-base-200 text-base-content" :data-theme="theme" x-data="homePage">
-    <!-- 使用 Alpine 管理页面交互；本页暂不需要响应式状态，仅保留 x-data 作为统一入口。 -->
+  <body class="min-h-screen bg-base-200 text-base-content" data-theme="business">
     <main class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:py-10">
       <header class="navbar mb-8 rounded-box border border-base-300 bg-base-100 px-3 shadow-sm">
         <div class="flex-1">
@@ -19,7 +18,6 @@
         <div class="flex-none">
           <a class="btn btn-ghost btn-sm hidden sm:inline-flex" href="/reference">接口参考</a>
           <a class="btn btn-ghost btn-square btn-sm sm:hidden" href="/reference" aria-label="接口参考"><span class="iconoir-book"></span></a>
-          <button class="btn btn-ghost btn-square btn-sm" type="button" @click="toggleTheme()" :aria-label="theme === 'corporate' ? '切换到暗色模式' : '切换到亮色模式'"><span :class="theme === 'corporate' ? 'iconoir-half-moon' : 'iconoir-sun-light'"></span></button>
         </div>
       </header>
 
@@ -45,18 +43,5 @@
       </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
-    <script>
-      document.addEventListener("alpine:init", () => {
-        Alpine.data("homePage", () => ({
-          theme: localStorage.getItem("mige-theme") ?? "corporate",
-          init() {},
-          toggleTheme() {
-            this.theme = this.theme === "corporate" ? "business" : "corporate";
-            localStorage.setItem("mige-theme", this.theme);
-          },
-        }));
-      });
-    </script>
   </body>
 </html>
