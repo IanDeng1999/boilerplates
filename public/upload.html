@@ -39,7 +39,7 @@
               <h3 class="mt-4 font-semibold">从本地选择文件</h3>
               <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-base-content/55">系统会先在浏览器内计算 SHA-256，再获取上传地址并直传对象存储。</p>
               <label class="btn btn-primary mt-6" :class="{ 'btn-disabled': running }">
-                <span class="iconoir-add-media-image"></span>选择文件
+                <span class="iconoir-media-image-plus"></span>选择文件
                 <input class="sr-only" type="file" multiple @change="onPick($event)" :disabled="running" />
               </label>
             </div>
