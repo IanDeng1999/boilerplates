@@ -4,74 +4,75 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>登录 / 注册</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" />
+    <!-- 完全使用 daisyUI，不要写 custom；页面样式优先使用 daisyUI 原生类。 -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/iconoir@latest/css/iconoir.css" />
     <style>
       [x-cloak] { display: none !important; }
     </style>
   </head>
-  <body>
-    <main x-data="authPage" x-cloak>
-      <header>
-        <nav aria-label="页面导航"><a href="/index.html">返回首页</a></nav>
-      </header>
-      <h1>登录 / 注册</h1>
-      <p>首次用第三方账号登录即完成注册，再次登录会回到同一个账户。</p>
+  <body class="min-h-screen bg-base-200 text-base-content" data-theme="corporate">
+    <!-- 使用 Alpine 管理授权流程、表单状态、会话展示与错误反馈。 -->
+    <main class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:py-10" x-data="authPage" x-cloak>
+      <header class="navbar mb-8 rounded-box border border-base-300 bg-base-100 px-3 shadow-sm"><div class="flex-1"><a class="btn btn-ghost gap-2" href="/index.html"><span class="iconoir-nav-arrow-left"></span>返回首页</a></div><a class="btn btn-ghost text-lg font-semibold tracking-tight" href="/index.html">Mige</a></header>
+      <div class="mb-10"><div class="badge badge-primary badge-outline mb-4 gap-2"><span class="iconoir-user"></span>Account</div><h1 class="text-3xl font-bold tracking-tight">登录 / 注册</h1><p class="mt-3 leading-7 text-base-content/65">验证身份后，即可继续使用控制台服务。</p></div>
+      <section class="card border border-base-300 bg-base-100 shadow-sm">
+      <div class="card-body p-6 sm:p-8">
 
       <!-- 登录态：当前账户 + 登出 -->
       <article x-show="account">
-        <header>
-          <img width="48" height="48" x-show="account?.avatar" :src="account?.avatar" :alt="account?.username ?? 'avatar'" />
-          <h2>已登录</h2>
-        </header>
-        <ul>
-          <li>账户 ID：<code x-text="account?.id"></code></li>
-          <li>用户名：<span x-text="account?.username ?? '—'"></span></li>
-          <li>邮箱：<span x-text="account?.email ?? '—'"></span></li>
-          <li>创建时间：<span x-text="account?.createdAt ? new Date(account.createdAt).toLocaleString('zh-CN') : '—'"></span></li>
-        </ul>
-        <p>
-          <button :disabled="loading" @click="logout()">退出登录</button>
-          <button :disabled="loading" @click="checkAccount()">重新校验会话</button>
-        </p>
+        <div class="flex flex-col gap-5 border-b border-base-300 pb-6 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-center gap-4"><div class="avatar placeholder"><div class="w-14 rounded-box bg-primary text-lg text-primary-content"><img x-show="account?.avatar" :src="account?.avatar" :alt="account?.username ?? 'avatar'" /><span x-show="!account?.avatar" x-text="(account?.username ?? '?').slice(0, 1).toUpperCase()"></span></div></div><div><p class="text-xs font-medium uppercase tracking-widest text-base-content/45">Signed in</p><h2 class="mt-2 text-xl font-semibold" x-text="account?.username ?? account?.id"></h2><p class="mt-1 text-sm text-base-content/55">当前会话已生效</p></div></div>
+          <div class="badge badge-success badge-outline gap-2"><span class="iconoir-check-circle"></span>已验证</div>
+        </div>
+        <div class="mt-7 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-box border border-base-300 p-4"><p class="text-xs text-base-content/50">账户 ID</p><code class="mt-2 block break-all text-sm" x-text="account?.id"></code></div>
+          <div class="rounded-box border border-base-300 p-4"><p class="text-xs text-base-content/50">邮箱</p><p class="mt-2 break-all text-sm" x-text="account?.email ?? '—'"></p></div>
+          <div class="rounded-box border border-base-300 p-4"><p class="text-xs text-base-content/50">创建时间</p><p class="mt-2 text-sm" x-text="account?.createdAt ? new Date(account.createdAt).toLocaleString('zh-CN') : '—'"></p></div>
+        </div>
+        <div class="mt-7 flex flex-wrap items-center gap-3 border-t border-base-300 pt-6"><button class="btn btn-ghost" :disabled="loading" @click="checkAccount()"><span class="iconoir-refresh"></span>校验会话</button><button class="btn btn-error btn-outline" :disabled="loading" @click="logout()">退出登录</button></div>
       </article>
 
       <!-- 未登录：登录 / 注册入口 -->
       <article x-show="!account">
-        <fieldset>
-          <legend>操作</legend>
-          <button type="button" :disabled="tab === 'login'" @click="tab = 'login'">登录</button>
-          <button type="button" :disabled="tab === 'register'" @click="tab = 'register'">注册</button>
-        </fieldset>
-        <p x-show="tab === 'login'">已注册过的账号，直接授权即可。</p>
-        <p x-show="tab === 'register'">没有账号密码注册接口，首次授权即建档；邮箱相同的第三方账号会合并到已有账户。</p>
-        <p>
+        <div role="tablist" class="tabs tabs-border"><button type="button" role="tab" class="tab flex-1" :class="{ 'tab-active': tab === 'login' }" @click="tab = 'login'">登录</button><button type="button" role="tab" class="tab flex-1" :class="{ 'tab-active': tab === 'register' }" @click="tab = 'register'">注册</button></div>
+        <p class="mt-5 text-sm leading-6 text-base-content/65" x-show="tab === 'login'">已注册过的账号，直接授权即可。</p>
+        <p class="mt-5 text-sm leading-6 text-base-content/65" x-show="tab === 'register'">没有账号密码注册接口，首次授权即建档；相同邮箱的第三方账号会自动合并。</p>
+        <div class="mt-6 grid gap-3 sm:grid-cols-2">
           <template x-for="provider in providers" :key="provider.id">
-            <button :disabled="loading" @click="startOAuth(provider.id)">
-              使用 <span x-text="provider.label"></span><span x-text="tab === 'login' ? '登录' : '注册'"></span>
+            <button class="btn btn-outline w-full" :disabled="loading" @click="startOAuth(provider.id)">
+              <span x-text="provider.label"></span><span x-text="tab === 'login' ? ' 登录' : ' 注册'"></span>
             </button>
           </template>
-        </p>
+        </div>
+        <div class="divider my-8 text-xs text-base-content/50">或使用手机号</div>
         <form @submit.prevent="loginWithPhone()">
-          <label>手机号（E.164 格式）
-            <input x-model.trim="phone" type="tel" placeholder="+8613800138000" required />
-          </label>
-          <label>验证码
-            <input x-model.trim="code" inputmode="numeric" pattern="[0-9]{6}" placeholder="6 位验证码" required />
-          </label>
-          <p>
-            <button type="button" :disabled="loading || !phone" @click="requestPhoneCode()">获取验证码</button>
-            <button type="submit" :disabled="loading">手机号登录</button>
-          </p>
+          <div>
+            <label class="block text-sm font-medium" for="phone">手机号（E.164 格式）</label>
+            <input class="input input-bordered mt-3 w-full" id="phone" x-model.trim="phone" type="tel" placeholder="+8613800138000" required />
+          </div>
+          <div class="mt-7">
+            <label class="block text-sm font-medium" for="code">验证码</label>
+            <div class="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-3">
+              <input class="input input-bordered min-w-0 w-full" id="code" x-model.trim="code" inputmode="numeric" pattern="[0-9]{6}" placeholder="请输入 6 位验证码" required />
+              <button class="btn btn-outline whitespace-nowrap" type="button" :disabled="loading || !phone" @click="requestPhoneCode()">获取验证码</button>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-8 w-full" type="submit" :disabled="loading"><span class="loading loading-spinner loading-sm" x-show="loading"></span>手机号登录</button>
         </form>
-        <small>第三方回调地址需指向后端 <code>/api/auth/callback/{provider}</code>，由后端换码后重定向回本页。</small>
+        <p class="mt-8 border-t border-base-300 pt-5 text-xs leading-6 text-base-content/50">第三方回调地址需指向后端 <code>/api/auth/callback/{provider}</code>，由后端换码后重定向回本页。</p>
       </article>
 
-      <p x-show="error" role="alert"><strong x-text="error"></strong></p>
+      <div class="alert alert-error mt-5" x-show="error" role="alert"><span class="iconoir-warning-triangle"></span><span x-text="error"></span></div>
+      </div>
+      </section>
 
     </main>
 
+    <!-- 逻辑使用 alpine.js 实现 -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
     <script>
-      // 单页涵盖：登录 / 注册 / 登录态展示 / 登出，只调后端已有接口。
       document.addEventListener("alpine:init", () => {
         Alpine.data("authPage", () => ({
           providers: [
@@ -167,6 +168,5 @@
         }));
       });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
   </body>
 </html>

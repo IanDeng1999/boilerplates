@@ -4,48 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Socket.IO 测试</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" />
+    <!-- 完全使用 daisyUI，不要写 custom；页面样式优先使用 daisyUI 原生类。 -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/iconoir@latest/css/iconoir.css" />
+    <!-- Alpine 的 x-cloak 防止状态初始化前出现闪烁。 -->
+    <style>
+      [x-cloak] { display: none !important; }
+    </style>
   </head>
-  <body>
-    <main x-data="wsTest()">
-      <header>
-        <nav aria-label="页面导航"><a href="/index.html">返回首页</a></nav>
-      </header>
-      <h1>Socket.IO 测试</h1>
-      <p>连接 <code>/events</code> 命名空间，加入房间后可向房间内所有客户端发送消息。</p>
-
-      <article>
-        <header>
-          <strong>连接状态</strong>
-          <span aria-live="polite" x-text="status">正在连接…</span>
-        </header>
-        <p><small>此接口需要登录会话；未登录时请先前往登录页。</small></p>
-        <p><a href="/auth.html">前往登录</a></p>
+  <body class="min-h-screen bg-base-200 text-base-content" data-theme="corporate">
+    <!-- 使用 Alpine 管理 Socket.IO 连接状态、房间操作和事件日志。 -->
+    <main class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:py-10" x-data="wsTest()" x-cloak>
+      <header class="navbar mb-8 rounded-box border border-base-300 bg-base-100 px-3 shadow-sm"><div class="flex-1"><a class="btn btn-ghost gap-2" href="/index.html"><span class="iconoir-nav-arrow-left"></span>返回首页</a></div><a class="btn btn-ghost text-lg font-semibold tracking-tight" href="/index.html">Mige</a></header>
+      <div class="mb-10"><div class="badge badge-primary badge-outline mb-4 gap-2"><span class="iconoir-wifi"></span>Realtime</div><h1 class="text-3xl font-bold tracking-tight">Socket.IO 测试</h1><p class="mt-3 leading-7 text-base-content/65">连接 <code class="rounded bg-base-300 px-1.5 py-0.5 text-sm">/events</code> 命名空间，加入房间后可向房间内所有客户端发送消息。</p></div>
+      <article class="alert mb-7" :class="status.includes('已连接') ? 'alert-success' : 'alert-info'">
+        <span class="iconoir-wifi"></span><div><h2 class="font-semibold">连接状态</h2><p class="text-sm" aria-live="polite" x-text="status">正在连接…</p></div>
       </article>
+      <div class="grid gap-6 lg:grid-cols-2">
+        <article class="card border border-base-300 bg-base-100 shadow-sm">
+          <div class="card-body gap-6 p-7">
+            <div><p class="text-xs font-medium uppercase tracking-widest text-base-content/45">Step 1</p><h2 class="mt-1 font-semibold">加入房间</h2></div>
+            <form @submit.prevent="joinRoom">
+              <label class="form-control" for="roomId">
+                <span class="label-text mb-2">房间 ID</span>
+                <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                  <input class="input input-bordered min-w-0 w-full" id="roomId" x-model="roomId" name="roomId" placeholder="general" required :disabled="currentRoom" />
+                  <button class="btn btn-primary whitespace-nowrap" type="submit" x-show="!currentRoom">加入房间</button>
+                  <button class="btn btn-error whitespace-nowrap" type="button" x-show="currentRoom" @click="leaveRoom">离开房间</button>
+                </div>
+              </label>
+            </form>
+          </div>
+        </article>
 
-      <article>
-        <form @submit.prevent="joinRoom">
-          <label for="roomId">房间 ID</label>
-          <p>
-            <input id="roomId" x-model="roomId" name="roomId" placeholder="general" required :disabled="currentRoom" />
-            <button type="submit" x-show="!currentRoom">加入房间</button>
-            <button type="button" x-show="currentRoom" @click="leaveRoom">离开房间</button>
-          </p>
-        </form>
-
-        <form @submit.prevent="sendMessage">
-          <label for="msgInput">消息</label>
-          <p>
-            <input id="msgInput" x-ref="message" x-model="message" name="message" placeholder="输入消息…" autocomplete="off" required :disabled="!currentRoom" />
-            <button type="submit" :disabled="!currentRoom">发送</button>
-          </p>
-          <small x-text="currentRoom ? '正在向房间“' + currentRoom + '”发送消息。' : '请先加入一个房间。'"></small>
-        </form>
-      </article>
-
-      <article>
-        <header><strong>事件日志</strong></header>
-        <table>
+        <article class="card border border-base-300 bg-base-100 shadow-sm">
+          <div class="card-body gap-6 p-7">
+            <div><p class="text-xs font-medium uppercase tracking-widest text-base-content/45">Step 2</p><h2 class="mt-1 font-semibold">发送消息</h2></div>
+            <form @submit.prevent="sendMessage">
+              <label class="form-control" for="msgInput">
+                <span class="label-text mb-2">消息内容</span>
+                <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                  <input class="input input-bordered min-w-0 w-full" id="msgInput" x-ref="message" x-model="message" name="message" placeholder="输入消息…" autocomplete="off" required :disabled="!currentRoom" />
+                  <button class="btn btn-primary whitespace-nowrap" type="submit" :disabled="!currentRoom">发送</button>
+                </div>
+              </label>
+              <p class="text-sm text-base-content/55" x-text="currentRoom ? '正在向房间“' + currentRoom + '”发送消息。' : '请先加入一个房间。'"></p>
+            </form>
+          </div>
+        </article>
+      </div>
+      <article class="card mt-7 border border-base-300 bg-base-100 shadow-sm"><div class="card-body p-0">
+        <div class="flex items-center justify-between border-b border-base-300 px-5 py-4"><h2 class="font-semibold">事件日志</h2><span class="badge badge-ghost" x-text="messages.length + ' 条'"></span></div><div class="overflow-x-auto"><table class="table table-zebra">
           <thead>
             <tr>
               <th scope="col">时间</th>
@@ -61,11 +71,11 @@
                 <td x-text="item.detail"></td>
               </tr>
             </template>
-          </tbody>
-        </table>
-      </article>
+          </tbody></table></div></div></article>
     </main>
 
+    <!-- 逻辑使用 alpine.js 实现 -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
     <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
     <script>
       function wsTest() {
@@ -114,6 +124,5 @@
         };
       }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
   </body>
 </html>
