@@ -88,7 +88,7 @@
             this.socket.on("error", (data) => { const message = data?.message ?? "发生未知错误"; this.status = "连接错误：" + message; this.log("error", "错误：" + message); });
           },
 
-          log(event, detail) { this.messages.push({ id: crypto.randomUUID(), time: new Date().toLocaleTimeString("zh-CN"), event, detail }); },
+          log(event, detail) { this.messages.unshift({ id: crypto.randomUUID(), time: new Date().toLocaleTimeString("zh-CN"), event, detail }); },
           joinRoom() {
             const room = this.roomId.trim();
             if (!room) return;
