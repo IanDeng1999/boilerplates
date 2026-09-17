@@ -14,7 +14,7 @@ import { PointKillGuard } from "../guards/point-kill.guard.ts";
 import { ThrottlerGuard } from "../guards/throttler.guard.ts";
 import { FormatterInterceptor } from "../interceptors/formatter/formatter.interceptor.ts";
 
-export function UseHttpAspects() {
+export function UseCommonHttpAspects() {
   return applyDecorators(
     UseInterceptors(FormatterInterceptor),
     UsePipes(

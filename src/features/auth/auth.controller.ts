@@ -18,7 +18,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { UseHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
+import { UseCommonHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
 import { UserService } from "../user/user.service.ts";
 import { OAuthRedirectDto } from "./dto/oauth-redirect.dto.ts";
 import { AuthProvider } from "./entities/auth.entity.ts";
@@ -26,7 +26,7 @@ import { OauthService } from "./oauth.service.ts";
 
 @ApiTags("认证")
 @Controller("api/auth")
-@UseHttpAspects()
+@UseCommonHttpAspects()
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
   private readonly loginPagePath = "/auth.html";

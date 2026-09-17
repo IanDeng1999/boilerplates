@@ -9,6 +9,7 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Framework: NestJS + TypeScript
 - Package manager: `pnpm`
 - Service is already running on port `6363`
+- Every Controller must use `@UseCommonHttpAspects()`; every Gateway must use `@UseCommonSocketAspects()`.
 - Project structure:
   - `src/main.ts`: application entry
   - `src/app.module.ts`: root module

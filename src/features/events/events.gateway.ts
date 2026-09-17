@@ -7,14 +7,14 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 import type { Namespace, Server, Socket } from "socket.io";
-import { UseSocketAspects } from "../socket-aspects/decorators/socket-aspects.decorator.ts";
+import { UseCommonSocketAspects } from "../socket-aspects/decorators/socket-aspects.decorator.ts";
 import { EventsService } from "./events.service.ts";
 
 @WebSocketGateway({
   cors: { origin: "*", credentials: true },
   namespace: "events",
 })
-@UseSocketAspects()
+@UseCommonSocketAspects()
 export class EventsGateway {
   @WebSocketServer()
   server: Server;
