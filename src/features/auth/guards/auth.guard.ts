@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     const sessionId = request.cookies?.session;
 
     if (!sessionId) {
-      throw new UnauthorizedException("请先登录");
+      throw new UnauthorizedException("auth.loginRequired");
     }
 
     const sessionData = await this.redisClient.hget(
@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
 
     if (!sessionData) {
       reply.clearCookie("session", { path: "/" });
-      throw new UnauthorizedException("会话已过期，请重新登录");
+      throw new UnauthorizedException("auth.sessionExpired");
     }
 
     let session: { id?: unknown };
@@ -37,11 +37,11 @@ export class AuthGuard implements CanActivate {
       session = JSON.parse(sessionData);
     } catch {
       reply.clearCookie("session", { path: "/" });
-      throw new UnauthorizedException("会话数据格式错误");
+      throw new UnauthorizedException("auth.sessionInvalidFormat");
     }
     if (typeof session.id !== "string" || !session.id) {
       reply.clearCookie("session", { path: "/" });
-      throw new UnauthorizedException("会话数据无效");
+      throw new UnauthorizedException("auth.sessionInvalid");
     }
 
     request.user = { id: session.id, session: sessionId };

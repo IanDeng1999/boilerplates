@@ -96,7 +96,7 @@ export class UserService {
 
   private async findRequiredUser(id: string) {
     const user = await this.findById(id);
-    if (!user) throw new Error("认证关联的用户不存在");
+    if (!user) throw new Error("common.internalServerError");
     return user;
   }
 

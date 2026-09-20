@@ -124,7 +124,7 @@ export class AssetService {
     const ext = this.ossService.resolveExt(dto.name);
     // DTO 已拦一道，这里兜底，保证任何调用入口都不会落库白名单外的扩展名
     if (!ext || !ALLOWED_EXTENSION_SET.has(ext)) {
-      throw new BadRequestException(`不支持的扩展名：${ext ?? dto.name}`);
+      throw new BadRequestException("asset.unsupportedFileExtension");
     }
     const asset = this.assetRepository.create({
       bucket: this.configService.getOrThrow("OSS_BUCKET"),

@@ -6,13 +6,17 @@ import {
   Logger,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import statuses from "statuses";
+import { I18nService } from "nestjs-i18n";
+import { translateError } from "#src/core/i18n/i18n-error.ts";
 
 @Catch(Error)
 export class DefaultFilter<T extends Error> implements ExceptionFilter {
   private readonly logger = new Logger(DefaultFilter.name);
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly i18n: I18nService,
+  ) {}
 
   catch(exception: T, host: ArgumentsHost) {
     const req = host.switchToHttp().getRequest<FastifyRequest>();
@@ -28,7 +32,12 @@ export class DefaultFilter<T extends Error> implements ExceptionFilter {
     // 构建响应
     const response: Record<string, unknown> = {
       code: 50000,
-      msg: statuses(HttpStatus.INTERNAL_SERVER_ERROR),
+      msg: translateError(
+        this.i18n,
+        "common.internalServerError",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        host,
+      ),
       logId: req.id,
     };
 

@@ -18,6 +18,8 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { I18nService } from "nestjs-i18n";
+import { translateError } from "#src/core/i18n/i18n-error.ts";
 import { UseCommonHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
 import { UserService } from "../user/user.service.ts";
 import { OAuthRedirectDto } from "./dto/oauth-redirect.dto.ts";
@@ -35,6 +37,7 @@ export class AuthController {
     private readonly oauthService: OauthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
+    private readonly i18n: I18nService,
   ) {}
 
   @Get("login/:provider")
@@ -70,7 +73,10 @@ export class AuthController {
     @Res() reply: FastifyReply,
   ) {
     if (!state || state !== request.cookies?.["oauth-state"]) {
-      return this.redirectToLogin(reply, "state 校验失败，请重新登录");
+      return this.redirectToLogin(
+        reply,
+        translateError(this.i18n, "auth.oauthStateInvalid"),
+      );
     }
     reply.clearCookie("oauth-state", { path: "/" });
 
@@ -91,10 +97,16 @@ export class AuthController {
       return reply.redirect(this.loginPagePath, HttpStatus.FOUND);
     } catch (error) {
       if (error instanceof HttpException) {
-        return this.redirectToLogin(reply, error.message);
+        return this.redirectToLogin(
+          reply,
+          translateError(this.i18n, error.message, error.getStatus()),
+        );
       }
       this.logger.error(error, "OAuth callback failed");
-      return this.redirectToLogin(reply, "登录失败，请稍后重试");
+      return this.redirectToLogin(
+        reply,
+        translateError(this.i18n, "auth.loginFailed"),
+      );
     }
   }
 

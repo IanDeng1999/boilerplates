@@ -25,12 +25,12 @@ export class PointKillService {
   async assertRequestAllowed() {
     const ip = this.request.ip ?? this.request.socket.remoteAddress;
     if (ip && (await this.isBlocked(PointKillTargetType.Ip, ip))) {
-      throw new ForbiddenException("当前 IP 已被禁止访问");
+      throw new ForbiddenException("access.ipBlocked");
     }
 
     const userId = await this.getUserIdFromSession();
     if (userId && (await this.isBlocked(PointKillTargetType.UserId, userId))) {
-      throw new ForbiddenException("当前用户已被禁止访问");
+      throw new ForbiddenException("access.userBlocked");
     }
   }
 

@@ -145,7 +145,9 @@ export class OauthService {
         grant_type: "authorization_code",
       }),
     });
-    if (!response.ok) throw new BadGatewayException("获取访问令牌失败");
+    if (!response.ok) {
+      throw new BadGatewayException("auth.oauthTokenFailed");
+    }
     return (await response.json()) as OAuthTokenResponse;
   }
 
@@ -156,7 +158,9 @@ export class OauthService {
         Accept: "application/json",
       },
     });
-    if (!response.ok) throw new BadGatewayException("获取用户信息失败");
+    if (!response.ok) {
+      throw new BadGatewayException("auth.oauthUserInfoFailed");
+    }
     return (await response.json()) as OAuthUserInfo;
   }
 
@@ -191,7 +195,7 @@ export class OauthService {
 
   private assertProvider(provider: string): asserts provider is OAuthProvider {
     if (!Object.hasOwn(OAUTH_ENDPOINTS, provider)) {
-      throw new BadRequestException("不支持的 OAuth 提供商");
+      throw new BadRequestException("auth.unsupportedOAuthProvider");
     }
   }
 }

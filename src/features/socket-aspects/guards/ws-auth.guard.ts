@@ -5,6 +5,7 @@ import {
   Injectable,
 } from "@nestjs/common";
 import { HttpAdapterHost } from "@nestjs/core";
+import { WsException } from "@nestjs/websockets";
 import type { Redis } from "ioredis";
 import type { Socket } from "socket.io";
 import { REDIS_CLIENT } from "../../../core/redis/redis.module.ts";
@@ -30,7 +31,7 @@ export class WsAuthGuard implements CanActivate {
     ).session;
 
     if (!sessionId) {
-      throw new Error("请先登录");
+      throw new WsException("auth.loginRequired");
     }
 
     const sessionData = await this.redisClient.hget(
@@ -39,18 +40,18 @@ export class WsAuthGuard implements CanActivate {
     );
 
     if (!sessionData) {
-      throw new Error("会话已过期，请重新登录");
+      throw new WsException("auth.sessionExpired");
     }
 
     let session: { id?: unknown };
     try {
       session = JSON.parse(sessionData);
     } catch {
-      throw new Error("会话数据格式错误");
+      throw new WsException("auth.sessionInvalidFormat");
     }
 
     if (typeof session.id !== "string" || !session.id) {
-      throw new Error("会话数据无效");
+      throw new WsException("auth.sessionInvalid");
     }
 
     client.data.user = {

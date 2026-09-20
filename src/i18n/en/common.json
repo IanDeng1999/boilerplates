@@ -1,0 +1,12 @@
+{
+  "badRequest": "Bad request",
+  "unauthorized": "Unauthorized",
+  "forbidden": "Forbidden",
+  "notFound": "Resource not found",
+  "tooManyRequests": "Too many requests. Please try again later.",
+  "validationFailed": "Request validation failed",
+  "internalServerError": "Internal server error",
+  "serviceUnavailable": "Service unavailable",
+  "badGateway": "Upstream service request failed",
+  "invalidRequest": "Invalid request"
+}

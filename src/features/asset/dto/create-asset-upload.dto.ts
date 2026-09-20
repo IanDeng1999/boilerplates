@@ -29,9 +29,7 @@ export class CreateAssetUploadDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
-  @Matches(ALLOWED_EXTENSION_PATTERN, {
-    message: "不支持的扩展名：$value",
-  })
+  @Matches(ALLOWED_EXTENSION_PATTERN)
   name: string;
 
   @ApiProperty({
@@ -39,9 +37,7 @@ export class CreateAssetUploadDto {
     example: "image/png",
   })
   @IsString()
-  @Matches(ALLOWED_MIME_TYPE_PATTERN, {
-    message: "mimeType 仅支持 image/* 或 video/*，且格式须为 type/subtype",
-  })
+  @Matches(ALLOWED_MIME_TYPE_PATTERN)
   mimeType: string;
 
   @ApiProperty({
@@ -59,7 +55,7 @@ export class CreateAssetUploadDto {
     example: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
   })
   @IsString()
-  @Matches(/^[0-9a-f]{64}$/i, { message: "sha256 必须是 64 位十六进制字符串" })
+  @Matches(/^[0-9a-f]{64}$/i)
   sha256: string;
 }
 

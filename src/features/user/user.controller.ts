@@ -65,7 +65,9 @@ export class UserController {
   @ApiOperation({ summary: "获取当前用户信息" })
   async getCurrentUser(@Req() request: FastifyRequest) {
     const userId = request.user?.id;
-    if (!userId) throw new HttpException("未登录", HttpStatus.UNAUTHORIZED);
+    if (!userId) {
+      throw new HttpException("auth.loginRequired", HttpStatus.UNAUTHORIZED);
+    }
     const user = await this.userService.findById(userId);
     return user ? this.userService.serialization(user) : null;
   }
@@ -75,7 +77,9 @@ export class UserController {
   @ApiOperation({ summary: "退出登录" })
   async logout(@Req() request: FastifyRequest): Promise<LogoutResponseDto> {
     const sessionId = request.user?.session;
-    if (!sessionId) throw new HttpException("未登录", HttpStatus.UNAUTHORIZED);
+    if (!sessionId) {
+      throw new HttpException("auth.loginRequired", HttpStatus.UNAUTHORIZED);
+    }
     await this.authService.logout(sessionId);
     return { success: true };
   }

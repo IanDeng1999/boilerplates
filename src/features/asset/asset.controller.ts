@@ -73,7 +73,7 @@ export class AssetController {
     @Headers("authorization") auth: string,
   ) {
     if (auth !== `Bearer ${this.configService.getOrThrow("SECRET")}`) {
-      throw new ForbiddenException();
+      throw new ForbiddenException("common.forbidden");
     }
     return this.assetService.handleUploadCallback(body);
   }

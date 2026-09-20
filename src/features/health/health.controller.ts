@@ -79,7 +79,7 @@ export class HealthController {
     options: HealthCheckOptionsDto,
   ) {
     if (auth !== this.configService.getOrThrow("SECRET")) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("common.unauthorized");
     }
 
     const checks = {

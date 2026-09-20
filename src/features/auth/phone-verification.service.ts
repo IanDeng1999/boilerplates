@@ -26,7 +26,7 @@ export class PhoneVerificationService {
 
   async requestLoginCode(phone: string) {
     if (this.configService.get("NODE_ENV") === "production") {
-      throw new ServiceUnavailableException("短信服务尚未配置");
+      throw new ServiceUnavailableException("auth.smsNotConfigured");
     }
 
     const cooldownKey = `phone-login:cooldown:${phone}`;
@@ -38,7 +38,7 @@ export class PhoneVerificationService {
       "NX",
     );
     if (!available) {
-      throw new HttpException("请稍后再试", HttpStatus.TOO_MANY_REQUESTS);
+      throw new HttpException("auth.retryLater", HttpStatus.TOO_MANY_REQUESTS);
     }
 
     const code = randomInt(100_000, 1_000_000).toString();
@@ -56,7 +56,7 @@ export class PhoneVerificationService {
     const key = `phone-login:code:${phone}`;
     const hash = await this.redisClient.getdel(key);
     if (!hash || hash !== this.hash(code)) {
-      throw new UnauthorizedException("验证码无效或已过期");
+      throw new UnauthorizedException("auth.verificationCodeInvalid");
     }
   }
 

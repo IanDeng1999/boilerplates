@@ -91,7 +91,7 @@ export class BookController {
     console.log("获取");
     const book = await this.bookService.findOne(id);
     if (!book) {
-      throw new NotFoundException("书籍不存在", {
+      throw new NotFoundException("book.notFound", {
         errorCode: "40400",
       });
     }
@@ -111,7 +111,7 @@ export class BookController {
   async update(@Param("id") id: string, @Body() updateBookDto: UpdateBookDto) {
     const book = await this.bookService.update(id, updateBookDto);
     if (!book) {
-      throw new NotFoundException("书籍不存在", {
+      throw new NotFoundException("book.notFound", {
         errorCode: "40400",
       });
     }
@@ -134,7 +134,7 @@ export class BookController {
   async remove(@Param("id") id: string) {
     const result = await this.bookService.remove(id);
     if (!result) {
-      throw new NotFoundException("书籍不存在", {
+      throw new NotFoundException("book.notFound", {
         errorCode: "40400",
       });
     }

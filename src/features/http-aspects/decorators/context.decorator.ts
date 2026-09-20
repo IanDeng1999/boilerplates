@@ -10,7 +10,7 @@ export const CurrentUser = createParamDecorator(
     const req = ctx.switchToHttp().getRequest<FastifyRequest>();
     const user = req.user;
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("auth.loginRequired");
     }
     return user;
   },
@@ -27,7 +27,7 @@ export const ClientIP = createParamDecorator(
       req.socket?.remoteAddress ??
       req.headers["x-forwarded-for"];
     if (!ip) {
-      throw new Error("Invalid Request");
+      throw new Error("common.invalidRequest");
     }
     return ip.match(/\d+\.\d+\.\d+\.\d+/)?.[0];
   },
