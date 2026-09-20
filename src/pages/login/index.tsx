@@ -65,15 +65,15 @@ const Login: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="p-4">
+        <main className="p-4">
           <form
             onSubmit={(event) => {
               event.preventDefault();
               submit();
             }}
           >
-            <IonList inset>
-              <IonItem>
+            <IonList lines="none">
+              <IonItem className="mb-4">
                 <IonIcon aria-hidden="true" icon={callOutline} slot="start" />
                 <IonInput
                   id="phone-number"
@@ -89,7 +89,7 @@ const Login: React.FC = () => {
                   }
                 />
               </IonItem>
-              <IonItem>
+              <IonItem className="mb-4">
                 <IonIcon aria-hidden="true" icon={keyOutline} slot="start" />
                 <IonInput
                   id="verification-code"
@@ -118,7 +118,7 @@ const Login: React.FC = () => {
                     : t("login.requestCode")}
                 </IonButton>
               </IonItem>
-              <IonItem lines="none">
+              <IonItem lines="none" className="mb-3">
                 <div className="w-full">
                   <IonButton expand="block" type="submit" size="default">
                     {t("login.submit")}
@@ -126,13 +126,13 @@ const Login: React.FC = () => {
                 </div>
               </IonItem>
               <IonItem lines="none">
-                <IonNote color="medium" className="ion-text-wrap">
+                <IonNote color="medium" className="text-center">
                   {t("login.agreement")}
                 </IonNote>
               </IonItem>
             </IonList>
           </form>
-        </div>
+        </main>
         <IonToast
           isOpen={Boolean(message)}
           message={message}
