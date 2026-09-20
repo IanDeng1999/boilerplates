@@ -16,7 +16,7 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import NotFound from "./pages/not-found";
 import User from "./pages/user";
-import { useAppStore } from "./stores/use-app-store";
+import { useAppStore } from "./stores/app";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";

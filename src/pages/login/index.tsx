@@ -13,9 +13,8 @@ import {
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { phonePattern, verificationCodeCountdown } from "./const";
 import "./login.css";
-
-const phonePattern = /^1[3-9]\d{9}$/;
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +41,7 @@ const Login: React.FC = () => {
       return;
     }
 
-    setCountdown(60);
+    setCountdown(verificationCodeCountdown);
     setMessage("验证码已发送，请注意查收");
   };
 

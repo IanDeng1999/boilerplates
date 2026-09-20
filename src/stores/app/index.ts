@@ -1,10 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-type AppState = {
-  isDarkMode: boolean;
-  setDarkMode: (isDarkMode: boolean) => void;
-};
+import { appStoreKey } from "./const";
+import type { AppState } from "./types";
 
 /** Shared application state. Add domain-specific slices as the app grows. */
 export const useAppStore = create<AppState>()(
@@ -20,7 +17,7 @@ export const useAppStore = create<AppState>()(
       },
     }),
     {
-      name: "app-store",
+      name: appStoreKey,
     },
   ),
 );

@@ -8,7 +8,7 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 
 - Ionic React + Vite + TypeScript
 - Package manager: `pnpm`
-- Service is already running on port `19133`
+- Service is already running on port `2121`
 - Project structure:
   - `src/main.tsx`: application entry
   - `src/app.tsx`: app shell, routing, and tabs
@@ -34,6 +34,7 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Concise comments
 - No `any` unless absolutely necessary
 - No re-export-only index.ts files
+- Split types and constants into types/const.ts
 
 ## Definition of Done
 

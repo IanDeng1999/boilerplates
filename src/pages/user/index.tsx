@@ -11,7 +11,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { moonOutline } from "ionicons/icons";
-import { useAppStore } from "../stores/use-app-store";
+import { useAppStore } from "../../stores/app";
 
 const User: React.FC = () => {
   const isDarkMode = useAppStore((state) => state.isDarkMode);
