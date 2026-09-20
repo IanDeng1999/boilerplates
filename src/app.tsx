@@ -34,6 +34,7 @@ import "@ionic/react/css/typography.css";
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
+import "./theme/variables.css";
 // import '@ionic/react/css/palettes/dark.always.css';
 import "@ionic/react/css/palettes/dark.class.css";
 
