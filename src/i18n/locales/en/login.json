@@ -1,0 +1,13 @@
+{
+  "title": "Sign in",
+  "phoneNumber": "Phone number",
+  "phonePlaceholder": "Enter your phone number",
+  "verificationCode": "Verification code",
+  "verificationCodePlaceholder": "Enter the 6-digit code",
+  "requestCode": "Get code",
+  "resendCode": "Resend in {{countdown}}s",
+  "submit": "Sign in / Register",
+  "agreement": "By signing in, you agree to the Terms of Service and Privacy Policy.",
+  "invalidPhone": "Enter a valid phone number",
+  "codeSent": "Verification code sent"
+}
