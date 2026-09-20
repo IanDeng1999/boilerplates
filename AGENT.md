@@ -6,7 +6,8 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 
 ## Project Constraints
 
-- Ionic React + Vite + TypeScript
+- Ionic React + Vite + TypeScript + Tailwind CSS v4
+- Tailwind is configured without Preflight: use utility classes for application styling and do not add custom CSS unless Ionic component theming requires it
 - Package manager: `pnpm`
 - Service is already running on port `2121`
 - Project structure:

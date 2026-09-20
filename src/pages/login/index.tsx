@@ -64,73 +64,75 @@ const Login: React.FC = () => {
           <IonTitle>{t("login.title")}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            submit();
-          }}
-        >
-          <IonList inset>
-            <IonItem>
-              <IonIcon aria-hidden="true" icon={callOutline} slot="start" />
-              <IonInput
-                id="phone-number"
-                inputMode="numeric"
-                label={t("login.phoneNumber")}
-                labelPlacement="stacked"
-                maxlength={11}
-                placeholder={t("login.phonePlaceholder")}
-                type="tel"
-                value={phoneNumber}
-                onIonInput={(event) =>
-                  setPhoneNumber(event.detail.value?.replace(/\D/g, "") ?? "")
-                }
-              />
-            </IonItem>
-            <IonItem>
-              <IonIcon aria-hidden="true" icon={keyOutline} slot="start" />
-              <IonInput
-                id="verification-code"
-                inputMode="numeric"
-                label={t("login.verificationCode")}
-                labelPlacement="stacked"
-                maxlength={6}
-                placeholder={t("login.verificationCodePlaceholder")}
-                value={verificationCode}
-                onIonInput={(event) =>
-                  setVerificationCode(
-                    event.detail.value?.replace(/\D/g, "") ?? "",
-                  )
-                }
-              />
-              <IonButton
-                disabled={countdown > 0}
-                fill="clear"
-                onClick={requestCode}
-                slot="end"
-                type="button"
-                size="default"
-              >
-                {countdown > 0
-                  ? t("login.resendCode", { countdown })
-                  : t("login.requestCode")}
-              </IonButton>
-            </IonItem>
-            <IonItem lines="none">
-              <div style={{ width: "100%" }}>
-                <IonButton expand="block" type="submit" size="default">
-                  {t("login.submit")}
+      <IonContent>
+        <div className="p-4">
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              submit();
+            }}
+          >
+            <IonList inset>
+              <IonItem>
+                <IonIcon aria-hidden="true" icon={callOutline} slot="start" />
+                <IonInput
+                  id="phone-number"
+                  inputMode="numeric"
+                  label={t("login.phoneNumber")}
+                  labelPlacement="stacked"
+                  maxlength={11}
+                  placeholder={t("login.phonePlaceholder")}
+                  type="tel"
+                  value={phoneNumber}
+                  onIonInput={(event) =>
+                    setPhoneNumber(event.detail.value?.replace(/\D/g, "") ?? "")
+                  }
+                />
+              </IonItem>
+              <IonItem>
+                <IonIcon aria-hidden="true" icon={keyOutline} slot="start" />
+                <IonInput
+                  id="verification-code"
+                  inputMode="numeric"
+                  label={t("login.verificationCode")}
+                  labelPlacement="stacked"
+                  maxlength={6}
+                  placeholder={t("login.verificationCodePlaceholder")}
+                  value={verificationCode}
+                  onIonInput={(event) =>
+                    setVerificationCode(
+                      event.detail.value?.replace(/\D/g, "") ?? "",
+                    )
+                  }
+                />
+                <IonButton
+                  disabled={countdown > 0}
+                  fill="clear"
+                  onClick={requestCode}
+                  slot="end"
+                  type="button"
+                  size="default"
+                >
+                  {countdown > 0
+                    ? t("login.resendCode", { countdown })
+                    : t("login.requestCode")}
                 </IonButton>
-              </div>
-            </IonItem>
-            <IonItem lines="none">
-              <IonNote color="medium" className="ion-text-wrap">
-                {t("login.agreement")}
-              </IonNote>
-            </IonItem>
-          </IonList>
-        </form>
+              </IonItem>
+              <IonItem lines="none">
+                <div className="w-full">
+                  <IonButton expand="block" type="submit" size="default">
+                    {t("login.submit")}
+                  </IonButton>
+                </div>
+              </IonItem>
+              <IonItem lines="none">
+                <IonNote color="medium" className="ion-text-wrap">
+                  {t("login.agreement")}
+                </IonNote>
+              </IonItem>
+            </IonList>
+          </form>
+        </div>
         <IonToast
           isOpen={Boolean(message)}
           message={message}

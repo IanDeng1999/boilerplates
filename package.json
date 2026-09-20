@@ -30,12 +30,14 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
     "@capacitor/cli": "8.5.2",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "@vitejs/plugin-legacy": "8.0.0",
     "@vitejs/plugin-react": "6.0.0",
     "globals": "^15.15.0",
     "jsdom": "22.1.0",
+    "tailwindcss": "^4.3.3",
     "terser": "^5.16.0",
     "typescript": "7.0.2",
     "vite": "^8.0.0"

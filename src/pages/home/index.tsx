@@ -26,7 +26,7 @@ const Home: React.FC = () => {
             <IonTitle size="large">{t("common.home")}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <div className="ion-padding">
+        <div className="p-4">
           <p>{t("home.welcome")}</p>
           <IonButton expand="block" onClick={() => navigate("/login")}>
             {t("home.returnToLogin")}

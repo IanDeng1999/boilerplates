@@ -18,12 +18,14 @@ const NotFound: React.FC = () => {
           <IonTitle>404</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <h1>{t("notFound.title")}</h1>
-        <p>{t("notFound.description")}</p>
-        <IonButton routerLink="/tabbar/home">
-          {t("notFound.returnHome")}
-        </IonButton>
+      <IonContent>
+        <div className="p-4">
+          <h1>{t("notFound.title")}</h1>
+          <p>{t("notFound.description")}</p>
+          <IonButton routerLink="/tabbar/home">
+            {t("notFound.returnHome")}
+          </IonButton>
+        </div>
       </IonContent>
     </IonPage>
   );

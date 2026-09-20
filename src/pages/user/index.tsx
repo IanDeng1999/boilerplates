@@ -32,7 +32,7 @@ const User: React.FC = () => {
             <IonTitle size="large">{t("user.title")}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <div className="ion-padding">
+        <div className="p-4">
           <IonListHeader>{t("user.appearance")}</IonListHeader>
           <IonList inset>
             <IonItem>
