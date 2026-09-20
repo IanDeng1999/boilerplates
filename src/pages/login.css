@@ -1,0 +1,44 @@
+.login-page {
+  margin: 0 auto;
+  max-width: 480px;
+  padding: max(24px, env(safe-area-inset-top)) 16px 16px;
+}
+
+form {
+  display: grid;
+  gap: 20px;
+}
+
+.verification-field {
+  align-items: end;
+  display: flex;
+  gap: 12px;
+}
+
+.verification-field ion-input {
+  flex: 1;
+}
+
+.code-button {
+  background: transparent;
+  border: 0;
+  color: var(--ion-color-primary);
+  font: inherit;
+  padding: 12px 0;
+  white-space: nowrap;
+}
+
+.code-button:disabled {
+  color: var(--ion-color-medium);
+}
+
+.login-button {
+  margin-top: 24px;
+}
+
+.security-note {
+  display: block;
+  font-size: 12px;
+  margin-top: 20px;
+  text-align: center;
+}

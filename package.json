@@ -1,0 +1,42 @@
+{
+  "name": "unnamed-app",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 2121",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "pnpm exec tsc --noEmit && pnpm exec biome check --write"
+  },
+  "dependencies": {
+    "@capacitor/app": "8.1.1",
+    "@capacitor/core": "8.5.2",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/keyboard": "8.0.5",
+    "@capacitor/status-bar": "8.0.3",
+    "@ionic/react": "^9.0.0",
+    "@ionic/react-router": "^9.0.0",
+    "axios": "^1.20.0",
+    "ionicons": "8.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router": "6.30.0",
+    "react-router-dom": "6.30.0",
+    "zustand": "5.0.15"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "@capacitor/cli": "8.5.2",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
+    "@vitejs/plugin-legacy": "8.0.0",
+    "@vitejs/plugin-react": "6.0.0",
+    "globals": "^15.15.0",
+    "jsdom": "22.1.0",
+    "terser": "^5.16.0",
+    "typescript": "7.0.2",
+    "vite": "^8.0.0"
+  },
+  "description": "An Ionic project"
+}

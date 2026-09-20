@@ -1,0 +1,7 @@
+{
+  "name": "unnamed-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
