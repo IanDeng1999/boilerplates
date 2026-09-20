@@ -18,9 +18,11 @@
     "@ionic/react": "^9.0.0",
     "@ionic/react-router": "^9.0.0",
     "axios": "^1.20.0",
+    "i18next": "^26.4.2",
     "ionicons": "8.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-i18next": "^17.0.14",
     "react-router": "6.30.0",
     "react-router-dom": "6.30.0",
     "zustand": "5.0.15"

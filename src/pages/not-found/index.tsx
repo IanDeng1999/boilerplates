@@ -6,8 +6,11 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { useTranslation } from "react-i18next";
 
 const NotFound: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <IonPage>
       <IonHeader>
@@ -16,9 +19,11 @@ const NotFound: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <h1>页面未找到</h1>
-        <p>您访问的页面不存在或已被移动。</p>
-        <IonButton routerLink="/tabbar/home">返回首页</IonButton>
+        <h1>{t("notFound.title")}</h1>
+        <p>{t("notFound.description")}</p>
+        <IonButton routerLink="/tabbar/home">
+          {t("notFound.returnHome")}
+        </IonButton>
       </IonContent>
     </IonPage>
   );

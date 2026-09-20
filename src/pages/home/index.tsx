@@ -6,28 +6,30 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Home</IonTitle>
+          <IonTitle>{t("common.home")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Home</IonTitle>
+            <IonTitle size="large">{t("common.home")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <div className="ion-padding">
-          <p>欢迎来到首页</p>
+          <p>{t("home.welcome")}</p>
           <IonButton expand="block" onClick={() => navigate("/login")}>
-            返回登录页
+            {t("home.returnToLogin")}
           </IonButton>
         </div>
       </IonContent>

@@ -11,6 +11,7 @@ import {
 import { IonReactRouter } from "@ionic/react-router";
 import { home, person } from "ionicons/icons";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Navigate, Route } from "react-router-dom";
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -71,6 +72,8 @@ const App: React.FC = () => {
 };
 
 const TabRoutes: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -84,11 +87,11 @@ const TabRoutes: React.FC = () => {
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/tabbar/home">
           <IonIcon aria-hidden="true" icon={home} />
-          <IonLabel>Home</IonLabel>
+          <IonLabel>{t("common.home")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="user" href="/tabbar/user">
           <IonIcon aria-hidden="true" icon={person} />
-          <IonLabel>User</IonLabel>
+          <IonLabel>{t("common.user")}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
