@@ -20,6 +20,7 @@ import {
 } from "@nestjs/swagger";
 import { I18nService } from "nestjs-i18n";
 import { translateError } from "#src/core/i18n/i18n-error.ts";
+import { ApiSuccessResponse } from "#src/core/swagger/api-response.decorator.ts";
 import { UseCommonHttpAspects } from "../http-aspects/decorators/http-aspects.decorator.ts";
 import { UserService } from "../user/user.service.ts";
 import { OAuthRedirectDto } from "./dto/oauth-redirect.dto.ts";
@@ -43,6 +44,11 @@ export class AuthController {
   @Get("login/:provider")
   @ApiOperation({ summary: "获取 OAuth 授权地址" })
   @ApiParam(providerParameter())
+  @ApiSuccessResponse({
+    status: HttpStatus.OK,
+    description: "获取成功",
+    type: OAuthRedirectDto,
+  })
   async getOAuthUrl(
     @Param("provider") provider: AuthProvider,
     @Res({ passthrough: true }) reply: FastifyReply,
