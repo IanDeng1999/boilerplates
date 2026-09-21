@@ -7,11 +7,10 @@ import {
   HttpStatus,
   Post,
   Req,
-  Res,
   UseGuards,
 } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { SESSION_TTL_SECONDS } from "../auth/auth.const.ts";
 import { AuthService } from "../auth/auth.service.ts";
 import { LogoutResponseDto } from "../auth/dto/logout-response.dto.ts";
 import { PhoneLoginDto } from "../auth/dto/phone-login.dto.ts";
@@ -29,7 +28,6 @@ export class UserController {
     private readonly userService: UserService,
     private readonly authService: AuthService,
     private readonly phoneVerificationService: PhoneVerificationService,
-    private readonly configService: ConfigService,
   ) {}
 
   @Post("phone/code")
@@ -42,26 +40,22 @@ export class UserController {
   @Post("phone/login")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "手机号验证码登录或注册" })
-  async loginWithPhone(
-    @Body() dto: PhoneLoginDto,
-    @Res({ passthrough: true }) reply: FastifyReply,
-  ) {
+  async loginWithPhone(@Body() dto: PhoneLoginDto) {
     await this.phoneVerificationService.verifyLoginCode(dto.phone, dto.code);
     const { sessionId, user } = await this.userService.loginWithPhone(
       dto.phone,
     );
-    reply.setCookie("session", sessionId, {
-      httpOnly: true,
-      secure: this.configService.get("NODE_ENV") === "production",
-      sameSite: "strict",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60,
-    });
-    return user;
+    return {
+      accessToken: sessionId,
+      tokenType: "Bearer",
+      expiresIn: SESSION_TTL_SECONDS,
+      user,
+    };
   }
 
   @Get("me")
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: "获取当前用户信息" })
   async getCurrentUser(@Req() request: FastifyRequest) {
     const userId = request.user?.id;
@@ -74,6 +68,7 @@ export class UserController {
 
   @Post("logout")
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: "退出登录" })
   async logout(@Req() request: FastifyRequest): Promise<LogoutResponseDto> {
     const sessionId = request.user?.session;

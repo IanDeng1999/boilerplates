@@ -8,6 +8,7 @@ import {
 import type { Redis } from "ioredis";
 import { REDIS_CLIENT } from "../../../core/redis/redis.module.ts";
 import { sessionKey } from "../auth.const.ts";
+import { getBearerToken } from "../auth-token.ts";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -15,8 +16,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
-    const reply = context.switchToHttp().getResponse<FastifyReply>();
-    const sessionId = request.cookies?.session;
+    const sessionId = getBearerToken(request.headers.authorization);
 
     if (!sessionId) {
       throw new UnauthorizedException("auth.loginRequired");
@@ -28,7 +28,6 @@ export class AuthGuard implements CanActivate {
     );
 
     if (!sessionData) {
-      reply.clearCookie("session", { path: "/" });
       throw new UnauthorizedException("auth.sessionExpired");
     }
 
@@ -36,11 +35,9 @@ export class AuthGuard implements CanActivate {
     try {
       session = JSON.parse(sessionData);
     } catch {
-      reply.clearCookie("session", { path: "/" });
       throw new UnauthorizedException("auth.sessionInvalidFormat");
     }
     if (typeof session.id !== "string" || !session.id) {
-      reply.clearCookie("session", { path: "/" });
       throw new UnauthorizedException("auth.sessionInvalid");
     }
 

@@ -88,7 +88,11 @@
           socket: null,
 
           init() {
-            this.socket = io("/events", { transports: ["websocket"], withCredentials: true });
+            const accessToken = localStorage.getItem("accessToken");
+            this.socket = io("/events", {
+              transports: ["websocket"],
+              auth: { authorization: accessToken ? `Bearer ${accessToken}` : "" },
+            });
             this.socket.on("connect", () => { this.status = "已连接（" + this.socket.id + "）"; this.log("connect", "已连接到服务器"); });
             this.socket.on("disconnect", () => { this.status = "连接已断开"; this.currentRoom = null; this.log("disconnect", "与服务器断开连接"); });
             this.socket.on("connect_error", (error) => { this.status = "连接失败：" + error.message; this.log("connect_error", "连接失败：" + error.message); });

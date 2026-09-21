@@ -85,9 +85,15 @@
           loading: false,
           account: null,
           error: "",
+          accessToken: localStorage.getItem("accessToken") ?? "",
 
           init() {
             const params = new URLSearchParams(window.location.search);
+            const fragment = new URLSearchParams(window.location.hash.slice(1));
+            const accessToken = fragment.get("access_token");
+            if (accessToken) {
+              this.setAccessToken(accessToken);
+            }
             // 后端回调成功后重定向回本页，失败时带 loginError
             const loginError = params.get("loginError");
             const failure = params.get("error");
@@ -135,7 +141,8 @@
             });
             this.loading = false;
             if (!ok) return this.fail(payload?.msg ?? "登录失败");
-            this.account = payload?.data ?? null;
+            this.setAccessToken(payload?.data?.accessToken);
+            this.account = payload?.data?.user ?? null;
           },
 
           async checkAccount() {
@@ -152,14 +159,25 @@
             if (!ok) return this.fail(payload?.msg ?? "登出失败");
 
             this.account = null;
+            this.setAccessToken("");
             this.error = "";
             this.tab = "login";
           },
 
           async call(path, options = {}) {
-            const response = await fetch(path, { credentials: "include", ...options });
+            const headers = new Headers(options.headers);
+            if (this.accessToken) {
+              headers.set("Authorization", `Bearer ${this.accessToken}`);
+            }
+            const response = await fetch(path, { ...options, headers });
             const payload = await response.json().catch(() => null);
             return { ok: response.ok, status: response.status, payload };
+          },
+
+          setAccessToken(accessToken) {
+            this.accessToken = accessToken ?? "";
+            if (this.accessToken) localStorage.setItem("accessToken", this.accessToken);
+            else localStorage.removeItem("accessToken");
           },
 
           fail(message) {

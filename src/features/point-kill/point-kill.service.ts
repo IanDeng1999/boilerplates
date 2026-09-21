@@ -6,6 +6,8 @@ import { REQUEST } from "@nestjs/core";
 import type { Cache } from "cache-manager";
 import type { Redis } from "ioredis";
 import { REDIS_CLIENT } from "../../core/redis/redis.module.ts";
+import { sessionKey } from "../auth/auth.const.ts";
+import { getBearerToken } from "../auth/auth-token.ts";
 import {
   PointKill,
   PointKillTargetType,
@@ -35,11 +37,11 @@ export class PointKillService {
   }
 
   private async getUserIdFromSession() {
-    const sessionId = this.request.cookies?.session;
+    const sessionId = getBearerToken(this.request.headers.authorization);
     if (!sessionId) return undefined;
 
     const sessionData = await this.redisClient.hget(
-      `session:${sessionId}`,
+      sessionKey(sessionId),
       "data",
     );
     if (!sessionData) return undefined;

@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import {
   ApiErrorResponse,
   ApiSuccessResponse,
@@ -34,6 +34,7 @@ export class AssetController {
 
   @Post("upload-urls")
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "批量获取上传地址",

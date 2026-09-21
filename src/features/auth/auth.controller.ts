@@ -87,14 +87,14 @@ export class AuthController {
       );
       const { sessionId } =
         await this.userService.loginWithOAuth(authentication);
-      reply.setCookie(
-        "session",
-        sessionId,
-        this.cookieOptions({
-          maxAge: 7 * 24 * 60 * 60,
-        }),
+      const fragment = new URLSearchParams({
+        access_token: sessionId,
+        token_type: "Bearer",
+      });
+      return reply.redirect(
+        `${this.loginPagePath}#${fragment}`,
+        HttpStatus.FOUND,
       );
-      return reply.redirect(this.loginPagePath, HttpStatus.FOUND);
     } catch (error) {
       if (error instanceof HttpException) {
         return this.redirectToLogin(

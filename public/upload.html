@@ -106,6 +106,7 @@
           files: [],
           running: false,
           error: "",
+          accessToken: localStorage.getItem("accessToken") ?? "",
           init() {
             this.checkAccount();
           },
@@ -181,7 +182,11 @@
           },
 
           async call(path, options = {}) {
-            const response = await fetch(path, { credentials: "include", ...options });
+            const headers = new Headers(options.headers);
+            if (this.accessToken) {
+              headers.set("Authorization", `Bearer ${this.accessToken}`);
+            }
+            const response = await fetch(path, { ...options, headers });
             const payload = await response.json().catch(() => null);
             return { ok: response.ok, status: response.status, payload };
           },

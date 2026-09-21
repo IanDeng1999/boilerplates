@@ -4,19 +4,16 @@ import {
   Inject,
   Injectable,
 } from "@nestjs/common";
-import { HttpAdapterHost } from "@nestjs/core";
 import { WsException } from "@nestjs/websockets";
 import type { Redis } from "ioredis";
 import type { Socket } from "socket.io";
 import { REDIS_CLIENT } from "../../../core/redis/redis.module.ts";
 import { sessionKey } from "../../auth/auth.const.ts";
+import { getBearerToken } from "../../auth/auth-token.ts";
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
-  constructor(
-    @Inject(REDIS_CLIENT) private readonly redisClient: Redis,
-    private readonly httpAdapterHost: HttpAdapterHost,
-  ) {}
+  constructor(@Inject(REDIS_CLIENT) private readonly redisClient: Redis) {}
 
   async canActivate(context: ExecutionContext) {
     const client = context.switchToWs().getClient();
@@ -25,10 +22,10 @@ export class WsAuthGuard implements CanActivate {
   }
 
   async authenticate(client: Socket) {
-    const { parseCookie } = this.httpAdapterHost.httpAdapter.getInstance();
-    const sessionId = parseCookie(
-      client.handshake.headers.cookie ?? "",
-    ).session;
+    const sessionId = getBearerToken(
+      client.handshake.auth.authorization ??
+        client.handshake.headers.authorization,
+    );
 
     if (!sessionId) {
       throw new WsException("auth.loginRequired");
