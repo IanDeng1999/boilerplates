@@ -32,7 +32,7 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Avoid over-defensive programming
 - Never generate or run database migrations
 - Prefer reusing existing utilities over creating new ones
-- When creating new files, review existing similar files first for conventions and patterns
+- Before writing any code, you must review other files of the same type to learn and follow their style, conventions, and patterns
 - Name files and directories in lowercase kebab-case
 
 ## Code Style
