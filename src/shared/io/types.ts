@@ -10,4 +10,10 @@ export interface IoConfig {
   socket: SocketConfig;
 }
 
+export interface HttpResponse<T> {
+  code: number;
+  msg: string;
+  data: T;
+}
+
 export type SocketEventHandler = (...args: unknown[]) => void;

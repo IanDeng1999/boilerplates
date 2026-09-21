@@ -1,14 +1,14 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import { io as createSocket } from "socket.io-client";
-import { config } from "../config/config";
+import { config } from "@/shared/config/config";
 import { DEFAULT_HTTP_TIMEOUT, DEFAULT_SOCKET_CONFIG } from "./const";
-import type { IoConfig, SocketEventHandler } from "./types";
+import type { HttpResponse, IoConfig, SocketEventHandler } from "./types";
 
 export class Io {
   readonly http;
   readonly socket;
 
-  constructor(ioConfig: IoConfig = config.io) {
+  constructor(ioConfig: IoConfig) {
     const { url, ...socketOptions } = ioConfig.socket;
 
     this.http = axios.create({
@@ -22,7 +22,7 @@ export class Io {
   }
 
   request<T>(config: AxiosRequestConfig) {
-    return this.http.request<T>(config);
+    return this.http.request<HttpResponse<T>>(config);
   }
 
   connect() {
@@ -45,3 +45,6 @@ export class Io {
     this.socket.emit(event, ...args);
   }
 }
+
+// 导出公共的Io实例，所有地方复用
+export const io = new Io(config.io);
