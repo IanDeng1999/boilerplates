@@ -11,11 +11,6 @@ const { t } = useI18n();
 
 <template>
   <div class="tab-page">
-    <header class="page-header">
-      <p>{{ t("profile.eyebrow") }}</p>
-      <h1>{{ t("profile.title") }}</h1>
-    </header>
-
     <h2 class="section-title">{{ t("profile.preferences") }}</h2>
     <CellGroup inset>
       <Cell
