@@ -10,13 +10,15 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Package manager: `pnpm`
 - Service is already running on port `6363`
 - Every Controller must use `@UseCommonHttpAspects()`; every Gateway must use `@UseCommonSocketAspects()`.
-- Project structure:
-  - `src/main.ts`: application entry
-  - `src/app.module.ts`: root module
-  - `src/features/`: business modules
-  - `src/infra/`: infrastructure services
-  - `src/common/`: shared utilities
-  - `public/`: static assets
+
+## Project Structure
+
+- `src/main.ts`: application entry
+- `src/app.module.ts`: root module
+- `src/features/`: business modules
+- `src/infra/`: infrastructure services
+- `src/common/`: shared utilities
+- `public/`: static assets
 
 ## Execution Style
 
@@ -25,7 +27,7 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Avoid over-defensive programming
 - Never generate or run database migrations
 - Prefer reusing existing utilities over creating new ones
-- When creating new files, review existing similar files first for conventions and patterns
+- Before writing any code, you must review other files of the same type to learn and follow their style, conventions, and patterns
 
 ## Code Style
 
