@@ -9,8 +9,8 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Vue3 + Vite + TypeScript + Vant
 - Package manager: `pnpm`
 - Service is already running on port `2121`
-- All colors used in styles/components must reference native Vant CSS variables (CSS token), no hardcoded hex/rgb color values directly
-- Prioritize using official built-in Vant components to implement all functional requirements, avoid custom reimplementation of components that already exist in Vant library
+- All colors must use Vant native CSS token, no hardcoded color values
+- Prioritize using built-in Vant components for all features
 
 ## Project Structure
 
