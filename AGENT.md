@@ -10,6 +10,21 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Package manager: `pnpm`
 - Service is already running on port `2121`
 
+## Project Structure
+
+- `src/main.ts`: Application entry point
+- `src/main-app.vue`: Root application component
+- `src/views/`: Route-level pages
+- `src/layouts/`: Shared page layouts
+- `src/router/`: Route definitions
+- `src/stores/`: Pinia state stores
+- `src/i18n/`: Internationalization setup and locale messages
+- `src/shared/`: Shared configuration, IO utilities, types, and constants
+- `src/assets/` and `public/`: Bundled and public static assets
+- `android/` and `ios/`: Capacitor native projects
+- `capacitor.config.ts`: Capacitor configuration
+- `vite.config.ts`: Vite configuration
+
 ## Execution Style
 
 - Think several steps ahead
