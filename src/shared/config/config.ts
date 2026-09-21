@@ -6,6 +6,7 @@ export const config: AppConfig = CONFIG_SCHEMA.parse({
     http: {
       baseURL: import.meta.env.VITE_HTTP_BASE_URL,
       timeout: import.meta.env.VITE_HTTP_TIMEOUT,
+      withCredentials: true,
     },
     socket: {
       url: import.meta.env.VITE_SOCKET_URL,
