@@ -6,10 +6,16 @@
   "scripts": {
     "dev": "vite --port 2121",
     "build": "vue-tsc -b && vite build",
+    "cap:sync": "pnpm build && cap sync",
+    "cap:open:android": "cap open android",
+    "cap:open:ios": "cap open ios",
     "preview": "vite preview",
     "lint": "pnpm exec tsc --noEmit && pnpm exec biome check --write"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
     "pinia": "^4.0.3",
     "pinia-plugin-persistedstate": "^4.7.1",
     "vant": "^4.10.2",
@@ -19,6 +25,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
+    "@capacitor/cli": "^8.5.2",
     "@types/node": "24.13.3",
     "@vitejs/plugin-vue": "6.0.8",
     "@vue/tsconfig": "0.9.1",
