@@ -13,21 +13,22 @@
     "lint": "pnpm exec tsc --noEmit && pnpm exec biome check --write"
   },
   "dependencies": {
-    "@capacitor/android": "^8.5.2",
-    "@capacitor/core": "^8.5.2",
-    "@capacitor/ios": "^8.5.2",
-    "axios": "^1.20.0",
-    "pinia": "^4.0.3",
-    "pinia-plugin-persistedstate": "^4.7.1",
-    "socket.io-client": "^4.8.3",
-    "vant": "^4.10.2",
+    "@capacitor/android": "8.5.2",
+    "@capacitor/core": "8.5.2",
+    "@capacitor/ios": "8.5.2",
+    "axios": "1.20.0",
+    "pinia": "4.0.3",
+    "pinia-plugin-persistedstate": "4.7.1",
+    "socket.io-client": "4.8.3",
+    "vant": "4.10.2",
     "vue": "3.5.42",
-    "vue-i18n": "^11.4.12",
-    "vue-router": "^5.3.1"
+    "vue-i18n": "11.4.12",
+    "vue-router": "5.3.1",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
-    "@capacitor/cli": "^8.5.2",
+    "@capacitor/cli": "8.5.2",
     "@types/node": "24.13.3",
     "@vitejs/plugin-vue": "6.0.8",
     "@vue/tsconfig": "0.9.1",

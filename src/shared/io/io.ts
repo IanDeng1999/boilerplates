@@ -1,5 +1,6 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import { io as createSocket } from "socket.io-client";
+import { config } from "../config/config";
 import { DEFAULT_HTTP_TIMEOUT, DEFAULT_SOCKET_CONFIG } from "./const";
 import type { IoConfig, SocketEventHandler } from "./types";
 
@@ -7,12 +8,12 @@ export class Io {
   readonly http;
   readonly socket;
 
-  constructor(config: IoConfig) {
-    const { url, ...socketOptions } = config.socket;
+  constructor(ioConfig: IoConfig = config.io) {
+    const { url, ...socketOptions } = ioConfig.socket;
 
     this.http = axios.create({
       timeout: DEFAULT_HTTP_TIMEOUT,
-      ...config.http,
+      ...ioConfig.http,
     });
     this.socket = createSocket(url, {
       ...DEFAULT_SOCKET_CONFIG,
