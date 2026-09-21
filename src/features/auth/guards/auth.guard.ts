@@ -8,7 +8,11 @@ import {
 import type { Redis } from "ioredis";
 import { REDIS_CLIENT } from "../../../core/redis/redis.module.ts";
 import { sessionKey } from "../auth.const.ts";
-import { getBearerToken } from "../auth-token.ts";
+
+export function getBearerToken(authorization: unknown) {
+  if (typeof authorization !== "string") return undefined;
+  return authorization.match(/^Bearer\s+(\S+)$/i)?.[1];
+}
 
 @Injectable()
 export class AuthGuard implements CanActivate {

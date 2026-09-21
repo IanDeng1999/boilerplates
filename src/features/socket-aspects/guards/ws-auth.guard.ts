@@ -9,7 +9,7 @@ import type { Redis } from "ioredis";
 import type { Socket } from "socket.io";
 import { REDIS_CLIENT } from "../../../core/redis/redis.module.ts";
 import { sessionKey } from "../../auth/auth.const.ts";
-import { getBearerToken } from "../../auth/auth-token.ts";
+import { getBearerToken } from "../../auth/guards/auth.guard.ts";
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
