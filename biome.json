@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!assets/**/*", "!global.css"]
+    "includes": [
+      "**",
+      "!android/**/*",
+      "!ios/**/*",
+      "!dist/**/*",
+      "!assets/**/*",
+      "!global.css"
+    ]
   },
   "formatter": {
     "enabled": true,
