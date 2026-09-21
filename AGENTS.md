@@ -10,6 +10,7 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - Package manager: `pnpm`
 - Service is already running on port `2121`
 - All colors used in styles/components must reference native Vant CSS variables (CSS token), no hardcoded hex/rgb color values directly
+- Prioritize using official built-in Vant components to implement all functional requirements, avoid custom reimplementation of components that already exist in Vant library
 
 ## Project Structure
 
