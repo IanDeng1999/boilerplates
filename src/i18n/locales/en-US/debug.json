@@ -48,6 +48,23 @@
     "shortBottom": "Short toast at bottom",
     "longCenter": "Long toast at center"
   },
+  "dialog": {
+    "title": "Dialog",
+    "description": "Test native alert, confirmation, and text input dialogs and inspect their results.",
+    "alert": "Show alert",
+    "confirm": "Show confirmation",
+    "prompt": "Show prompt",
+    "alertTitle": "Notice",
+    "alertMessage": "This is an alert example from Capacitor Dialog.",
+    "confirmTitle": "Confirm action",
+    "confirmMessage": "Do you want to continue?",
+    "promptTitle": "Enter a name",
+    "promptMessage": "Enter a name for this demonstration.",
+    "promptPlaceholder": "Enter a name",
+    "promptDefaultValue": "Capacitor",
+    "ok": "OK",
+    "cancel": "Cancel"
+  },
   "actionSheet": {
     "title": "Action Sheet",
     "description": "Open a native action sheet and return the selected button index and cancellation state.",

@@ -48,6 +48,23 @@
     "shortBottom": "底部短提示",
     "longCenter": "居中长提示"
   },
+  "dialog": {
+    "title": "Dialog 原生对话框",
+    "description": "测试原生警告、确认和文本输入对话框，并展示调用返回值。",
+    "alert": "显示警告框",
+    "confirm": "显示确认框",
+    "prompt": "显示输入框",
+    "alertTitle": "操作提示",
+    "alertMessage": "这是 Capacitor Dialog 的警告框示例。",
+    "confirmTitle": "确认操作",
+    "confirmMessage": "是否确认继续执行？",
+    "promptTitle": "输入名称",
+    "promptMessage": "请输入用于演示的名称。",
+    "promptPlaceholder": "请输入名称",
+    "promptDefaultValue": "Capacitor",
+    "ok": "确定",
+    "cancel": "取消"
+  },
   "actionSheet": {
     "title": "Action Sheet 操作面板",
     "description": "打开原生操作面板，并返回所选按钮的索引和取消状态。",
