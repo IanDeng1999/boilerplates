@@ -10,9 +10,8 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <div class="tab-page">
-    <h2 class="section-title">{{ t("profile.preferences") }}</h2>
-    <CellGroup inset>
+  <main class="tab-page">
+    <CellGroup inset :title="t('profile.preferences')">
       <Cell
         :title="t('profile.darkMode')"
         icon="setting-o"
@@ -37,5 +36,5 @@ const { t } = useI18n();
         @click="appStore.toggleLocale"
       />
     </CellGroup>
-  </div>
+  </main>
 </template>

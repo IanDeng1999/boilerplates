@@ -4,14 +4,6 @@
 
 You are a senior Full-Stack engineer proficient in TypeScript and NestJS development.
 
-## Project Constraints
-
-- Vue3 + Vite + TypeScript + Vant
-- Package manager: `pnpm`
-- Service is already running on port `2121`
-- All colors must use Vant native CSS token, no hardcoded color values
-- Prioritize using built-in Vant components for all features
-
 ## Project Structure
 
 - `src/main.ts`: Application entry point
@@ -26,6 +18,14 @@ You are a senior Full-Stack engineer proficient in TypeScript and NestJS develop
 - `android/` and `ios/`: Capacitor native projects
 - `capacitor.config.ts`: Capacitor configuration
 - `vite.config.ts`: Vite configuration
+
+## Project Constraints
+
+- Vue3 + Vite + TypeScript + Vant + Tailwind CSS + Less
+- Package manager: `pnpm`
+- Service is already running on port `2121`
+- All colors must use Vant native CSS token, no hardcoded color values
+- Prioritize using built-in Vant components for all features
 
 ## Execution Style
 
