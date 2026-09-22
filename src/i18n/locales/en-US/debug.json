@@ -1,0 +1,11 @@
+{
+  "title": "Debug",
+  "environment": "Environment",
+  "route": "Current route",
+  "platform": "Platform",
+  "nativePlatform": "Native platform",
+  "yes": "Yes",
+  "no": "No",
+  "testToast": "Test Toast",
+  "toastMessage": "Toast is working"
+}

@@ -28,6 +28,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/debug",
+      name: "debug",
+      component: () => import("../views/debug-view.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       redirect: "/tabbar/home",
     },

@@ -3,5 +3,7 @@
   "title": "Me",
   "preferences": "Preferences",
   "darkMode": "Dark mode",
-  "language": "Language"
+  "language": "Language",
+  "development": "Developer tools",
+  "debug": "Debug page"
 }

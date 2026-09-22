@@ -1,0 +1,11 @@
+{
+  "title": "调试",
+  "environment": "运行环境",
+  "route": "当前路由",
+  "platform": "平台",
+  "nativePlatform": "原生环境",
+  "yes": "是",
+  "no": "否",
+  "testToast": "测试 Toast",
+  "toastMessage": "Toast 工作正常"
+}

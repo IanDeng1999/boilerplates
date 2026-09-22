@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { Cell, CellGroup, Switch } from "vant";
+import { Cell, CellGroup, NavBar, Switch } from "vant";
 import { useI18n } from "vue-i18n";
 import { useAppStore } from "../stores/app";
 
@@ -10,7 +10,8 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <main class="tab-page">
+  <main>
+    <NavBar :title="t('profile.title')" fixed placeholder safe-area-inset-top />
     <CellGroup inset :title="t('profile.preferences')">
       <Cell
         :title="t('profile.darkMode')"
@@ -34,6 +35,16 @@ const { t } = useI18n();
         is-link
         clickable
         @click="appStore.toggleLocale"
+      />
+    </CellGroup>
+
+    <CellGroup inset :title="t('profile.development')">
+      <Cell
+        :title="t('profile.debug')"
+        icon="setting-o"
+        is-link
+        clickable
+        to="/debug"
       />
     </CellGroup>
   </main>

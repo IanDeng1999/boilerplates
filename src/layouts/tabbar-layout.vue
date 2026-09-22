@@ -12,10 +12,10 @@ const { t } = useI18n();
     </div>
 
     <Tabbar route placeholder fixed safe-area-inset-bottom>
-      <TabbarItem replace to="/tabbar/home" icon="home-o">{{
+      <TabbarItem to="/tabbar/home" icon="home-o">{{
         t("nav.home")
       }}</TabbarItem>
-      <TabbarItem replace to="/tabbar/user" icon="user-o">{{
+      <TabbarItem to="/tabbar/user" icon="user-o">{{
         t("nav.profile")
       }}</TabbarItem>
     </Tabbar>

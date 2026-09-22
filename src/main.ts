@@ -1,3 +1,4 @@
+import { App as CapacitorApp } from "@capacitor/app";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { createApp } from "vue";
@@ -16,5 +17,13 @@ pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(i18n);
 app.use(router);
+void CapacitorApp.addListener("backButton", ({ canGoBack }) => {
+  if (canGoBack) {
+    router.back();
+    return;
+  }
+
+  void CapacitorApp.exitApp();
+});
 useAppStore(pinia).initialize();
 app.mount("#app");
