@@ -3,10 +3,13 @@ import { Collapse, NavBar } from "vant";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import ActionSheetPlugin from "./components/action-sheet-plugin.vue";
+import AppLauncherPlugin from "./components/app-launcher-plugin.vue";
+import AppPlugin from "./components/app-plugin.vue";
 import DevicePlugin from "./components/device-plugin.vue";
 import DialogPlugin from "./components/dialog-plugin.vue";
 import HapticsPlugin from "./components/haptics-plugin.vue";
 import KeyboardPlugin from "./components/keyboard-plugin.vue";
+import PreferencesPlugin from "./components/preferences-plugin.vue";
 import ScreenOrientationPlugin from "./components/screen-orientation-plugin.vue";
 import SharePlugin from "./components/share-plugin.vue";
 import SplashScreenPlugin from "./components/splash-screen-plugin.vue";
@@ -23,6 +26,9 @@ const activePlugins = ref<string[]>([]);
     <NavBar :title="t('debug.title')" fixed placeholder safe-area-inset-top />
     <div class="px-[var(--van-padding-md)] pb-[var(--van-padding-md)]">
       <Collapse v-model="activePlugins" :border="false">
+        <AppPlugin />
+        <AppLauncherPlugin />
+        <PreferencesPlugin />
         <SharePlugin />
         <DevicePlugin />
         <StatusBarPlugin />

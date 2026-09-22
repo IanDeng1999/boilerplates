@@ -12,6 +12,33 @@
   "available": "当前环境支持",
   "unavailable": "当前环境不支持",
   "completed": "调用成功",
+  "app": {
+    "title": "App 应用状态",
+    "description": "读取应用信息、当前状态、启动链接和应用语言，并监听生命周期、深链与恢复结果事件。最小化仅支持 Android。",
+    "info": "读取应用信息",
+    "minimize": "最小化应用",
+    "events": "最近应用事件"
+  },
+  "appLauncher": {
+    "title": "App Launcher 应用启动器",
+    "description": "检查 URL 或应用是否可打开，并调用系统打开目标。iOS 自定义 Scheme 与 Android 11 以上查询需要配置白名单。",
+    "urlLabel": "目标 URL",
+    "urlPlaceholder": "输入 URL、Scheme 或 Android 包名",
+    "check": "检查是否可打开",
+    "open": "打开目标"
+  },
+  "preferences": {
+    "title": "Preferences 偏好存储",
+    "description": "读写轻量级字符串键值数据，并查看当前存储中的所有键。Web 环境会回退到 localStorage。",
+    "keyLabel": "键",
+    "keyPlaceholder": "输入存储键",
+    "valueLabel": "值",
+    "valuePlaceholder": "输入字符串值",
+    "set": "写入",
+    "get": "读取",
+    "remove": "移除",
+    "keys": "列出所有键"
+  },
   "share": {
     "title": "Share 分享",
     "description": "检查当前环境的分享能力，或调用系统分享面板分享文字与链接。",

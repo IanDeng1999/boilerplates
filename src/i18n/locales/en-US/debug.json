@@ -12,6 +12,33 @@
   "available": "Supported in the current environment",
   "unavailable": "Not supported in the current environment",
   "completed": "Completed successfully",
+  "app": {
+    "title": "App",
+    "description": "Read app details, state, launch URL, and language, and observe lifecycle, deep-link, and restored-result events. Minimizing is Android-only.",
+    "info": "Load app information",
+    "minimize": "Minimize app",
+    "events": "Recent app events"
+  },
+  "appLauncher": {
+    "title": "App Launcher",
+    "description": "Check whether a URL or app can be opened, then ask the system to open it. Custom iOS schemes and Android 11+ queries require allowlist configuration.",
+    "urlLabel": "Target URL",
+    "urlPlaceholder": "Enter a URL, scheme, or Android package",
+    "check": "Check availability",
+    "open": "Open target"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "description": "Read and write lightweight string key/value data and inspect all stored keys. The web implementation falls back to localStorage.",
+    "keyLabel": "Key",
+    "keyPlaceholder": "Enter a storage key",
+    "valueLabel": "Value",
+    "valuePlaceholder": "Enter a string value",
+    "set": "Set",
+    "get": "Get",
+    "remove": "Remove",
+    "keys": "List all keys"
+  },
   "share": {
     "title": "Share",
     "description": "Check sharing support or open the system share sheet with text and a link.",
