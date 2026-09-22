@@ -7,5 +7,32 @@
   "yes": "是",
   "no": "否",
   "testToast": "测试 Toast",
-  "toastMessage": "Toast 工作正常"
+  "toastMessage": "Toast 工作正常",
+  "result": "调用结果",
+  "available": "当前环境支持",
+  "unavailable": "当前环境不支持",
+  "completed": "调用成功",
+  "share": {
+    "title": "Share 分享",
+    "description": "检查当前环境的分享能力，或调用系统分享面板分享文字与链接。",
+    "check": "检查分享能力",
+    "action": "打开系统分享",
+    "contentTitle": "Capacitor Share 示例",
+    "contentText": "来自应用调试页面的分享内容",
+    "dialogTitle": "分享到"
+  },
+  "device": {
+    "title": "Device 设备信息",
+    "description": "读取设备标识、系统信息、电池状态和系统语言。",
+    "action": "读取设备信息"
+  },
+  "statusBar": {
+    "title": "Status Bar 状态栏",
+    "description": "读取状态栏信息，并测试明暗样式、隐藏和显示操作。该插件仅支持原生平台。",
+    "info": "读取状态栏信息",
+    "dark": "深色图标",
+    "light": "浅色图标",
+    "hide": "隐藏",
+    "show": "显示"
+  }
 }

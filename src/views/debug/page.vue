@@ -1,38 +1,24 @@
 <script setup lang="ts">
-import { Capacitor } from "@capacitor/core";
-import { Button, Cell, CellGroup, NavBar, showToast } from "vant";
+import { Collapse, NavBar } from "vant";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import DevicePlugin from "./components/device-plugin.vue";
+import SharePlugin from "./components/share-plugin.vue";
+import StatusBarPlugin from "./components/status-bar-plugin.vue";
 
-const route = useRoute();
-const router = useRouter();
 const { t } = useI18n();
+const activePlugins = ref<string[]>([]);
 </script>
 
 <template>
   <main>
-    <NavBar
-      :title="t('debug.title')"
-      left-arrow
-      fixed
-      placeholder
-      safe-area-inset-top
-      @click-left="router.back()"
-    />
-
-    <CellGroup inset :title="t('debug.environment')">
-      <Cell :title="t('debug.route')" :value="route.fullPath" />
-      <Cell :title="t('debug.platform')" :value="Capacitor.getPlatform()" />
-      <Cell
-        :title="t('debug.nativePlatform')"
-        :value="t(Capacitor.isNativePlatform() ? 'debug.yes' : 'debug.no')"
-      />
-    </CellGroup>
-
-    <div class="p-[var(--van-padding-md)]">
-      <Button type="primary" block @click="showToast(t('debug.toastMessage'))">
-        {{ t("debug.testToast") }}
-      </Button>
+    <NavBar :title="t('debug.title')" fixed placeholder safe-area-inset-top />
+    <div class="px-[var(--van-padding-md)] pb-[var(--van-padding-md)]">
+      <Collapse v-model="activePlugins" :border="false">
+        <SharePlugin />
+        <DevicePlugin />
+        <StatusBarPlugin />
+      </Collapse>
     </div>
   </main>
 </template>

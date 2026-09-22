@@ -7,5 +7,32 @@
   "yes": "Yes",
   "no": "No",
   "testToast": "Test Toast",
-  "toastMessage": "Toast is working"
+  "toastMessage": "Toast is working",
+  "result": "Result",
+  "available": "Supported in the current environment",
+  "unavailable": "Not supported in the current environment",
+  "completed": "Completed successfully",
+  "share": {
+    "title": "Share",
+    "description": "Check sharing support or open the system share sheet with text and a link.",
+    "check": "Check share support",
+    "action": "Open system share",
+    "contentTitle": "Capacitor Share example",
+    "contentText": "Shared from the app debug page",
+    "dialogTitle": "Share with"
+  },
+  "device": {
+    "title": "Device",
+    "description": "Read the device identifier, system information, battery state, and system language.",
+    "action": "Load device information"
+  },
+  "statusBar": {
+    "title": "Status Bar",
+    "description": "Read status bar information and test dark, light, hide, and show actions. This plugin is native-only.",
+    "info": "Load status bar information",
+    "dark": "Dark icons",
+    "light": "Light icons",
+    "hide": "Hide",
+    "show": "Show"
+  }
 }
