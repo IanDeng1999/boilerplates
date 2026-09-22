@@ -65,6 +65,26 @@
     "ok": "确定",
     "cancel": "取消"
   },
+  "keyboard": {
+    "title": "Keyboard 键盘",
+    "description": "控制软键盘并监听显示、隐藏事件。显示键盘仅支持 Android，其余外观和布局控制仅支持 iOS。",
+    "inputLabel": "测试输入",
+    "inputPlaceholder": "点击此处唤起键盘",
+    "show": "显示键盘",
+    "hide": "隐藏键盘",
+    "iosControls": "iOS 辅助栏与页面滚动",
+    "showAccessoryBar": "显示辅助栏",
+    "hideAccessoryBar": "隐藏辅助栏",
+    "enableScroll": "启用页面滚动",
+    "disableScroll": "禁用页面滚动",
+    "style": "iOS 键盘样式",
+    "defaultStyle": "跟随系统",
+    "lightStyle": "浅色",
+    "darkStyle": "深色",
+    "resizeMode": "iOS 键盘布局模式",
+    "getResizeMode": "读取当前模式",
+    "events": "最近键盘事件"
+  },
   "actionSheet": {
     "title": "Action Sheet 操作面板",
     "description": "打开原生操作面板，并返回所选按钮的索引和取消状态。",

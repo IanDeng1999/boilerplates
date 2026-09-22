@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import ActionSheetPlugin from "./components/action-sheet-plugin.vue";
 import DevicePlugin from "./components/device-plugin.vue";
 import DialogPlugin from "./components/dialog-plugin.vue";
+import KeyboardPlugin from "./components/keyboard-plugin.vue";
 import SharePlugin from "./components/share-plugin.vue";
 import SplashScreenPlugin from "./components/splash-screen-plugin.vue";
 import StatusBarPlugin from "./components/status-bar-plugin.vue";
@@ -25,6 +26,7 @@ const activePlugins = ref<string[]>([]);
         <SplashScreenPlugin />
         <ToastPlugin />
         <DialogPlugin />
+        <KeyboardPlugin />
         <ActionSheetPlugin />
       </Collapse>
     </div>

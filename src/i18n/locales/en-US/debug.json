@@ -65,6 +65,26 @@
     "ok": "OK",
     "cancel": "Cancel"
   },
+  "keyboard": {
+    "title": "Keyboard",
+    "description": "Control the software keyboard and observe show and hide events. Showing is Android-only; appearance and layout controls are iOS-only.",
+    "inputLabel": "Test input",
+    "inputPlaceholder": "Tap here to open the keyboard",
+    "show": "Show keyboard",
+    "hide": "Hide keyboard",
+    "iosControls": "iOS accessory bar and page scrolling",
+    "showAccessoryBar": "Show accessory bar",
+    "hideAccessoryBar": "Hide accessory bar",
+    "enableScroll": "Enable page scrolling",
+    "disableScroll": "Disable page scrolling",
+    "style": "iOS keyboard style",
+    "defaultStyle": "System default",
+    "lightStyle": "Light",
+    "darkStyle": "Dark",
+    "resizeMode": "iOS keyboard resize mode",
+    "getResizeMode": "Get current mode",
+    "events": "Recent keyboard events"
+  },
   "actionSheet": {
     "title": "Action Sheet",
     "description": "Open a native action sheet and return the selected button index and cancellation state.",
