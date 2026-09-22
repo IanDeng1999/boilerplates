@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { Cell, CellGroup, NavBar, Switch } from "vant";
 import { useI18n } from "vue-i18n";
-import { useAppStore } from "../stores/app";
+import { useAppStore } from "../../stores/app";
 
 const appStore = useAppStore();
 const { isDark, locale } = storeToRefs(appStore);
