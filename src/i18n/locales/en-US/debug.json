@@ -40,5 +40,23 @@
     "description": "Show the splash screen for two seconds with automatic hiding, or hide it manually. This plugin is native-only.",
     "show": "Show for two seconds",
     "hide": "Hide"
+  },
+  "toast": {
+    "title": "Toast",
+    "description": "Test native Toast durations and positions. Toasts always appear at the bottom on Android 12 and newer.",
+    "message": "Capacitor Toast is working",
+    "shortBottom": "Short toast at bottom",
+    "longCenter": "Long toast at center"
+  },
+  "actionSheet": {
+    "title": "Action Sheet",
+    "description": "Open a native action sheet and return the selected button index and cancellation state.",
+    "action": "Open action sheet",
+    "dialogTitle": "Photo options",
+    "message": "Select an action to perform",
+    "upload": "Upload",
+    "share": "Share",
+    "remove": "Remove",
+    "cancel": "Cancel"
   }
 }

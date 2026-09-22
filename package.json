@@ -13,6 +13,7 @@
     "lint": "pnpm exec tsc --noEmit && pnpm exec biome check --write"
   },
   "dependencies": {
+    "@capacitor/action-sheet": "8.1.1",
     "@capacitor/android": "8.5.2",
     "@capacitor/app": "^8.1.1",
     "@capacitor/core": "8.5.2",
@@ -21,6 +22,8 @@
     "@capacitor/share": "^8.0.2",
     "@capacitor/splash-screen": "8.0.2",
     "@capacitor/status-bar": "^8.0.3",
+    "@capacitor/toast": "8.0.1",
+    "@ionic/pwa-elements": "3.4.0",
     "axios": "1.20.0",
     "pinia": "4.0.3",
     "pinia-plugin-persistedstate": "4.7.1",

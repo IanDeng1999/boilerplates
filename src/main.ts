@@ -1,4 +1,5 @@
 import { App as CapacitorApp } from "@capacitor/app";
+import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { createApp } from "vue";
@@ -9,6 +10,8 @@ import { useAppStore } from "./stores/app";
 import "vant/lib/index.css";
 import "./styles/variables.css";
 import "./styles/tailwind.css";
+
+void defineCustomElements(window);
 
 const app = createApp(App);
 const pinia = createPinia();

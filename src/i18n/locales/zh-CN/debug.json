@@ -40,5 +40,23 @@
     "description": "显示两秒后自动隐藏启动画面，或手动调用隐藏操作。该插件仅支持原生平台。",
     "show": "显示两秒",
     "hide": "隐藏"
+  },
+  "toast": {
+    "title": "Toast 消息提示",
+    "description": "测试原生 Toast 的显示时长和位置。Android 12 及以上版本始终显示在底部。",
+    "message": "Capacitor Toast 工作正常",
+    "shortBottom": "底部短提示",
+    "longCenter": "居中长提示"
+  },
+  "actionSheet": {
+    "title": "Action Sheet 操作面板",
+    "description": "打开原生操作面板，并返回所选按钮的索引和取消状态。",
+    "action": "打开操作面板",
+    "dialogTitle": "图片操作",
+    "message": "请选择要执行的操作",
+    "upload": "上传",
+    "share": "分享",
+    "remove": "删除",
+    "cancel": "取消"
   }
 }
