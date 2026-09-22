@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "8.5.2",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "24.13.3",
