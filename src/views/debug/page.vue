@@ -7,9 +7,11 @@ import DevicePlugin from "./components/device-plugin.vue";
 import DialogPlugin from "./components/dialog-plugin.vue";
 import HapticsPlugin from "./components/haptics-plugin.vue";
 import KeyboardPlugin from "./components/keyboard-plugin.vue";
+import ScreenOrientationPlugin from "./components/screen-orientation-plugin.vue";
 import SharePlugin from "./components/share-plugin.vue";
 import SplashScreenPlugin from "./components/splash-screen-plugin.vue";
 import StatusBarPlugin from "./components/status-bar-plugin.vue";
+import TextZoomPlugin from "./components/text-zoom-plugin.vue";
 import ToastPlugin from "./components/toast-plugin.vue";
 
 const { t } = useI18n();
@@ -29,6 +31,8 @@ const activePlugins = ref<string[]>([]);
         <DialogPlugin />
         <KeyboardPlugin />
         <HapticsPlugin />
+        <ScreenOrientationPlugin />
+        <TextZoomPlugin />
         <ActionSheetPlugin />
       </Collapse>
     </div>

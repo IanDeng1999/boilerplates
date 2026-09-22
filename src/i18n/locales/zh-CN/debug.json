@@ -102,6 +102,21 @@
     "selectionChanged": "选择变化",
     "selectionEnd": "结束选择"
   },
+  "screenOrientation": {
+    "title": "Screen Orientation 屏幕方向",
+    "description": "读取并监听屏幕方向，或将界面锁定为竖屏、横屏并恢复系统方向。",
+    "current": "当前方向",
+    "refresh": "读取屏幕方向",
+    "lockPortrait": "锁定竖屏",
+    "lockLandscape": "锁定横屏",
+    "unlock": "解除锁定"
+  },
+  "textZoom": {
+    "title": "Text Zoom 文本缩放",
+    "description": "读取并调整 WebView 文本缩放比例，也可恢复为系统首选字体比例。",
+    "read": "读取当前与首选比例",
+    "usePreferred": "使用系统首选比例"
+  },
   "actionSheet": {
     "title": "Action Sheet 操作面板",
     "description": "打开原生操作面板，并返回所选按钮的索引和取消状态。",

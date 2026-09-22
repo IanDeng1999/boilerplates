@@ -102,6 +102,21 @@
     "selectionChanged": "Selection changed",
     "selectionEnd": "End selection"
   },
+  "screenOrientation": {
+    "title": "Screen Orientation",
+    "description": "Read and observe the screen orientation, lock it to portrait or landscape, and restore the system orientation.",
+    "current": "Current orientation",
+    "refresh": "Read screen orientation",
+    "lockPortrait": "Lock portrait",
+    "lockLandscape": "Lock landscape",
+    "unlock": "Unlock orientation"
+  },
+  "textZoom": {
+    "title": "Text Zoom",
+    "description": "Read and adjust the WebView text zoom level, or restore the system-preferred font scale.",
+    "read": "Read current and preferred zoom",
+    "usePreferred": "Use system preferred zoom"
+  },
   "actionSheet": {
     "title": "Action Sheet",
     "description": "Open a native action sheet and return the selected button index and cancellation state.",
