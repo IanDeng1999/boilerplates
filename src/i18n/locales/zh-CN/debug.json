@@ -85,6 +85,23 @@
     "getResizeMode": "读取当前模式",
     "events": "最近键盘事件"
   },
+  "haptics": {
+    "title": "Haptics 触觉反馈",
+    "description": "测试碰撞、通知、振动和连续选择触觉反馈。设备会根据系统能力提供对应效果。",
+    "impact": "碰撞反馈",
+    "light": "轻度",
+    "medium": "中度",
+    "heavy": "重度",
+    "notification": "通知反馈",
+    "success": "成功",
+    "warning": "警告",
+    "error": "错误",
+    "vibrate": "振动 500 毫秒",
+    "selection": "连续选择反馈（依次点击）",
+    "selectionStart": "开始选择",
+    "selectionChanged": "选择变化",
+    "selectionEnd": "结束选择"
+  },
   "actionSheet": {
     "title": "Action Sheet 操作面板",
     "description": "打开原生操作面板，并返回所选按钮的索引和取消状态。",

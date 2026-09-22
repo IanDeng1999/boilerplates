@@ -85,6 +85,23 @@
     "getResizeMode": "Get current mode",
     "events": "Recent keyboard events"
   },
+  "haptics": {
+    "title": "Haptics",
+    "description": "Test impact, notification, vibration, and continuous selection feedback. The device provides the effect supported by the system.",
+    "impact": "Impact feedback",
+    "light": "Light",
+    "medium": "Medium",
+    "heavy": "Heavy",
+    "notification": "Notification feedback",
+    "success": "Success",
+    "warning": "Warning",
+    "error": "Error",
+    "vibrate": "Vibrate for 500 ms",
+    "selection": "Selection feedback (tap in order)",
+    "selectionStart": "Start selection",
+    "selectionChanged": "Selection changed",
+    "selectionEnd": "End selection"
+  },
   "actionSheet": {
     "title": "Action Sheet",
     "description": "Open a native action sheet and return the selected button index and cancellation state.",
