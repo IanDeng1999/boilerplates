@@ -34,5 +34,11 @@
     "light": "Light icons",
     "hide": "Hide",
     "show": "Show"
+  },
+  "splashScreen": {
+    "title": "Splash Screen",
+    "description": "Show the splash screen for two seconds with automatic hiding, or hide it manually. This plugin is native-only.",
+    "show": "Show for two seconds",
+    "hide": "Hide"
   }
 }

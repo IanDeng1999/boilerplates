@@ -34,5 +34,11 @@
     "light": "浅色图标",
     "hide": "隐藏",
     "show": "显示"
+  },
+  "splashScreen": {
+    "title": "Splash Screen 启动画面",
+    "description": "显示两秒后自动隐藏启动画面，或手动调用隐藏操作。该插件仅支持原生平台。",
+    "show": "显示两秒",
+    "hide": "隐藏"
   }
 }
