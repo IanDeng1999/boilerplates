@@ -1,7 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+const history = createWebHistory(import.meta.env.BASE_URL);
+let navigationDirection = "forward";
+
+history.listen((_, __, { direction }) => {
+  navigationDirection = direction === "back" ? "back" : "forward";
+});
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history,
   routes: [
     {
       path: "/",
@@ -37,6 +44,11 @@ const router = createRouter({
       redirect: "/tabbar/home",
     },
   ],
+});
+
+router.beforeEach((to) => {
+  to.meta.pageTransition = `app-page-${navigationDirection}`;
+  navigationDirection = "forward";
 });
 
 export default router;
