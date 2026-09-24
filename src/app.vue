@@ -1,7 +1,7 @@
 <template>
   <main class="size-full overflow-y-auto">
     <RouterView v-slot="{ Component, route }">
-      <Transition :name="String(route.meta.pageTransition)" mode="out-in">
+      <Transition :name="String(route.meta.pageTransition)">
         <component
           :is="Component"
           :key="route.matched[0]?.path ?? route.path"
@@ -20,26 +20,27 @@
   transition:
     opacity var(--van-duration-base) var(--van-ease-out),
     transform var(--van-duration-base) var(--van-ease-out);
+  will-change: opacity, transform;
 }
 
 .app-page-forward-enter-from {
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateX(12%) scale(0.985);
 }
 
 .app-page-forward-leave-to {
   opacity: 0;
-  transform: translateX(-20%);
+  transform: translateX(-4%) scale(0.99);
 }
 
 .app-page-back-enter-from {
   opacity: 0;
-  transform: translateX(-20%);
+  transform: translateX(-4%) scale(0.99);
 }
 
 .app-page-back-leave-to {
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateX(12%) scale(0.985);
 }
 
 @media (prefers-reduced-motion: reduce) {
