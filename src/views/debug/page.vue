@@ -10,6 +10,7 @@ import DevicePlugin from "./components/device-plugin.vue";
 import DialogPlugin from "./components/dialog-plugin.vue";
 import HapticsPlugin from "./components/haptics-plugin.vue";
 import KeyboardPlugin from "./components/keyboard-plugin.vue";
+import LogPlugin from "./components/log-plugin.vue";
 import PreferencesPlugin from "./components/preferences-plugin.vue";
 import ScreenOrientationPlugin from "./components/screen-orientation-plugin.vue";
 import SharePlugin from "./components/share-plugin.vue";
@@ -37,6 +38,7 @@ const activePlugins = ref<string[]>([]);
       <Collapse v-model="activePlugins" :border="false">
         <AppPlugin />
         <AppLauncherPlugin />
+        <LogPlugin />
         <PreferencesPlugin />
         <SharePlugin />
         <DevicePlugin />

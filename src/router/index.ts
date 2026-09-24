@@ -40,6 +40,11 @@ const router = createRouter({
       component: () => import("../views/debug/page.vue"),
     },
     {
+      path: "/log",
+      name: "log",
+      component: () => import("../views/log/page.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       redirect: "/tabbar/home",
     },

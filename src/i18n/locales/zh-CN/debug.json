@@ -27,6 +27,19 @@
     "check": "检查是否可打开",
     "open": "打开目标"
   },
+  "logs": {
+    "title": "日志",
+    "description": "分别写入不同等级的测试日志，可在「我的 > 日志」中查看。",
+    "debug": "Debug 日志",
+    "info": "Info 日志",
+    "warn": "Warn 日志",
+    "error": "Error 日志",
+    "debugMessage": "这是一条 Debug 测试日志",
+    "infoMessage": "这是一条 Info 测试日志",
+    "warnMessage": "这是一条 Warn 测试日志",
+    "errorMessage": "这是一条 Error 测试日志",
+    "errorDetail": "用于验证错误详情序列化的测试错误"
+  },
   "preferences": {
     "title": "Preferences 偏好存储",
     "description": "读写轻量级字符串键值数据，并查看当前存储中的所有键。Web 环境会回退到 localStorage。",

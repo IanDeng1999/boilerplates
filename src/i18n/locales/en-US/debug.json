@@ -27,6 +27,19 @@
     "check": "Check availability",
     "open": "Open target"
   },
+  "logs": {
+    "title": "Logs",
+    "description": "Write test logs at each level. View them in My > Logs.",
+    "debug": "Debug log",
+    "info": "Info log",
+    "warn": "Warn log",
+    "error": "Error log",
+    "debugMessage": "This is a debug test log",
+    "infoMessage": "This is an info test log",
+    "warnMessage": "This is a warn test log",
+    "errorMessage": "This is an error test log",
+    "errorDetail": "A test error for verifying error-detail serialization"
+  },
   "preferences": {
     "title": "Preferences",
     "description": "Read and write lightweight string key/value data and inspect all stored keys. The web implementation falls back to localStorage.",

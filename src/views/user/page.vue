@@ -46,6 +46,13 @@ const { t } = useI18n();
         clickable
         to="/debug"
       />
+      <Cell
+        :title="t('profile.log')"
+        icon="description-o"
+        is-link
+        clickable
+        to="/log"
+      />
     </CellGroup>
   </main>
 </template>

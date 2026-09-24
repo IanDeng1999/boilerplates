@@ -7,6 +7,7 @@ import App from "./app.vue";
 import { i18n } from "./i18n";
 import router from "./router";
 import { useAppStore } from "./stores/app";
+import { useLogStore } from "./stores/log";
 import "vant/lib/index.css";
 import "./styles/variables.css";
 import "./styles/tailwind.css";
@@ -20,6 +21,7 @@ pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(i18n);
 app.use(router);
+const logStore = useLogStore(pinia);
 void CapacitorApp.addListener("backButton", ({ canGoBack }) => {
   if (canGoBack) {
     router.back();
@@ -28,5 +30,6 @@ void CapacitorApp.addListener("backButton", ({ canGoBack }) => {
 
   void CapacitorApp.exitApp();
 });
+logStore.info("APP Startup");
 useAppStore(pinia).initialize();
 app.mount("#app");
