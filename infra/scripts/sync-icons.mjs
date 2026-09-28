@@ -7,53 +7,58 @@ const repositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
 const sourcePath = path.join(repositoryRoot, "resources/icon.png");
 
 const targets = [
-  {
-    path: "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
-    size: 1024,
-  },
-  ...[
-    ["mdpi", 48],
-    ["hdpi", 72],
-    ["xhdpi", 96],
-    ["xxhdpi", 144],
-    ["xxxhdpi", 192],
-  ].flatMap(([density, size]) => [
-    {
-      path: `android/app/src/main/res/mipmap-${density}/ic_launcher.png`,
-      size,
-    },
-    {
-      path: `android/app/src/main/res/mipmap-${density}/ic_launcher_round.png`,
-      size,
-    },
-  ]),
-  ...[
-    ["mdpi", 108],
-    ["hdpi", 162],
-    ["xhdpi", 216],
-    ["xxhdpi", 324],
-    ["xxxhdpi", 432],
-  ].map(([density, size]) => ({
-    path: `android/app/src/main/res/mipmap-${density}/ic_launcher_foreground.png`,
-    size,
-  })),
+  // iOS
+  ["ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png", 1024],
+
+  // Android — launcher
+  ["android/app/src/main/res/mipmap-mdpi/ic_launcher.png", 48],
+  ["android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png", 48],
+  ["android/app/src/main/res/mipmap-hdpi/ic_launcher.png", 72],
+  ["android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png", 72],
+  ["android/app/src/main/res/mipmap-xhdpi/ic_launcher.png", 96],
+  ["android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png", 96],
+  ["android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png", 144],
+  ["android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png", 144],
+  ["android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png", 192],
+  ["android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png", 192],
+
+  // Android — foreground
+  ["android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png", 108],
+  ["android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png", 162],
+  ["android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png", 216],
+  ["android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png", 324],
+  ["android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png", 432],
 ];
 
-await Promise.all([
-  access(sourcePath),
-  ...targets.map(({ path: targetPath }) =>
-    access(path.join(repositoryRoot, targetPath)),
-  ),
-]);
-
-await Promise.all(
-  targets.map(async ({ path: targetPath, size }) => {
-    await sharp(sourcePath)
-      .flatten({ background: "#ffffff" })
-      .resize(size, size, { fit: "fill" })
-      .png()
-      .toFile(path.join(repositoryRoot, targetPath));
-  }),
+// Check source exists first
+const sourceOk = await access(sourcePath).then(
+  () => true,
+  () => false,
 );
+if (!sourceOk) {
+  console.error("Source icon not found:", sourcePath);
+  process.exit(1);
+}
 
-console.log(`Synced ${targets.length} app icon files from resources/icon.png.`);
+// Write each target, skipping those whose file doesn't exist
+let synced = 0;
+for (const [targetPath, size] of targets) {
+  const fullPath = path.join(repositoryRoot, targetPath);
+  if (
+    !(await access(fullPath).then(
+      () => true,
+      () => false,
+    ))
+  ) {
+    console.warn(`Skipping missing target: ${targetPath}`);
+    continue;
+  }
+  await sharp(sourcePath)
+    .flatten({ background: "#ffffff" })
+    .resize(size, size, { fit: "fill" })
+    .png()
+    .toFile(fullPath);
+  synced++;
+}
+
+console.log(`Synced ${synced} app icon files from resources/icon.png.`);
