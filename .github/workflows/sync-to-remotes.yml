@@ -1,0 +1,48 @@
+name: Sync to external Git repositories
+
+on:
+  push:
+    branches:
+      - "*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      SYNC_REPOSITORY_BASE_URLS: ${{ secrets.SYNC_REPOSITORY_BASE_URLS }}
+    steps:
+      - name: Check out the pushed commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify sync repository configuration
+        shell: bash
+        run: |
+          if [ -z "$SYNC_REPOSITORY_BASE_URLS" ]; then
+            echo "Missing SYNC_REPOSITORY_BASE_URLS repository secret."
+            exit 1
+          fi
+
+      - name: Push branch to sync repositories
+        shell: bash
+        run: |
+          index=0
+          while IFS= read -r repository_base_url; do
+            repository_base_url="${repository_base_url//[[:space:]]/}"
+            remote_name="sync-${index}"
+
+            if [ -z "$repository_base_url" ]; then
+              echo "SYNC_REPOSITORY_BASE_URLS contains an empty repository URL line."
+              exit 1
+            fi
+
+            repository_url="${repository_base_url%/}/${GITHUB_REPOSITORY}.git"
+            git remote add "$remote_name" "$repository_url"
+            git push --force "$remote_name" "HEAD:refs/heads/${GITHUB_REF_NAME}"
+            index=$((index + 1))
+          done <<< "$SYNC_REPOSITORY_BASE_URLS"
