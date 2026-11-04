@@ -5,6 +5,11 @@ window.onload = () => {
     winOnloadBak();
   }
   document.getElementById("testButton").addEventListener("click", () => {
-    $autojs.invoke("start:screen-shot", "按钮已被点击");
+    $autojs.invoke(
+      "start:screen-shot",
+      JSON.stringify({
+        foo: "bar",
+      }),
+    );
   });
 };
