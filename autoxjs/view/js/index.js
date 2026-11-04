@@ -5,6 +5,6 @@ window.onload = () => {
     winOnloadBak();
   }
   document.getElementById("testButton").addEventListener("click", () => {
-    $autojs.invoke("toast-log", "按钮已被点击");
+    $autojs.invoke("start:screen-shot", "按钮已被点击");
   });
 };

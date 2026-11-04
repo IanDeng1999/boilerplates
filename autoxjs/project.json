@@ -1,9 +1,9 @@
 {
-	"name": "unnamed",
-	"main": "main.js",
-	"packageName": "com.example.unnamed",
-	"versionName": "1.0.0",
-	"versionCode": 1,
-	"assets": [],
-	"useFeatures": []
+  "name": "unnamed",
+  "main": "_main.js",
+  "packageName": "com.example.unnamed",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "assets": [],
+  "useFeatures": []
 }

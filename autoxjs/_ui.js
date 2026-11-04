@@ -10,4 +10,4 @@ const webSettings = ui.webView.getSettings();
 webSettings.setAllowFileAccess(true);
 ui.webView.loadUrl("file://" + files.path("./view/index.html"));
 
-require("./ui/ui.js");
+require("./ui/ui-entry.js");

@@ -17,6 +17,7 @@
 # dist
 autoxjs/core
 autoxjs/ui
+ui-commands.json
 
 # logs
 logs/

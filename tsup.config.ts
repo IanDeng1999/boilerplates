@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 export default defineConfig([
   {
-    entry: ["src/**/*.ts", "!src/ui.ts"],
+    entry: ["src/**/*.ts", "!src/ui-entry.ts"],
     outDir: "autoxjs/core",
     bundle: false,
     splitting: false,
@@ -14,7 +14,7 @@ export default defineConfig([
     external: ["autojs6:ui"],
   },
   {
-    entry: ["src/ui.ts"],
+    entry: ["src/ui-entry.ts"],
     outDir: "autoxjs/ui",
     splitting: false,
     sourcemap: true,
