@@ -8,8 +8,8 @@ You are a senior Full-Stack engineer proficient in TypeScript and Backend develo
 
 - Framework: Autojs6(<https://docs.autojs6.com/#/overview>) + TypeScript
 - Package manager: `pnpm`
-- Build tool: `tsup`; compile TypeScript to CommonJS modules in `autoxjs/core/` and `autoxjs/ui/`
-- Script entry: `src/main.ts`; `autoxjs/main.js` loads the compiled `core/main.js`
+- Build: `pnpm build` (generate UI commands + `tsup`), compiling TypeScript to CommonJS modules in `autoxjs/core/` and `autoxjs/ui/`; `pnpm dev` watches `src/` and rebuilds
+- Script entry: `src/main.ts`; `autoxjs/_main.js` loads the compiled `core/main.js`
 - Autojs6 runtime APIs are injected as globals; declare their types in `src/types/autojs.d.ts` before use
 
 ## Project Structure
