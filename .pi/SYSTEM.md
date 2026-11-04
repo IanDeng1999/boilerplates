@@ -14,16 +14,18 @@ You are a senior Full-Stack engineer proficient in TypeScript and Backend develo
 
 ## Project Structure
 
-- `src/main.ts`: Autojs6 script entry
-- `src/tasks/`: task abstractions and task implementations
-- `src/shared/`: reusable script utilities
-- `src/types/autojs.d.ts`: declarations for Autojs6 runtime globals
-- `src/ui.ts`: Autojs6 UI script entry, bundled to `autoxjs/ui/ui.js`
-- `autoxjs/core/`: generated CommonJS scripts compiled from `src/`
-- `autoxjs/main.js`: Autojs6 project entry that loads `core/main.js`
-- `autoxjs/view/`: WebView static assets, including HTML, CSS, and JavaScript
-- `autoxjs/project.json`: Autojs6 project metadata
-- `tsup.config.ts`: TypeScript build configuration
+- `src/`: TypeScript source
+  - `main.ts`: script entry
+  - `ui-entry.ts`: UI entry
+  - `tasks/`: task framework and HOK task implementations
+  - `shared/`: reusable utilities
+  - `types/`: Autojs6 global type declarations
+- `autoxjs/`: Autojs6 project and build output
+  - `core/`: compiled scripts from `src/`
+  - `ui/`: compiled UI entry
+  - `view/`: WebView static assets (HTML/CSS/JS)
+  - `project.json`: project metadata
+- `infra/`: build scripts (e.g. UI command generation)
 
 ## Execution Style
 
