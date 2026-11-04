@@ -16,6 +16,7 @@
 
 # dist
 autoxjs/core
+autoxjs/ui
 
 # logs
 logs/
