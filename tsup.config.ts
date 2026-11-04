@@ -4,6 +4,7 @@ export default defineConfig([
   {
     entry: ["src/**/*.ts", "!src/ui.ts"],
     outDir: "autoxjs/core",
+    bundle: false,
     splitting: false,
     sourcemap: true,
     clean: true,

@@ -1,4 +1,4 @@
-import { alog } from "@/shared/logger";
+import { alog } from "../shared/logger";
 import type { BaseTask } from "./base.task";
 import { TaskStatus } from "./task.const";
 
