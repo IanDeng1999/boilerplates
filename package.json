@@ -1,0 +1,16 @@
+{
+	"name": "autojs6-unnamed",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"build": "tsup --silent",
+		"build:watch": "nodemon --watch src --ext ts --exec \"pnpm build\""
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.6.4",
+		"@types/node": "^26.6.6",
+		"nodemon": "^3.1.14",
+		"tsup": "^9.0.0",
+		"typescript": "^7.0.2"
+	}
+}
