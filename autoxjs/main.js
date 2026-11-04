@@ -1,3 +1,1 @@
-"nodejs";
-
-require("./core/index.cjs");
+require("./core/main.js");

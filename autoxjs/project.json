@@ -1,12 +1,9 @@
 {
 	"name": "unnamed",
 	"main": "main.js",
-	"packageName": "me.example.unnamed",
+	"packageName": "com.example.unnamed",
 	"versionName": "1.0.0",
 	"versionCode": 1,
 	"assets": [],
-	"useFeatures": [],
-	"node": {
-		"permissions": ["screen_capture"]
-	}
+	"useFeatures": []
 }

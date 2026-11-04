@@ -1,16 +1,17 @@
 {
-	"name": "autojs6-unnamed",
-	"version": "1.0.0",
-	"type": "module",
-	"scripts": {
-		"dev": "nodemon --watch src --ext ts --exec \"pnpm build\"",
-		"build": "tsup --silent"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.6.4",
-		"@types/node": "^26.6.6",
-		"nodemon": "^3.1.14",
-		"tsup": "^9.0.0",
-		"typescript": "^7.0.2"
-	}
+  "name": "autojs6-unnamed",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec \"pnpm build\"",
+    "build": "tsup --silent"
+  },
+  "description": "This is a autojs6 script project",
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.4",
+    "@types/node": "^26.6.6",
+    "nodemon": "^3.1.14",
+    "tsup": "^9.0.0",
+    "typescript": "^7.0.2"
+  }
 }
