@@ -3,8 +3,8 @@
 	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
-		"build": "tsup --silent",
-		"build:watch": "nodemon --watch src --ext ts --exec \"pnpm build\""
+		"dev": "nodemon --watch src --ext ts --exec \"pnpm build\"",
+		"build": "tsup --silent"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.6.4",
